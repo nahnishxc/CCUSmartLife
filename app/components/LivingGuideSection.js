@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import Link from 'next/link';
-import Lottie from 'lottie-react';
+import Link from 'next/link'
+import Lottie from 'lottie-react'
 
-import eatingAnimation from '../lottie/eating.json';
-import transportAnimation from '../lottie/transport.json';
-import entertainmentAnimation from '../lottie/entertainment.json';
-import housingAnimation from '../lottie/housing.json';
-import educationAnimation from '../lottie/education.json';
-import bookingAnimation from '../lottie/booking.json';
+import eatingAnimation from '../lottie/eating.json'
+import transportAnimation from '../lottie/transport.json'
+import entertainmentAnimation from '../lottie/entertainment.json'
+import housingAnimation from '../lottie/housing.json'
+import financeAnimation from '../lottie/education.json'
+import medicalAnimation from '../lottie/medical.json'
 
 const items = [
   {
@@ -22,7 +22,7 @@ const items = [
     key: 'transport',
     title: 'Transport',
     description: 'Buses, trains, scooters, and how to get to and from campus.',
-    href: '/transport',
+    href: '/transportation',
     animation: transportAnimation,
   },
   {
@@ -40,20 +40,39 @@ const items = [
     animation: housingAnimation,
   },
   {
-    key: 'academic',
-    title: 'Student Services',
-    description: 'Registration, course issues, documents, and academic procedures.',
-    href: '/student-services',
-    animation: educationAnimation,
+    key: 'finance',
+    title: 'Financial Services',
+    description: 'Banks, ATMs, currency exchange, and essential financial guidance.',
+    href: '/finance',
+    animation: financeAnimation,  
   },
   {
-    key: 'booking',
-    title: 'Facility Booking',
-    description: 'Reserve classrooms, meeting rooms, and other campus spaces.',
-    href: '/booking',
-    animation: bookingAnimation,
+    key: 'medical',
+    title: 'Medical Services',
+    description: 'Clinics, hospitals, and the CCU Health Center for emergencies and care.',
+    href: '/medical',
+    animation: medicalAnimation,  
   },
-];
+]
+
+export function HomeLivingIcons() {
+  return (
+    <div className="home-icons-grid">
+      {items.map((item) => (
+        <Link href={item.href} key={item.key} className="home-icon-card">
+          <div className="home-icon-lottie">
+            <Lottie
+              animationData={item.animation}
+              loop={true}
+              autoplay={true}
+            />
+          </div>
+          <h3 className="home-icon-title">{item.title}</h3>
+        </Link>
+      ))}
+    </div>
+  )
+}
 
 export default function LivingGuideSection() {
   return (
@@ -88,5 +107,5 @@ export default function LivingGuideSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }

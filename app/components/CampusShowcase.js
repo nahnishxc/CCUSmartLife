@@ -25,27 +25,6 @@ export default function CampusShowcase() {
             </Link>
           </div>
         </div>
-
-        <div className="showcase-block">
-          <div className="showcase-image-wrapper">
-            <Image
-              src="/images/homepage/outside.jpg"
-              alt="Life Around CCU"
-              fill
-              className="showcase-image"
-            />
-          </div>
-          <div className="showcase-text">
-            <h3 className="showcase-title">Life Around CCU</h3>
-            <p className="showcase-description">
-              Discover nearby food stalls, shops, clinics, banks, and essential services around the campus.
-            </p>
-            <Link href="/off-campus" className="showcase-link">
-              Explore more →
-            </Link>
-          </div>
-        </div>
-
       </div>
     </section>
   );

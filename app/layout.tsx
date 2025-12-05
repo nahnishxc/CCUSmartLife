@@ -18,8 +18,6 @@ export default function RootLayout({
       <body>
         <Navbar />
         <main className="main-with-navbar">{children}</main>
-        <ContactSection />
-        <Footer />
       </body>
     </html>
   );
