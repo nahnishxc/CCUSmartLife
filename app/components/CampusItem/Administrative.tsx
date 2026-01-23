@@ -3,22 +3,22 @@ import { Briefcase } from "lucide-react";
 
 // --- 處室資料 (模擬連結) ---
 const OFFICES = [
-  { name: "President", url: "#" },
-  { name: "Secretariat", url: "#" },
-  { name: "Office of Academic Affairs", url: "#" },
-  { name: "Office of International Affairs", url: "#" }, // 特別把 OIA 放前面一點
-  { name: "Office of Student Affairs", url: "#" },
-  { name: "Office of Information Technology", url: "#" },
-  { name: "Office of General Affairs", url: "#" },
-  { name: "Accounting Office", url: "#" },
-  { name: "Office of Research and Development", url: "#" },
-  { name: "Personnel Office", url: "#" },
-  { name: "Library", url: "#" },
-  { name: "Physical Education Center", url: "#" },
-  { name: "Counseling Center", url: "#" },
-  { name: "Environmental Hygiene & Safety", url: "#" },
-  { name: "Ching Jiang Learning Center", url: "#" },
-  { name: "Office of Institutional Research", url: "#" },
+  { name: "President", url: "https://president.ccu.edu.tw/p/426-1001-3.php?Lang=zh-tw" },
+  { name: "Secretariat", url: "https://www.ccu.edu.tw/p/404-1000-25913.php?Lang=en" },
+  { name: "Office of Academic Affairs", url: "https://www.ccu.edu.tw/p/404-1000-25914.php?Lang=en" },
+  { name: "Office of International Affairs", url: "https://oia.ccu.edu.tw/?Lang=en" }, // 特別把 OIA 放前面一點
+  { name: "Office of Student Affairs", url: "https://studaffairs.ccu.edu.tw/?Lang=en" },
+  { name: "Office of Information Technology", url: "https://www.ccu.edu.tw/p/404-1000-25917.php?Lang=en" },
+  { name: "Office of General Affairs", url: "https://www.ccu.edu.tw/p/404-1000-25915.php?Lang=en" },
+  { name: "Accounting Office", url: "https://www.ccu.edu.tw/p/404-1000-25918.php?Lang=en" },
+  { name: "Office of Research and Development", url: "https://www.ccu.edu.tw/p/404-1000-25916.php?Lang=en" },
+  { name: "Personnel Office", url: "https://www.ccu.edu.tw/p/404-1000-25919.php?Lang=en" },
+  { name: "Library", url: "https://lib.ccu.edu.tw/?Lang=zh-tw" },
+  { name: "Physical Education Center", url: "https://www.ccu.edu.tw/p/404-1000-25920.php?Lang=en" },
+  { name: "Counseling Center", url: "https://advising.ccu.edu.tw/p/404-1013-699.php?Lang=en" },
+  { name: "Environmental Hygiene & Safety", url: "https://environ.ccu.edu.tw/?Lang=en" },
+  { name: "Ching Jiang Learning Center", url: "https://cjlc.ccu.edu.tw/en/" },
+  { name: "Office of Institutional Research", url: "https://oir.ccu.edu.tw/index.php" },
 ];
 
 export default function Administrative() {

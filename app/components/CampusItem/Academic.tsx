@@ -2,102 +2,13 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, ArrowLeft, ExternalLink } from "lucide-react";
-
-// --- 1. 資料結構與假資料 ---
-interface Department {
-  name: string;
-  url: string;
-}
-
-interface College {
-  id: string;
-  name: string;
-  description: string;
-  departments: Department[];
-}
-
-const COLLEGES_DATA: College[] = [
-  {
-    id: "humanities",
-    name: "College of Humanities",
-    description: "Dedicated to the study of human culture, history, and literature.",
-    departments: [
-      { name: "Department of Chinese Literature", url: "#" },
-      { name: "Department of Foreign Languages and Literature", url: "#" },
-      { name: "Department of History", url: "#" },
-      { name: "Department of Philosophy", url: "#" },
-    ]
-  },
-  {
-    id: "science",
-    name: "College of Science",
-    description: "Fostering scientific innovation and research excellence.",
-    departments: [
-      { name: "Department of Mathematics", url: "#" },
-      { name: "Department of Earth and Environmental Sciences", url: "#" },
-      { name: "Department of Physics", url: "#" },
-      { name: "Department of Chemistry and Biochemistry", url: "#" },
-    ]
-  },
-  {
-    id: "management",
-    name: "College of Management",
-    description: "Cultivating future leaders with global vision and professional skills.",
-    departments: [
-      { name: "Department of Economics", url: "#" },
-      { name: "Department of Finance", url: "#" },
-      { name: "Department of Business Administration", url: "#" },
-      { name: "Department of Accounting and Information Technology", url: "#" },
-      { name: "Department of Information Management", url: "#" },
-    ]
-  },
-  {
-    id: "engineering",
-    name: "College of Engineering",
-    description: "Leading the way in technological advancement and engineering solutions.",
-    departments: [
-      { name: "Department of Computer Science and Information Engineering", url: "#" },
-      { name: "Department of Electrical Engineering", url: "#" },
-      { name: "Department of Mechanical Engineering", url: "#" },
-      { name: "Department of Chemical Engineering", url: "#" },
-    ]
-  },
-  {
-    id: "law",
-    name: "College of Law",
-    description: "Upholding justice and legal expertise.",
-    departments: [
-      { name: "Department of Law", url: "#" },
-      { name: "Department of Financial and Economic Law", url: "#" },
-    ]
-  },
-  {
-    id: "education",
-    name: "College of Education",
-    description: "Nurturing educators and leaders in sports and health.",
-    departments: [
-      { name: "Department of Adult and Continuing Education", url: "#" },
-      { name: "Center for Teacher Education", url: "#" },
-      { name: "Department of Athletic Sports", url: "#" },
-    ]
-  },
-  {
-    id: "social",
-    name: "College of Social Sciences",
-    description: "Understanding society and human behavior.",
-    departments: [
-      { name: "Department of Social Welfare", url: "#" },
-      { name: "Department of Psychology", url: "#" },
-      { name: "Department of Labor Relations", url: "#" },
-      { name: "Department of Communication", url: "#" },
-    ]
-  }
-];
+import { ACADEMIC_UNITS } from "../Data/College";
 
 export default function Academic() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const selectedCollege = COLLEGES_DATA.find(c => c.id === selectedId);
+  // 2. 使用引入的資料
+  const selectedCollege = ACADEMIC_UNITS.find(c => c.id === selectedId);
 
   return (
     <div className="w-full h-full bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 relative overflow-hidden flex flex-col">
@@ -134,7 +45,8 @@ export default function Academic() {
 
               <div className="flex-1">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
-                  {COLLEGES_DATA.map((college) => (
+                  {/* 使用 ACADEMIC_UNITS 進行 map */}
+                  {ACADEMIC_UNITS.map((college) => (
                     <button
                       key={college.id}
                       onClick={() => setSelectedId(college.id)}
@@ -179,13 +91,14 @@ export default function Academic() {
               </div>
               <div className="flex-1 flex flex-col justify-center">
                 <h3 className="text-lg font-bold text-gray-700 mb-2">About the College</h3>
-                <p className="text-gray-500 leading-relaxed">
+                {/* 加上 whitespace-pre-line 確保長文字換行正確 */}
+                <p className="text-gray-500 leading-relaxed whitespace-pre-line">
                   {selectedCollege.description}
                 </p>
               </div>
             </div>
 
-            {/* 系所連結列表 (仿照圖片樣式：淺藍色底、藍色字) */}
+            {/* 系所連結列表 */}
             <div>
               <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 border-b border-gray-100 pb-2">
                 Departments & Institutes

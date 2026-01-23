@@ -1,51 +1,7 @@
 "use client";
 import { Clock, MapPin } from "lucide-react";
-
-// --- 設施資料 ---
-const FACILITIES = [
-  {
-    id: "lib",
-    name: "Main Library",
-    desc: "Access to vast collections, quiet study areas, and multimedia rooms.",
-    hours: "Mon-Fri: 08:00 - 22:00\nSat-Sun: 09:00 - 17:00",
-    location: "Central Campus",
-  },
-  {
-    id: "gym",
-    name: "Indoor Gymnasium",
-    desc: "Features basketball courts, badminton courts, and a fitness center.",
-    hours: "Daily: 08:00 - 22:00",
-    location: "North Campus",
-  },
-  {
-    id: "pool",
-    name: "Swimming Pool",
-    desc: "Standard Olympic-sized outdoor pool and indoor heated pool.",
-    hours: "Tue-Sun: 06:00 - 21:00\n(Closed on Mondays)",
-    location: "Sports Complex",
-  },
-  {
-    id: "track",
-    name: "Athletic Field",
-    desc: "400m standard track and soccer field. Open for jogging at night.",
-    hours: "Open 24 Hours\n(Lights off at 23:00)",
-    location: "East Campus",
-  },
-  {
-    id: "activity",
-    name: "Student Activity Center",
-    desc: "The hub for student clubs, exhibitions, and convenience stores.",
-    hours: "07:00 - 23:00",
-    location: "Near Dormitories",
-  },
-  {
-    id: "lake",
-    name: "Tranquility Lake",
-    desc: "A scenic spot perfect for walking, relaxing, and swan watching.",
-    hours: "Open 24 Hours",
-    location: "Campus Entrance",
-  },
-];
+// 假設你將資料存在 src/data/facilities.ts，請依實際路徑調整
+import { FACILITIES } from "../Data/Facilities";
 
 export default function Facilities() {
   return (
@@ -75,10 +31,11 @@ export default function Facilities() {
         {FACILITIES.map((item) => (
           <div
             key={item.id}
-            className="group bg-gray-50 rounded-2xl border border-gray-100 overflow-hidden hover:border-emerald-200 hover:shadow-md transition-all flex flex-col"
+            // h-full 確保卡片會填滿 grid cell 的高度，讓同一列的卡片等高
+            className="group bg-gray-50 rounded-2xl border border-gray-100 overflow-hidden hover:border-emerald-200 hover:shadow-md transition-all flex flex-col h-full"
           >
             {/* 圖片區域 (16:9) */}
-            <div className="w-full aspect-video bg-gray-200 flex items-center justify-center text-gray-400 font-bold text-sm tracking-wider group-hover:bg-emerald-50 group-hover:text-emerald-300 transition-colors">
+            <div className="w-full aspect-video bg-gray-200 flex items-center justify-center text-gray-400 font-bold text-sm tracking-wider group-hover:bg-emerald-50 group-hover:text-emerald-300 transition-colors shrink-0">
               IMG
             </div>
 
@@ -88,27 +45,31 @@ export default function Facilities() {
                 {item.name}
               </h3>
 
-              <p className="text-sm text-gray-500 leading-relaxed mb-4 flex-1">
+              {/* flex-1: 佔據剩餘空間，將底部資訊推到最下面。
+                  min-h-[4.5rem]: 預留約 3-4 行文字的高度，避免文字太少時卡片看起來空空的。
+              */}
+              <p className="text-sm text-gray-500 leading-relaxed mb-4 flex-1 min-h-[4.5rem]">
                 {item.desc}
               </p>
 
               {/* 底部資訊：時間與地點 */}
-              <div className="space-y-2 pt-4 border-t border-gray-200/60 mt-auto">
+              <div className="space-y-3 pt-4 border-t border-gray-200/60 mt-auto">
                 {/* 開放時間 */}
                 <div className="flex items-start gap-2">
                   <Clock
                     size={16}
                     className="text-emerald-500 mt-0.5 shrink-0"
                   />
-                  <span className="text-xs text-gray-600 font-medium whitespace-pre-line">
+                  {/* whitespace-pre-line 讓資料中的 \n 可以正確換行顯示 */}
+                  <span className="text-xs text-gray-600 font-medium whitespace-pre-line leading-snug">
                     {item.hours}
                   </span>
                 </div>
 
                 {/* 地點 */}
-                <div className="flex items-center gap-2">
-                  <MapPin size={16} className="text-emerald-500 shrink-0" />
-                  <span className="text-xs text-gray-600 font-medium">
+                <div className="flex items-start gap-2">
+                  <MapPin size={16} className="text-emerald-500 shrink-0 mt-0.5" />
+                  <span className="text-xs text-gray-600 font-medium leading-snug">
                     {item.location}
                   </span>
                 </div>
