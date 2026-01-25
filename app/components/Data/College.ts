@@ -49,7 +49,11 @@ const EDUCATION_DESC = `Established in August, 1999 by the Ministry of Education
 
 This college has existed For more than ten year, all faculty members have engaged in various researches in the fields of educational theories and practices, teaching, and popularization services. The College provides excellent proficiency, and now claims leadership in the realm of domestic education studies. Moreover, the College is the most important unit of educational research in both Central and Southern Taiwan.`;
 
-const DESC = ``;
+const OTHERS_DESC = `This section introduces academic units at National Chung Cheng University that support students beyond traditional college and department structures. These units play an important role in helping international students adapt to the academic environment, strengthen essential skills, and explore flexible learning opportunities during their studies at CCU.
+
+The Center for General Education is responsible for university-wide general education courses that emphasize critical thinking, interdisciplinary learning, and an understanding of social, cultural, and global issues. These courses are designed to help students build a solid academic foundation regardless of their major. The Center for Language Studies provides language-related courses and learning resources, including English and other foreign languages, to support students’ academic studies and daily communication in an international context. The Bachelor Program in Interdisciplinary Studies offers a flexible degree program that allows students to integrate knowledge from multiple disciplines and design a personalized study plan that aligns with their academic interests and future goals.
+
+Together, these units offer international students additional academic support, language development opportunities, and flexible learning pathways, helping them better navigate and enrich their study experience at CCU.`;
 
 // 匯出主資料陣列
 export const ACADEMIC_UNITS: College[] = [
@@ -258,15 +262,19 @@ export const ACADEMIC_UNITS: College[] = [
   {
     id: "others",
     name: "others",
-    description: LAW_DESC,
+    description: OTHERS_DESC,
     departments: [
       {
-        name: "Department of General Law",
-        url: "https://deptlaw.ccu.edu.tw/?Lang=en",
+        name: "Center for General Education",
+        url: "https://deptcge.ccu.edu.tw/?Lang=en",
       },
       {
-        name: "Department of Financial and Economic Law",
-        url: "https://deptflaw.ccu.edu.tw/index.php?temp=intro&lang=en",
+        name: "Center for Language Studies",
+        url: "https://cls.ccu.edu.tw/?Lang=en",
+      },
+      {
+        name: "Bachelor Program in Interdisciplinary Studies",
+        url: "https://deptids.ccu.edu.tw/?Lang=en",
       },
     ],
   },
