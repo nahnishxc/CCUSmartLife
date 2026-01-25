@@ -80,32 +80,6 @@ export default function Home() {
             {navItems.map((item, idx) => {
               const isActive = activeTab === item.id;
 
-              // --- Campus Dropdown ---
-              if (item.id === "campus") {
-                return (
-                  <div key={idx} className="relative group z-30">
-                    <button onClick={() => setActiveTab(item.id)} className={`relative z-20 flex flex-row items-center gap-3 cursor-pointer p-2 rounded-lg transition-all duration-200 ${isActive ? "bg-white shadow-sm ring-1 ring-emerald-100" : "hover:bg-white/60"}`}>
-                      <div className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${isActive ? "bg-emerald-100 text-emerald-600 scale-110" : "bg-emerald-50 text-emerald-600 group-hover:bg-emerald-100 group-hover:scale-110"}`}>
-                        <item.icon size={20} />
-                      </div>
-                      <span className={`text-sm font-bold tracking-wide transition-colors ${isActive ? "text-black" : "text-gray-500 group-hover:text-gray-800"}`}>{item.name}</span>
-                      <ChevronDown size={14} className="text-gray-300 group-hover:text-gray-500 transition-colors"/>
-                    </button>
-                    <div className="absolute top-[70%] left-1/2 -translate-x-1/2 pt-10 w-48 hidden group-hover:block z-10">
-                      <div className="bg-white rounded-xl shadow-xl border border-gray-100 origin-top animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden">
-                        <div className="py-2 flex flex-col">
-                          {campusSubItems.map((subItem) => (
-                            <button key={subItem} onClick={(e) => { e.stopPropagation(); setActiveTab("campus"); setCampusSubTab(subItem); }} className={`px-4 py-3 text-left text-xs font-bold transition-colors hover:bg-emerald-50 hover:text-emerald-600 ${activeTab === "campus" && campusSubTab === subItem ? "text-emerald-600 bg-emerald-50/50" : "text-gray-500"}`}>
-                              {subItem}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }
-
               // --- Essentials Dropdown ---
               if (item.id === "essentials") {
                 return (
