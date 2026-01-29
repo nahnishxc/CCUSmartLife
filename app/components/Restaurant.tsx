@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Search, 
@@ -12,7 +12,7 @@ import {
   Filter
 } from "lucide-react";
 
-interface Restaurant {
+export interface RestaurantData {
   id: string;
   name: string;
   brief: string;
@@ -25,7 +25,7 @@ interface Restaurant {
   imageUrl: string;
 }
 
-const MOCK_RESTAURANTS: Restaurant[] = [
+const MOCK_RESTAURANTS: RestaurantData[] = [
   {
     id: "1",
     name: "Morning Glory Breakfast",
@@ -124,71 +124,128 @@ const MOCK_RESTAURANTS: Restaurant[] = [
   },
 ];
 
-// 基礎標籤
 const BASIC_TAGS = ["All", "Breakfast", "Lunch", "Dinner", "Vegetarian", "Halal"];
 
-// 進階標籤 (用於搜尋展開時顯示)
 const MORE_TAGS = [
   { category: "Type", tags: ["Cafe", "Snack", "Drink", "Buffet", "Noodle", "Dumpling"] },
   { category: "Feature", tags: ["Cheap", "Gym", "Late Night", "Spicy", "Fried", "Sweet"] }
 ];
 
+async function fetchRestaurants(): Promise<RestaurantData[]> {
+  
+  // ---------------------------------------------------------
+  // [Option 1] CURRENT: Mock Data Mode
+  // Use this for development and demo.
+  // ---------------------------------------------------------
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(MOCK_RESTAURANTS);
+    }, 800);
+  });
+
+  // ---------------------------------------------------------
+  // [Option 2] FUTURE: Real API Mode
+  // When backend is ready:
+  // 1. Comment out or delete Option 1 above.
+  // 2. Uncomment the code below.
+  // 3. Update the API_URL variable.
+  // ---------------------------------------------------------
+  /*
+  const API_URL = "http://localhost:3000/api/restaurants"; // Change this to your real API
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // cache: "no-store", // Uncomment if you want fresh data every time (SSR/ISR settings)
+    });
+
+    if (!res.ok) {
+      throw new Error(`API Error: ${res.status}`);
+    }
+
+    const data = await res.json();
+    
+    // IMPORTANT: Make sure the backend data structure matches 'RestaurantData' interface.
+    // If your backend returns different field names (e.g. 'restaurant_name' instead of 'name'),
+    // you might need to map it here:
+    // return data.map((item: any) => ({
+    //   id: item.id,
+    //   name: item.restaurant_name,
+    //   ...
+    // }));
+
+    return data;
+
+  } catch (error) {
+    console.error("Failed to fetch restaurants:", error);
+    return []; // Return empty array on error to prevent crash
+  }
+  */
+}
+
 export default function Restaurant() {
+  const [restaurants, setRestaurants] = useState<RestaurantData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
   const [view, setView] = useState<"list" | "detail">("list");
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  // --- 狀態管理 ---
-  // 1. 搜尋文字
   const [searchQuery, setSearchQuery] = useState("");
-  // 2. 目前選中的標籤 (預設 All)
   const [activeTag, setActiveTag] = useState("All");
-  // 3. 搜尋框是否被 Focus (用來控制展開面板)
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
-  // 當切換檢視時滾動回頂部
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        const data = await fetchRestaurants();
+        setRestaurants(data);
+      } catch (error) {
+        console.error("Failed to fetch restaurants:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [view, selectedId]);
 
-  // --- 核心邏輯：過濾餐廳 ---
-  const filteredRestaurants = MOCK_RESTAURANTS.filter((restaurant) => {
-    // 1. 標籤篩選：如果是 "All" 就通過，否則檢查 tags 是否包含 activeTag
+  const filteredRestaurants = restaurants.filter((restaurant) => {
     const matchTag = activeTag === "All" || restaurant.tags.includes(activeTag);
     
-    // 2. 關鍵字搜尋：檢查名稱或簡介是否包含搜尋文字 (不分大小寫)
     const query = searchQuery.toLowerCase();
     const matchSearch = 
       restaurant.name.toLowerCase().includes(query) || 
       restaurant.brief.toLowerCase().includes(query) ||
       restaurant.tags.some(t => t.toLowerCase().includes(query));
 
-    // 兩者都要符合
     return matchTag && matchSearch;
   });
 
-  // 取得選中的餐廳資料 (詳情頁用)
-  const selectedRestaurant = MOCK_RESTAURANTS.find(r => r.id === selectedId);
+  const selectedRestaurant = restaurants.find(r => r.id === selectedId);
 
-  // 詳情頁的推薦邏輯
   const relatedRestaurants = selectedRestaurant 
-    ? MOCK_RESTAURANTS.filter(r => 
+    ? restaurants.filter(r => 
         r.id !== selectedRestaurant.id && 
         r.tags.some(t => selectedRestaurant.tags.includes(t))
       ).slice(0, 3) 
     : [];
 
-  // 處理點擊標籤 (包含一般標籤和進階標籤)
   const handleTagClick = (tag: string) => {
     setActiveTag(tag);
-    // 如果是在搜尋展開模式下點的，可以選擇要不要關閉面板，這裡先選擇保持開啟或依需求調整
-    // setIsSearchFocused(false); // 如果想點了就收起來，把這行註解打開
   };
 
   return (
     <div className="w-full relative">
       <AnimatePresence mode="wait">
         
-        {/* === List View === */}
         {view === "list" && (
           <motion.div
             key="list"
@@ -198,10 +255,8 @@ export default function Restaurant() {
             transition={{ duration: 0.3 }}
             className="w-full flex flex-col gap-8"
           >
-            {/* --- 上方控制區 (Search & Tags) --- */}
             <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 flex flex-col items-center justify-center relative z-20">
               
-              {/* 1. 搜尋列 */}
               <div className="w-full max-w-2xl mb-6 relative">
                 <div className="relative w-full z-30">
                   <Search className={`absolute left-5 top-1/2 -translate-y-1/2 transition-colors ${isSearchFocused ? "text-emerald-600" : "text-gray-400"}`} size={22} />
@@ -210,12 +265,9 @@ export default function Restaurant() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onFocus={() => setIsSearchFocused(true)}
-                    // 這裡不放 onBlur 是因為點擊下方的 Tag 會先觸發 Blur 導致面板消失無法點擊
-                    // 我們改用下方的透明遮罩層來處理關閉
                     placeholder="Search for food..." 
                     className={`w-full bg-gray-100 rounded-2xl py-4 pl-14 pr-10 text-base focus:outline-none transition-all placeholder-gray-400 font-medium ${isSearchFocused ? "ring-2 ring-emerald-200 bg-white shadow-lg" : ""}`}
                   />
-                  {/* 清除搜尋按鈕 */}
                   {searchQuery && (
                     <button 
                       onClick={() => setSearchQuery("")}
@@ -226,7 +278,6 @@ export default function Restaurant() {
                   )}
                 </div>
 
-                {/* 2. 圖一功能：搜尋展開面板 (Mega Menu) */}
                 <AnimatePresence>
                   {isSearchFocused && (
                     <motion.div
@@ -269,8 +320,6 @@ export default function Restaurant() {
                 </AnimatePresence>
               </div>
 
-              {/* 3. 基礎標籤列 (圖二功能) */}
-              {/* 當搜尋展開時，這一列可以選擇隱藏，或是保留。這裡我保留它，讓使用者知道目前狀態 */}
               <div className="w-full flex justify-center flex-wrap gap-3">
                 {BASIC_TAGS.map((tag, i) => {
                   const isActive = activeTag === tag;
@@ -280,7 +329,7 @@ export default function Restaurant() {
                       onClick={() => handleTagClick(tag)}
                       className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all border hover:scale-105 active:scale-95 ${
                         isActive 
-                          ? "bg-emerald-500 text-white border-emerald-500 shadow-md" // 圖二：選中時變色
+                          ? "bg-emerald-500 text-white border-emerald-500 shadow-md"
                           : "bg-gray-50 text-gray-600 border-gray-100 hover:bg-emerald-50 hover:text-emerald-600"
                       }`}
                     >
@@ -291,7 +340,6 @@ export default function Restaurant() {
               </div>
             </div>
 
-            {/* 透明遮罩層：當搜尋展開時，點擊背景關閉面板 */}
             {isSearchFocused && (
               <div 
                 className="fixed inset-0 z-10 bg-black/5" 
@@ -299,9 +347,21 @@ export default function Restaurant() {
               />
             )}
 
-            {/* --- 下方列表區 --- */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pb-10 relative z-0"> 
-              {filteredRestaurants.length > 0 ? (
+              {isLoading ? (
+                Array.from({ length: 4 }).map((_, idx) => (
+                  <div key={idx} className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex gap-5 items-stretch h-[170px] animate-pulse">
+                    <div className="w-[130px] h-full bg-gray-200 rounded-2xl flex-shrink-0" />
+                    <div className="flex-1 flex flex-col justify-between py-1">
+                      <div className="space-y-3">
+                        <div className="h-6 bg-gray-200 rounded w-3/4" />
+                        <div className="h-4 bg-gray-200 rounded w-full" />
+                        <div className="h-4 bg-gray-200 rounded w-1/2" />
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : filteredRestaurants.length > 0 ? (
                 filteredRestaurants.map((item) => (
                   <div 
                     key={item.id}
@@ -349,7 +409,6 @@ export default function Restaurant() {
                   </div>
                 ))
               ) : (
-                // 查無資料時的顯示
                 <div className="col-span-1 md:col-span-2 flex flex-col items-center justify-center py-20 text-gray-400">
                   <Search size={48} className="mb-4 opacity-20" />
                   <p>No restaurants found matching "{activeTag}" or "{searchQuery}"</p>
@@ -365,7 +424,6 @@ export default function Restaurant() {
           </motion.div>
         )}
 
-        {/* === Detail View (保持不變) === */}
         {view === "detail" && selectedRestaurant && (
           <motion.div
             key="detail"
@@ -470,13 +528,13 @@ export default function Restaurant() {
                            <Star size={14} className="fill-yellow-400 text-yellow-400" />
                            <span className="text-xs font-bold text-gray-600">{item.rating}</span>
                         </div>
-                         <div className="flex gap-1 mt-3 flex-wrap h-6 overflow-hidden">
+                          <div className="flex gap-1 mt-3 flex-wrap h-6 overflow-hidden">
                             {item.tags.slice(0, 2).map((t, i) => (
                               <span key={i} className="text-[10px] bg-white border border-gray-200 px-2 py-0.5 rounded text-gray-500 font-medium">
                                 {t}
                               </span>
                             ))}
-                         </div>
+                          </div>
                       </div>
                     </div>
                   ))
