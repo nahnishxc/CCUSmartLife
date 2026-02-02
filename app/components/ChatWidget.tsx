@@ -92,30 +92,37 @@ export default function ChatWidget() {
   // =========================================================================
   // 核心座標修復邏輯
   // =========================================================================
-  const snap = (mode: "bubble" | "panel") => {
+const snap = (mode: "bubble" | "panel") => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     
-    // 預測即將變化的寬高
+    // 取得目標寬高
     const targetW = mode === "panel" ? size.width : 160;
     const targetH = mode === "panel" ? size.height : 160;
 
     const curX = x.get();
     const curY = y.get();
 
-    // 判斷當前中心點位置來決定貼左或貼右
-    const currentW = mode === "panel" ? 160 : size.width; // 從球變面板或反之
+    // --- X 軸修復：判斷中心點靠哪邊 ---
+    const currentW = mode === "panel" ? 160 : size.width;
     const centerX = curX + currentW / 2;
     const targetX = centerX < vw / 2 ? safe : vw - targetW - safe;
 
-    // 確保 Y 軸不超出螢幕
-    const targetY = clamp(curY, safe, vh - targetH - safe);
+    // --- Y 軸修復：處理下半部貼邊問題 ---
+    // 判斷中心點是否在螢幕下半部
+    const currentH = mode === "panel" ? 160 : size.height;
+    const centerY = curY + currentH / 2;
+    
+    let targetY;
+    if (mode === "bubble" && centerY > vh / 2) {
+      // 如果是要變回球球，且原本位置在下半部，強制吸附到底部
+      targetY = vh - targetH - safe;
+    } else {
+      // 否則維持原位並限制在安全範圍內
+      targetY = clamp(curY, safe, vh - targetH - safe);
+    }
 
-    animate(x, targetX, {
-      type: "spring",
-      stiffness: 360,
-      damping: 32,
-    });
+    animate(x, targetX, { type: "spring", stiffness: 360, damping: 32 });
     animate(y, targetY, { type: "spring", stiffness: 360, damping: 32 });
   };
 
