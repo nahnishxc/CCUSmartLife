@@ -3,16 +3,19 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Facebook, Instagram, Globe, Users } from "lucide-react";
 import { CLUB_DATA } from "../Data/club";
+import Image from "next/image";
+
 
 interface Club {
   id: string;
   name: string;
   desc: string;
-  tags?: string[]; // ✅ 改成可選，因為 CLUB_DATA 目前沒有這欄
+  image?: string;
+  tags?: string[];
   links: {
     fb?: string;
     ig?: string;
-    web?: string; // ✅ 可留著，未來你想加也行
+    web?: string;
   };
 }
 
@@ -31,15 +34,20 @@ export default function ClubView() {
   return (
     <div className="w-full h-full bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 flex flex-col">
       <style jsx global>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
       `}</style>
 
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Student Clubs</h2>
         <p className="text-sm text-gray-500 mt-1 max-w-2xl leading-relaxed">
-          Explore diverse student organizations at CCU. From academic research to performance arts, 
-          find a community that shares your passion.
+          Explore diverse student organizations at CCU. From academic research
+          to performance arts, find a community that shares your passion.
         </p>
       </div>
 
@@ -73,12 +81,24 @@ export default function ClubView() {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
           >
             {data[activeTab].clubs.map((item) => (
-              <div 
+              <div
                 key={item.id}
                 className="bg-gray-50 p-5 rounded-2xl border border-gray-100 hover:border-emerald-200 hover:shadow-md transition-all flex flex-col h-full group"
               >
-                <div className="w-full aspect-video bg-gray-200 rounded-xl mb-4 flex items-center justify-center text-gray-400 font-bold tracking-wider group-hover:bg-emerald-50 group-hover:text-emerald-300 transition-colors">
-                  CLUB IMG
+                <div className="w-full aspect-video rounded-xl mb-4 overflow-hidden bg-gray-200 group-hover:bg-emerald-50 transition-colors relative">
+                  {item.image ? (
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-400 font-bold tracking-wider group-hover:text-emerald-300 transition-colors">
+                      CLUB IMG
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex-1">
@@ -88,7 +108,7 @@ export default function ClubView() {
                   <p className="text-sm text-gray-500 leading-relaxed mb-4 line-clamp-3">
                     {item.desc}
                   </p>
-                  
+
                   {/* ✅ tags 不一定有，所以用 fallback */}
                   {(item.tags ?? []).length > 0 && (
                     <div className="flex flex-wrap gap-2 mb-4">

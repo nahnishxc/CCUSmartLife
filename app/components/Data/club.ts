@@ -2,6 +2,7 @@ export interface Club {
   id: string;
   name: string;
   desc: string;
+  image?: string;
   links: {
     fb?: string;
     ig?: string;
@@ -23,6 +24,7 @@ export const CLUB_DATA: ClubCategory[] = [
         id: "ac1",
         name: "CCU Light & Salt Club",
         desc: "A Christian-based student group where members share life experiences and reflect on topics related to faith. The club offers a welcoming space for discussion, support, and spiritual growth.",
+        image: "/clubs/ac1.png",
         links: {
           fb: "https://www.facebook.com/CCULightSalt/?locale=en",
           ig: "https://www.instagram.com/_light_and_salt_club/",
@@ -32,6 +34,7 @@ export const CLUB_DATA: ClubCategory[] = [
         id: "ac2",
         name: "CCU Debate Club",
         desc: "Focused on developing debate skills, this club provides structured training as well as regular practice sessions. Members often represent CCU in intercollegiate debate tournaments.",
+        image: "/clubs/ac2.jpg",
         links: {
           fb: "https://www.facebook.com/ccudebate/?locale=en",
           ig: "https://www.instagram.com/ccu_debate/",
@@ -41,6 +44,7 @@ export const CLUB_DATA: ClubCategory[] = [
         id: "ac3",
         name: "CCU Astronomy Club",
         desc: "The club brings together students interested in astronomy through stargazing activities and astrophotography workshops. Members also enjoy social gatherings centered around exploring the night sky.",
+        image: "/clubs/ac3.jpg",
         links: {
           fb: "https://www.facebook.com/CCUAstro/?locale=en",
           ig: "https://www.instagram.com/ccu_astronomy/",
@@ -139,7 +143,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "AIESEC in CCU",
         desc: "AIESEC provides hands-on team experiences in an international environment. Members develop leadership and problem-solving skills while working with students from diverse cultures.",
         links: {
-          fb: "https://www.facebook.com/AIESEC.CCU.Be.My.Friend/?locale=zh_TW",
+          fb: "https://www.facebook.com/AIESEC.CCU.Be.My.Friend/?locale=en",
           ig: "https://www.instagram.com/aiesec.in.ccu/",
         },
       },
@@ -157,7 +161,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "Public Affairs Club",
         desc: "Focused on public issues and social innovation, the club encourages discussion of current events and civic participation. Members develop critical thinking through hands-on activities.",
         links: {
-          fb: "https://www.facebook.com/CCUPublicAffairsClub/?locale=zh_TW",
+          fb: "https://www.facebook.com/CCUPublicAffairsClub/?locale=en",
           ig: "https://www.instagram.com/ccupac2019/",
         },
       },
@@ -250,7 +254,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "CCU Swimming Team",
         desc: "As CCU’s Division II swim team, the club focuses on swimming training and related activities. Most practices and events take place at the campus swimming pool.",
         links: {
-          fb: "https://www.facebook.com/CCUSWIMMING/?locale=zh_TW",
+          fb: "https://www.facebook.com/CCUSWIMMING/?locale=en",
           ig: "https://www.instagram.com/ccu_swim/",
         },
       },
@@ -259,7 +263,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "CCU Kungfu",
         desc: "This club practices traditional Chinese martial arts, including weapons training. Members train to build strength and coordination while also developing discipline and focus.",
         links: {
-          fb: "https://www.facebook.com/CCUkungfu/?locale=zh_TW",
+          fb: "https://www.facebook.com/CCUkungfu/?locale=en",
           ig: "https://www.instagram.com/ccu_kungfu/",
         },
       },
@@ -286,7 +290,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "Tennis Club",
         desc: "Bringing together students who enjoy tennis, the club offers a place to learn, practice, and rally with others. Members train on campus and work on improving skills over time.",
         links: {
-          fb: "https://www.facebook.com/tennis.in.ccu/?locale=zh_TW",
+          fb: "https://www.facebook.com/tennis.in.ccu/?locale=en",
           ig: "https://www.instagram.com/ccu_tennis_club/",
         },
       },
@@ -337,7 +341,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "CCU Cycling Club",
         desc: "The cycling club promotes riding as both a sport and a lifestyle. Members often organize group rides to explore areas beyond campus and enjoy cycling together.",
         links: {
-          fb: "https://www.facebook.com/ccubike/?locale=zh_TW",
+          fb: "https://www.facebook.com/ccubike/?locale=en",
           ig: "https://www.instagram.com/ccu_cycling_club/",
         },
       },
@@ -352,7 +356,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "National Chung Cheng University Force Cheerleading Club",
         desc: "A competitive cheerleading team combining stunts, gymnastics, and dance. The club trains seriously and has a strong history of performing well in national-level competitions.",
         links: {
-          fb: "https://www.facebook.com/CCUForceCheerleading/?locale=zh_TW",
+          fb: "https://www.facebook.com/CCUForceCheerleading/?locale=en",
           ig: "https://www.instagram.com/ccu_force_cheerleading/",
         },
       },
@@ -467,7 +471,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "National Chung Cheng University High School Association of Taoyuan",
         desc: "TA club that brings together CCU students from Taoyuan. It offers opportunities for students from different departments to connect and builds cross-department friendships through camps and group activities.",
         links: {
-          fb: "https://www.facebook.com/CCUtaoyuan/?locale=zh_TW",
+          fb: "https://www.facebook.com/CCUtaoyuan/?locale=en",
           ig: "https://www.instagram.com/ccu_peach/",
         },
       },
@@ -508,7 +512,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "Zero Club",
         desc: "An organization dedicated to supporting children in rural areas and underprivileged families. The club organizes various activities aimed at providing care, resources, and companionship for children in need.",
         links: {
-          fb: "https://www.facebook.com/ccuzero/?locale=zh_TW",
+          fb: "https://www.facebook.com/ccuzero/?locale=en",
           ig: "https://www.instagram.com/ccu_zeroclub/",
         },
       },
@@ -517,7 +521,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "CCU-LoveLife",
         desc: "Focused on humane animal welfare, the club works to reduce the number of stray animals around campus and assists with medical care and rescue efforts.",
         links: {
-          fb: "https://www.facebook.com/groups/422046154563892/?locale=zh_TW",
+          fb: "https://www.facebook.com/groups/422046154563892/?locale=en",
           ig: "https://www.instagram.com/ccu_treasure/",
         },
       },
@@ -534,7 +538,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "Legal Aid Society",
         desc: "Formed by faculty and students from the Department of Law, this service-oriented club applies legal knowledge to public welfare and social service initiatives.",
         links: {
-          fb: "https://www.facebook.com/cculawclub/?locale=zh_TW",
+          fb: "https://www.facebook.com/cculawclub/?locale=en",
           ig: "https://www.instagram.com/cculegalaid/",
         },
       },
@@ -543,7 +547,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "Huomiyaya Alishan Community Work Cooperative",
         desc: "A service club dedicated to working with Tsou indigenous communities in the Alishan area. The club focuses on cultural preservation, promotion, and passing down Tsou traditions both on and off campus.",
         links: {
-          fb: "https://www.facebook.com/CCU.Homeyaya/?locale=zh_TW",
+          fb: "https://www.facebook.com/CCU.Homeyaya/?locale=en",
         },
       },
       {
@@ -551,7 +555,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "4Q Volunteer Club",
         desc: "A service-oriented club centered on personal growth and inner exploration. Through various activities, it helps students reflect, relax, and find balance amid busy academic life.",
         links: {
-          fb: "https://www.facebook.com/ccufycd347/?locale=zh_TW",
+          fb: "https://www.facebook.com/ccufycd347/?locale=en",
           ig: "https://www.instagram.com/ccu_4q/",
         },
       },
@@ -594,7 +598,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "CCUACGN",
         desc: "A student club focused on the study and exchange of ACG culture, including animation, comics, games, and light novels. The club regularly organizes activities for members to share interests and discuss related works.",
         links: {
-          fb: "https://www.facebook.com/CCUACGN?locale=zh_TW",
+          fb: "https://www.facebook.com/CCUACGN?locale=en",
           ig: "https://www.instagram.com/ccu._.acgn/",
         },
       },
@@ -603,7 +607,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "Game Club",
         desc: "A club dedicated to board games, party games, and role-based games. It aims to create a relaxed, low-pressure environment where members can enjoy games together.",
         links: {
-          fb: "https://www.facebook.com/CCUGAMECLUB/?locale=zh_TW",
+          fb: "https://www.facebook.com/CCUGAMECLUB/?locale=en",
         },
       },
       {
@@ -611,7 +615,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "Beauty Maker Club",
         desc: "A warm and friendly club focused on sharing makeup and beauty tips, improving personal styling skills, and occasionally providing makeup services.",
         links: {
-          fb: "https://www.facebook.com/ccubeautymaker/?locale=zh_TW",
+          fb: "https://www.facebook.com/ccubeautymaker/?locale=en",
         },
       },
       {
@@ -619,7 +623,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "Ya Cat Troupe",
         desc: "An independent performance group formed by students passionate about performing arts. The group focuses on theater production and frequently stages performances at the Zijin Theater on campus.",
         links: {
-          fb: "https://www.facebook.com/ccuyacat/?locale=zh_TW",
+          fb: "https://www.facebook.com/ccuyacat/?locale=en",
           ig: "https://www.instagram.com/yacat_troupe/",
         },
       },
@@ -653,7 +657,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "	National Chung Cheng University Chorus",
         desc: "A music club focused on choral performance across various genres, including classical, symphonic, and pop music, showcasing the diversity of vocal expression.",
         links: {
-          fb: "https://www.facebook.com/CHORUS.CCU/?locale=zh_TW",
+          fb: "https://www.facebook.com/CHORUS.CCU/?locale=en",
           ig: "https://www.instagram.com/ccuchoruszy/",
         },
       },
@@ -662,7 +666,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "Feelings Guitar Club",
         desc: "Offers structured guitar lessons through regular club classes and frequently holds public performances and showcases.",
         links: {
-          fb: "https://www.facebook.com/feelingsguitar/?locale=zh_TW",
+          fb: "https://www.facebook.com/feelingsguitar/?locale=en",
           ig: "https://www.instagram.com/feelingsguitarclub/",
         },
       },
@@ -680,7 +684,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "Zheng Club",
         desc: "A music club focused on traditional music and guzheng performance, with professional instructors invited to provide formal training.",
         links: {
-          fb: "https://www.facebook.com/ccuzheng/?locale=zh_TW",
+          fb: "https://www.facebook.com/ccuzheng/?locale=en",
           ig: "https://www.instagram.com/guzheng.ccu/",
         },
       },
@@ -698,7 +702,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "Percussion Club",
         desc: "Dedicated to promoting percussion music, the club provides diverse instrument experiences and performance opportunities. It regularly participates in club exhibitions and end-of-semester concerts.",
         links: {
-          fb: "https://www.facebook.com/ccu.percussion/?locale=zh_TW",
+          fb: "https://www.facebook.com/ccu.percussion/?locale=en",
           ig: "https://www.instagram.com/per.ccu.ssion/",
         },
       },
@@ -707,7 +711,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "Hot Music Club",
         desc: "Focused on promoting rock music and band culture, the club regularly hosts live performances and end-of-semester showcases.",
         links: {
-          fb: "https://www.facebook.com/ccuhotmusicclub/?locale=zh_TW",
+          fb: "https://www.facebook.com/ccuhotmusicclub/?locale=en",
           ig: "https://www.instagram.com/ccuhmclub/",
         },
       },
@@ -716,7 +720,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "Piano Club",
         desc: "A music club for students and faculty who enjoy piano performance and musical exchange, offering a space to share and develop piano skills.",
         links: {
-          fb: "https://www.facebook.com/ccupiano/?locale=zh_TW",
+          fb: "https://www.facebook.com/ccupiano/?locale=en",
           ig: "https://www.instagram.com/ccupiano/",
         },
       },
@@ -725,7 +729,7 @@ export const CLUB_DATA: ClubCategory[] = [
         name: "CCU JAZZ CLUB",
         desc: "A music club for those who love improvisation and swing rhythms. The club also provides access to professional instruction and ensemble practice.",
         links: {
-          fb: "https://www.facebook.com/ccujazzclub/?locale=zh_TW",
+          fb: "https://www.facebook.com/ccujazzclub/?locale=en",
           ig: "https://www.instagram.com/ccujazz_1798/",
         },
       },
