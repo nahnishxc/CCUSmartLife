@@ -2,6 +2,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import SmoothScrolling from "./components/SmoothScrolling";
+import ScrollToTop from "./components/ScrollToTop";
 
 export const metadata = {
   title: "CCU SmartLife",
@@ -20,7 +21,8 @@ export default function RootLayout({
         <SmoothScrolling>
           <main className="pt-20">{children}</main>
         </SmoothScrolling>
-        <Footer></Footer>
+        <Footer />
+        <ScrollToTop />
       </body>
     </html>
   );
