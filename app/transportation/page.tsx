@@ -10,10 +10,10 @@ import {
   Navigation,
 } from "lucide-react";
 // 引入剛剛建立的詳細頁面
-import BusDetail from "./TransportationItem/BusDetail";
-import TrainDetail from "./TransportationItem/TrainDetail";
-import UbikeDetail from "./TransportationItem/UbikeDetail";
-import RouteDetail from "./TransportationItem/RouteDetail";
+import BusDetail from "./sections/BusDetail";
+import TrainDetail from "./sections/TrainDetail";
+import UbikeDetail from "./sections/UbikeDetail";
+import RouteDetail from "./sections/RouteDetail";
 
 const ROUTE_GUIDES = [
   { id: "chiayi", name: "To Chiayi City", imageColor: "bg-blue-100" },

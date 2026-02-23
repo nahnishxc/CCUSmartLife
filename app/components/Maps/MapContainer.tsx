@@ -1,16 +1,34 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
+import React, { useState } from "react";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 interface MapContainerProps {
   children: React.ReactNode;
+  onScaleChange?: (scale: number) => void;
 }
 
-const MapContainer: React.FC<MapContainerProps> = ({ children }) => {
+const MapContainer: React.FC<MapContainerProps> = ({ children, onScaleChange }) => {
   return (
-    <div className="w-full h-[80vh] bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden relative shadow-inner">
-      <TransformWrapper initialScale={1} minScale={0.8} maxScale={4} centerOnInit limitToBounds={false}>
+    <div className="w-full h-[80vh] bg-[#f7f8e9] border border-slate-200 rounded-2xl overflow-hidden relative shadow-inner">
+      <TransformWrapper
+        initialScale={0.92}
+        minScale={0.75}
+        maxScale={3}
+        centerOnInit
+        limitToBounds
+        centerZoomedOut
+        smooth
+        wheel={{ step: 0.01, smoothStep: 0.003 }}
+        panning={{ velocityDisabled: true }}
+        velocityAnimation={{ sensitivity: 0.14, animationTime: 90, equalToMove: true }}
+        alignmentAnimation={{ sizeX: 0, sizeY: 0, animationTime: 0 }}
+        onTransformed={(ref) => {
+          if (onScaleChange) {
+            onScaleChange(ref.state.scale);
+          }
+        }}
+      >
         {({ zoomIn, zoomOut, resetTransform }) => (
           <>
             <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 z-10 flex flex-col gap-2 select-none">
@@ -50,11 +68,8 @@ const MapContainer: React.FC<MapContainerProps> = ({ children }) => {
               </button>
             </div>
 
-            <TransformComponent
-              wrapperClass="!w-full !h-full"
-              contentClass="!w-full !h-full flex items-center justify-center"
-            >
-              <div className="w-full max-w-[1100px] px-3 md:px-6">
+            <TransformComponent wrapperClass="!w-full !h-full" contentClass="flex items-center justify-center">
+              <div className="w-[1100px] max-w-[92vw] aspect-[745.52/579.61]">
                 {children}
               </div>
             </TransformComponent>
@@ -66,3 +81,5 @@ const MapContainer: React.FC<MapContainerProps> = ({ children }) => {
 };
 
 export default MapContainer;
+
+ 

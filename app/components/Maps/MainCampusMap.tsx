@@ -1,31 +1,50 @@
+
+
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { buildings } from '../Data/buildingsData';
+import BuildingLabel from '../BuildingLabel';
 
 export default function MainCampusMap() {
+  const [scale, setScale] = useState(0.92);
   const svg = `
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="_圖層_1" data-name="圖層 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 745.52 579.61">
+<svg id="_圖層_1" data-name="圖層 1" xmlns="http://www.w3.org/2000/svg" viewBox="-90 -90 925.52 759.61" preserveAspectRatio="xMidYMid meet" width="100%" height="100%">
   <defs>
     <style>
-      .bg-water { fill: #e3f1f8; } 
-      .bg-land { fill: #e8ffea; } /* 這就是你要的校地內綠色 */
-      .cls-1 { fill: #7f4f21; }
-      .cls-2 { fill: #2ca7ff; }
-      .cls-3 { fill: #7e318e; }
-      .cls-4 { stroke: #565656; stroke-width: 2px; fill: none; stroke-miterlimit: 10; }
-      .cls-5 { stroke: #b1b1b1; stroke-width: 5px; fill: none; stroke-miterlimit: 10; stroke-linejoin: round;}
-      .cls-6 { stroke: #b1b1b1; stroke-width: 9px; fill: none; stroke-miterlimit: 10; stroke-linejoin: round; stroke-linecap: round;}
-      .cls-7 { fill: #abff7d; }
-      .cls-8 { fill: #b28247; }
-      .cls-9 { fill: #7ad4fd; }
-      .cls-10 { fill: #eb6100; }
-      .cls-11 { fill: #ffc36f; }
-      .cls-12 { fill: #e4007f; }
-      .cls-13 { fill: #00913a; }
+      /* 基礎填色優化 */
+      .bg-water { fill: #f8f9f0; } /* 校外：改為極淺米色 */
+      .bg-land { fill: #f0f7f0; }  /* 校內：改為清爽淺綠 */
+      
+      /* 設施與建築色調優化 */
+      .cls-1 { fill: #fde68a; } /* 廁所 */
+      .cls-2 { fill: #7dd3fc; } /* 寧靜湖 */
+      .cls-3 { fill: #f5d0fe; } /* 機車停車場 */
+      .cls-4 { stroke: #4b5563; stroke-width: 1.5px; fill: none; opacity: 0.3; } /* 校地邊界 */
+      
+      /* 道路優化：增加圓角感 */
+      .cls-5 { stroke: #d1d5db; stroke-width: 5px; fill: none; stroke-linecap: round; stroke-linejoin: round; } /* 校內路 */
+      .cls-6 { stroke: #9ca3af; stroke-width: 8px; fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: 0.6; } /* 校外路 */
+      
+      .cls-7 { fill: #bef264; } /* 體育設施 */
+      .cls-8 { fill: #c7d2fe; } /* 公車站牌 */
+      .cls-9 { fill: #93c5fd; } /* 宿舍 */
+      .cls-10 { fill: #fca5a5; } /* 汽車停車場 */
+      .cls-11 { fill: #fbbf24; } /* 校舍建築 */
+      .cls-12 { fill: #f87171; } /* 員生社 */
+      .cls-13 { fill: #86efac; } /* 草地 */
+
+      /* 互動效果與質感 */
+      .cls-11, .cls-9, .cls-7, .cls-12, .cls-2 { 
+        transition: all 0.3s ease; 
+        cursor: pointer;
+      }
+      .cls-11:hover { fill: #f59e0b; filter: brightness(1.05); }
+      .cls-2:hover { fill: #38bdf8; }
     </style>
   </defs>
   
-  <rect class="bg-water" width="100%" height="100%" />
+  <rect class="bg-water" x="-90" y="-90" width="925.52" height="759.61" />
   
   <path class="bg-land" d="M538.46,20.74c11.19,6.78,14.31,24.37,14.31,24.37l38.46,57.17s9.54,18.78,19.01,11.25,20.8,0,20.8,0l63.95,41.42,5.81,79.1c-4.92-2.01-15.43,11.63-22.81,8.72s-17.89-8.05-17.89-8.05c0,0-12.52-16.99-20.12-3.58s-15.88,13.23-15.88,13.23c0,0-55.01,36.19-58.14,44.46s-11.18,16.04-11.18,16.04c-3.35,10-1.54,16.16-1.54,16.16,0,0,12.49,20.35,7.52,22.58-4.98,2.24,6.99,23.7,6.99,23.7,4.25,18.56-8.05,21.69-8.05,21.69-19.01-.89-23.48,7.83-23.48,7.83-7.16,28.84,6.48,28.62,6.48,28.62,9.39-6.93,9.61-3.8,13.64-2.98,4.02.83,6.48,0,6.48,0,20.57,2.61,21.91,44.19,21.91,44.19,0,0-44.94,19.88-59.48,25.92s-52.38,16.89-74.7,21.14c-21.17,4.04-104.91,19.96-104.74,22.33l-115.34,11.03c-5.52-20.57,2.24-24.15,2.24-24.15-.75-28.47,4.19-27.58,4.19-27.58,16.42-4.92,11.98-9.05,11.98-9.05l-11.98-5.86s-41.58-.87-43.02-9.39c-2.33-13.68-9.36-21.19-19.23-25.42-7.54-3.24-15.88-61.5-15.88-61.5-9.39-4.42-7.6,2.63-26.61,10.23s-24.6-3.49-24.6-3.49c0,0-13.42-4.11-10.29-15.74s-12.75-18.78-12.75-18.78c0,0-13.42,4.47-13.42,1.33s-1.12-8.71-3.8-9.38-8.27-7.38-6.26-12.33,1.57-10.48,2.24-13.53,14.98-3.21,13.86-4.24,1.34-21.78,1.34-21.78c8.94-20.12-4.02-15.58-4.02-15.58-4.7-5.96-1.34-9.66-1.34-9.66,18.34-9.58,13.64-13.23,13.64-13.23,0,0,.67-5.81-21.24,3.76s-21.91,7.87-29.52-4.88,5.59-19.68,5.59-19.68c6.26-14.09,0-16.27,0-16.27,2.91-25.66,18.11-17.05,24.15-5.2s41.37,11.18,24.37-.89-8.05-16.77-1.79-19.45,8.27,4.25,11.18-13.19,32.2-18.34,38.01-21.47,14.31-2.46,23.48-11.61,14.09-8.51,42.04,0,51.2-15.44,55.01-17.9,26.16-6.04,29.07-11.63,24.82-18.91,24.82-18.91l28.4-38.11c16.99-32.87,27.28-5.14,40.7-.89s28.17,5.14,37.57,1.57,19.68-16.1,21.69-27.73,11.4-20.12,11.4-20.12c9.17-10.29,35.33-6.04,35.33-6.04,4.25,7.16,18.56,6.04,18.56,6.04,0,0,17.37-4.02,32.87,5.37Z" />
 
@@ -152,6 +171,33 @@ export default function MainCampusMap() {
   <line class="cls-6" x1="115.63" y1="132.15" x2="125.99" y2="163.74"/>
 </svg>`; 
   return (
-    <div className="w-full h-full" dangerouslySetInnerHTML={{ __html: svg }} />
+    <div className="w-full h-full relative">
+      {/* 原始 SVG 地圖 */}
+      <div 
+        className="absolute inset-0" 
+        dangerouslySetInnerHTML={{ __html: svg }} 
+      />
+      
+      {/* 標籤層 */}
+      <svg
+        className="absolute inset-0 pointer-events-none"
+        viewBox="-90 -90 925.52 759.61"
+        preserveAspectRatio="xMidYMid meet"
+        width="100%"
+        height="100%"
+      >
+        {buildings.map((building) => (
+          <BuildingLabel
+            key={building.id}
+            building={building}
+            scale={scale}
+            onClick={() => {
+              // 未來可以導航到學院頁面
+              console.log('Clicked:', building.name);
+            }}
+          />
+        ))}
+      </svg>
+    </div>
   );
 }

@@ -45,9 +45,8 @@ export default function ClubView() {
 
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Student Clubs</h2>
-        <p className="text-sm text-gray-500 mt-1 max-w-2xl leading-relaxed">
-          Explore diverse student organizations at CCU. From academic research
-          to performance arts, find a community that shares your passion.
+        <p className="text-sm text-gray-500 mt-1 max-w-2xl leading-relaxed mt-2 md:mt-4">
+         From academic societies to sports teams, music, arts, and service groups, CCU’s student clubs are where friendships begin, ideas spark, and campus life truly comes alive.
         </p>
       </div>
 
