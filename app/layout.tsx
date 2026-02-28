@@ -4,6 +4,7 @@ import Footer from "./components/Footer";
 import SmoothScrolling from "./components/SmoothScrolling";
 import ScrollToTop from "./components/ScrollToTop";
 import MainNav from "./components/MainNav";
+import ChatWidget from "./components/ChatWidget";
 
 export const metadata = {
   title: "CCU SmartLife",
@@ -20,9 +21,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <MainNav />
             <div className="w-full min-h-[500px] flex flex-col">{children}</div>
           </main>
+
         </SmoothScrolling>
         <Footer />
         <ScrollToTop />
+        <ChatWidget />
       </body>
     </html>
   );

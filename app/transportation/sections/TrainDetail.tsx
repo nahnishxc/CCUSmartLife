@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { ArrowLeft, ArrowRightLeft, Calendar, Search, ChevronDown, ChevronLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { TAIWAN_STATIONS } from "../../components/Data/TrainStations";  // <--- 記得引用剛剛建立的檔案
+import { TAIWAN_STATIONS } from "../data/TrainStations";  // <--- 記得引用剛剛建立的檔案
 
 // --- 假資料 ---
 // 快速看板資料 (Quick Check) - 仿照你的圖二下半部
