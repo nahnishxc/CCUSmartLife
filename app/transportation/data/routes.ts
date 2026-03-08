@@ -101,30 +101,31 @@ export const ROUTE_DATA: Record<string, RouteData> = {
     name: "Railway Minxiong Station",
      images: [
       { 
-        url: "/route/chiayi_hsr_1.jpg", 
-        source: "https://vechiayi.quorange.com/..." 
+        url: "/route/minxiong_railway_1.jpg", 
+        source: "https://reurl.cc/5beqzM" 
       },
       { 
-        url: "/route/chiayi_hsr_2.jpg", 
+        url: "/route/minxiong_railway_2.jpg", 
         source: "https://another-source.com/..." 
       }
     ],
     imageColor: "bg-yellow-100",
     directions: [
       {
-        label: "CCU to Minxiong",
-        fare: "Approximately NT$113",
+        label: "CCU to Railway Minxiong Station",
+        fare: "Approximately NT$20-30",
         steps: [
-          { icon: Map, title: "Depart from CCU", desc: "Boarding at CCU Station outside Activity Center (1F)." },
-          { icon: Bus, title: "Take Bus 7309", desc: "Toward Daya Station, get off at Railway Minxiong Station. Fare: ~$20-30." }
-        ]
+          { icon: Map, title: "Depart from CCU", desc: "Boarding location: “CCU Station” outside the Activity Center (1st Floor)." },
+          { icon: Bus, title: "Head to Railway Minxiong Station", desc: "Transportation (Bus): Take Bus 7309 (toward Daya Station) ." },
+          { icon: Flag, title: "Arrive", desc: "Get off at Railway Minxiong Station." }                ]
       },
       {
-        label: "Minxiong to CCU",
-        fare: "Approximately NT$113",
+        label: "Railway Minxiong Station to CCU",
+        fare: "Approximately NT$20-30",
         steps: [
-          { icon: Map, title: "Depart Minxiong", desc: "Boarding at bus stop at Railway Minxiong Station." },
-          { icon: Bus, title: "Take Bus 7309", desc: "Toward Nanhua University, get off at CCU Station. Fare: ~$20-30." }
+          { icon: Map, title: "Depart from Railway Minxiong Station", desc: "Boarding location: Bus stop at Railway Minxiong Station." },
+          { icon: Bus, title: " Head to CCU", desc: "Transportation (Bus): Take Bus 7309 (toward Nanhua University)." },
+          { icon: Flag, title: "Arrive", desc: "Get off at CCU Station." }    
         ]
       }
     ]
@@ -134,66 +135,66 @@ export const ROUTE_DATA: Record<string, RouteData> = {
     name: "Taoyuan Airport",
      images: [
       { 
-        url: "/route/chiayi_hsr_1.jpg", 
-        source: "https://vechiayi.quorange.com/..." 
+        url: "/route/taoyuan_airport_1.jpg", 
+        source: "https://reurl.cc/QV076q" 
       },
       { 
-        url: "/route/chiayi_hsr_2.jpg", 
-        source: "https://another-source.com/..." 
+        url: "/route/taoyuan_airport_2.jpg", 
+        source: "https://reurl.cc/5beoGM" 
       }
     ],
     imageColor: "bg-emerald-100",
     directions: [
       {
-        label: "CCU to Airport",
-        fare: "Approximately NT$113",
+        label: "CCU to Taoyuan Airport",
+        fare: "Approximately NT$1038-1068",
         steps: [
-          { icon: Bus, title: "Step 1 & 2", desc: "Take Bus 106 to HSR Chiayi Station (~$113)." },
-          { icon: Train, title: "Step 3", desc: "HSR to HSR Taoyuan Station (~$890-920)." },
-          { icon: Plane, title: "Step 4", desc: "Walk to A18 MRT Station, take MRT to Terminal 1 or 2 (~$35)." }
+          { icon: Bus, title: "Depart from CCU", desc: "Boarding location: “CCU Station” outside the Activity Center (1st Floor)." },
+          { icon: Train, title: "Head to HSR Chiayi Station", desc: "Transportation (Bus): Take Taiwan Tourist Shuttle Bus 106 (toward HSR Chiayi Station) and get off at “HSR Chiayi Station.”" },
+          { icon: Train, title: "HSR Chiayi Station to HSR Taoyuan Station", desc: "Transportation (HSR): Take the High Speed Rail to“HSR Taoyuan Station.”" },
+          { icon: Plane, title: "HSR Taoyuan Station to Taoyuan Airport", desc: "Walk from HSR Taoyuan Station to “Taoyuan HSR MRT Station (A18)”, and take the Airport MRT to “Airport Terminal 1 Station (A12)” or “Airport Terminal 2 Station (A13).”" }
+        
         ]
       },
       {
-        label: "Airport to CCU",
-        fare: "Approximately NT$113",
+        label: "Taoyuan Airport to CCU",
+        fare: "Approximately NT$1038-1068",
         steps: [
-          { icon: Plane, title: "Step 1 & 2", desc: "Take MRT from Terminal (A12/A13) to HSR Taoyuan Station (A18) (~$35)." },
-          { icon: Train, title: "Step 3", desc: "HSR to HSR Chiayi Station (~$890-920)." },
-          { icon: Bus, title: "Step 4", desc: "Take Bus 106 to CCU Station (~$113)." }
+         { icon: Bus, title: "Depart from Taoyuan Airport", desc: "Boarding location: Airport MRT “Airport Terminal 1 Station (A12)” or “Airport Terminal 2 Station (A13)”." },
+          { icon: Train, title: " Head to HSR Taoyuan Station", desc: "Transportation (MRT): Take the Airport MRT to “Taoyuan HSR MRT Station (A18)” and get off there." },
+          { icon: Train, title: "HSR Taoyuan Station to HSR Chiayi Station", desc: "Walk from Taoyuan HSR MRT Station to “HSR Taoyuan Station”, and take the High Speed Rail to “HSR Chiayi Station.”" },
+          { icon: Plane, title: "HSR Chiayi Station to CCU", desc: "Transportation (Bus): Take Taiwan Tourist Shuttle Bus 106 (toward Railway Chiayi Station) and get off at “CCU Station.”" }
+        
         ]
       }
     ]
   },
-  wenhua_night_market: {
-    id: "wenhua_night_market",
-    name: "Wenhua Rd. Night Market",
+  minxiong_police_precinct: {
+    id: "minxiong_police_precinct",
+    name: "Minxiong Police Precinct",
     images: [
       { 
-        url: "/route/chiayi_hsr_1.jpg", 
-        source: "https://vechiayi.quorange.com/..." 
+        url: "/route/minxiong_police_precinct.jpg", 
+        source: "https://www.facebook.com/CYPDsunday/" 
       },
-      { 
-        url: "/route/chiayi_hsr_2.jpg", 
-        source: "https://another-source.com/..." 
-      }
     ],
     imageColor: "bg-pink-100",
     directions: [
       {
-        label: "CCU to Market",
-        fare: "Approximately NT$113",
+        label: "CCU to Minxiong Police Precinct",
+        fare: "Approximately NT$20-30",
         steps: [
-          { icon: Map, title: "Depart CCU", desc: "Boarding at CCU Station outside Activity Center (1F)." },
-          { icon: Bus, title: "Head to Market", desc: "Take Bus 7309 toward Daya Station, get off at Central Fountain. Fare: ~$40-60." },
-          { icon: Footprints, title: "Walk to Market", desc: "Walk about 300 meters to reach the night market." }
+          { icon: Map, title: "Depart from CCU", desc: "Boarding location: “CCU Station” outside the Activity Center (1st Floor)." },
+          { icon: Bus, title: "Head to Railway Minxiong Station", desc: "Transportation (Bus): Take Bus 7309 (toward Daya Station) and get off at “Railway Minxiong Station.”" },
+          { icon: Footprints, title: "Head to Minxiong Police Precinct", desc: "Walking: Approximately 170 meters." }
         ]
       },
       {
-        label: "Market to CCU",
-        fare: "Approximately NT$113",
+        label: "Minxiong Police Precinct to CCU",
+        fare: "Approximately NT$20-30",
         steps: [
-          { icon: Footprints, title: "Walk to Stop", desc: "Walk 300m back to Central Fountain Stop." },
-          { icon: Bus, title: "Head to CCU", desc: "Take Bus 7309 toward Nanhua University, get off at CCU Station. Fare: ~$40-60." }
+          { icon: Footprints, title: "Walking: Approximately 170 meters.", desc: "Walking: Approximately 170 meters to “Railway Minxiong Station.”" },
+          { icon: Bus, title: "Head to CCU", desc: "Transportation (Bus): Take Bus 7309 (toward Nanhua University) and get off at “CCU Station.”" }
         ]
       }
     ]
@@ -203,32 +204,35 @@ export const ROUTE_DATA: Record<string, RouteData> = {
     name: "Kaohsiung Airport",
      images: [
       { 
-        url: "/route/chiayi_hsr_1.jpg", 
-        source: "https://vechiayi.quorange.com/..." 
+        url: "/route/kaohsiung_airport_1.jpg", 
+        source: "https://reurl.cc/Xaoej3" 
       },
       { 
-        url: "/route/chiayi_hsr_2.jpg", 
-        source: "https://another-source.com/..." 
+        url: "/route/kaohsiung_airport_2.jpg", 
+        source: "https://reurl.cc/R9A6rZ" 
       }
     ],
     imageColor: "bg-cyan-100",
-    directions: [
+ directions: [
       {
-        label: "CCU to Airport",
-        fare: "Approximately NT$113",
+        label: "CCU to Kaohsiung Airport",
+        fare: "Approximately NT$1038-1068",
         steps: [
-          { icon: Bus, title: "Step 1 & 2", desc: "Bus 106 to HSR Chiayi Station (~$113)." },
-          { icon: Train, title: "Step 3", desc: "HSR to HSR Zuoying Station (~$395-410)." },
-          { icon: Plane, title: "Step 4", desc: "Transfer to Kaohsiung MRT to Airport Station (R4) (~$50)." }
+          { icon: Bus, title: "Depart from CCU", desc: "Boarding location: “CCU Station” outside the Activity Center (1st Floor)." },
+          { icon: Train, title: "Head to HSR Chiayi Station", desc: "Transportation (Bus): Take Taiwan Tourist Shuttle Bus 106 (toward HSR Chiayi Station) and get off at “HSR Chiayi Station.”" },
+          { icon: Train, title: "HSR Chiayi Station to HSR Zuoying Station", desc: "Transportation (HSR): Take the High Speed Rail to “HSR Zuoying Station.”" },
+          { icon: Plane, title: "HSR Zuoying Station to Kaohsiung Airport", desc: "Walk from HSR Zuoying Station to “Taoyuan HSR MRT Station (A18)”, and take the MRT to “Kaohsiung International Airport Station (R4)” and get off there." }
+        
         ]
       },
       {
-        label: "Airport to CCU",
-        fare: "Approximately NT$113",
+        label: "Kaohsiung Airport to CCU",
+        fare: "Approximately NT$558-573",
         steps: [
-          { icon: Plane, title: "Step 1 & 2", desc: "Take MRT from Airport (R4) to Zuoying (R16) (~$50)." },
-          { icon: Train, title: "Step 3", desc: "HSR to HSR Chiayi Station (~$395-410)." },
-          { icon: Bus, title: "Step 4", desc: "Bus 106 to CCU Station (~$113)." }
+         { icon: Bus, title: "Depart from Kaohsiung Airport", desc: "Boarding location: MRT “Kaohsiung International Airport Station (R4)”" },
+          { icon: Train, title: " Head to HSR Zuoying Station", desc: "Transportation (MRT): Take the MRT to “Zuoying Station (R16)” and get off there, and then walk from Zuoying MRT Station to “HSR Zuoying Station.”" },
+          { icon: Train, title: "HSR Zuoying Station to HSR Chiayi Station", desc: "Transportation (HSR): Take the High Speed Rail to “HSR Chiayi Station.”" },
+          { icon: Plane, title: "HSR Chiayi Station to CCU", desc: "Transportation (Bus): Take Taiwan Tourist Shuttle Bus 106 (toward Railway Chiayi Station) and get off at “CCU Station.”" }
         ]
       }
     ]

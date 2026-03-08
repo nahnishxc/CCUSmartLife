@@ -334,7 +334,7 @@ export default function Announcement() {
             </button>
           ) : null}
 
-          <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+          <h2 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
             <Bell className="text-emerald-600" size={20} />
             {activeTitle}
           </h2>

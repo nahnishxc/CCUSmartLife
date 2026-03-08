@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Building } from './Data/buildingsData';
+import { Building } from '../Data/buildingsData';
 
 interface BuildingLabelProps {
   building: Building;

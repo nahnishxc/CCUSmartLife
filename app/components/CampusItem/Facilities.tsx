@@ -1,7 +1,7 @@
 "use client";
 import { Clock, MapPin } from "lucide-react";
 // 假設你將資料存在 src/data/facilities.ts，請依實際路徑調整
-import { FACILITIES } from "../Data/Facilities";
+import { FACILITIES } from "../../Data/Facilities";
 
 export default function Facilities() {
   return (

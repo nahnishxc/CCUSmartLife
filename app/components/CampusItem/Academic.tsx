@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, ArrowLeft, ExternalLink } from "lucide-react";
-import { ACADEMIC_UNITS } from "../Data/College";
+import { ACADEMIC_UNITS } from "../../Data/College";
 
 export default function Academic() {
   const [selectedId, setSelectedId] = useState<string | null>(null);

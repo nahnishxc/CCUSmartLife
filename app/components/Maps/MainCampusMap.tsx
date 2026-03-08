@@ -2,7 +2,7 @@
 
 'use client';
 import React, { useState, useEffect } from 'react';
-import { buildings } from '../Data/buildingsData';
+import { buildings } from '../../Data/buildingsData';
 import BuildingLabel from '../BuildingLabel';
 
 export default function MainCampusMap() {

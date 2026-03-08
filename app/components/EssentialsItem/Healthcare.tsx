@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import { MapPin, Phone, ChevronLeft, ChevronRight, Stethoscope } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 // 引入我們剛剛更新的 hospitalData
-import { medicalData, hospitalData, ClinicCategory, Clinic } from "../Data/Medical";
+import { medicalData, hospitalData, ClinicCategory, Clinic } from "../../Data/Medical";
 
 // 直接使用從 TS 匯入的資料
 const HOSPITALS_CATEGORY = hospitalData;

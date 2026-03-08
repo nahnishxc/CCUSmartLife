@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Facebook, Instagram, Globe, Users } from "lucide-react";
-import { CLUB_DATA } from "../Data/club";
+import { CLUB_DATA } from "../../Data/club";
 import Image from "next/image";
 
 
