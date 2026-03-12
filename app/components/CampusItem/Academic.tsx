@@ -8,12 +8,11 @@ export default function Academic() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   // 2. 使用引入的資料
-  const selectedCollege = ACADEMIC_UNITS.find(c => c.id === selectedId);
+  const selectedCollege = ACADEMIC_UNITS.find((c) => c.id === selectedId);
 
   return (
     <div className="w-full h-full bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 relative overflow-hidden flex flex-col">
       <AnimatePresence mode="wait">
-        
         {/* === View 1: Overview (Map + List) === */}
         {!selectedId && (
           <motion.div
@@ -34,7 +33,6 @@ export default function Academic() {
 
             {/* 下半部：學院列表 */}
             <div className="flex-1 flex flex-col md:flex-row gap-8 overflow-y-auto custom-scrollbar">
-              
               <div className="flex flex-col items-center md:items-start md:w-1/4 border-b md:border-b-0 md:border-r border-gray-100 pb-6 md:pb-0 md:pr-6">
                 <div className="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500 mb-4 shadow-sm">
                   <BookOpen size={40} strokeWidth={1.5} />
@@ -53,7 +51,9 @@ export default function Academic() {
                       className="text-left px-4 py-3 rounded-xl hover:bg-gray-50 text-gray-600 font-medium hover:text-emerald-600 hover:pl-6 transition-all duration-300 flex items-center justify-between group"
                     >
                       {college.name}
-                      <span className="opacity-0 group-hover:opacity-100 transition-opacity text-emerald-400">→</span>
+                      <span className="opacity-0 group-hover:opacity-100 transition-opacity text-emerald-400">
+                        →
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -73,7 +73,7 @@ export default function Academic() {
             className="w-full h-full flex flex-col overflow-y-auto custom-scrollbar"
           >
             {/* 返回按鈕 */}
-            <button 
+            <button
               onClick={() => setSelectedId(null)}
               className="self-start mb-6 flex items-center gap-2 text-sm text-gray-500 hover:text-black transition-colors bg-gray-50 px-4 py-2 rounded-full font-medium"
             >
@@ -82,7 +82,9 @@ export default function Academic() {
             </button>
 
             {/* 標題 */}
-            <h2 className="text-3xl font-bold text-gray-800 mb-8">{selectedCollege.name}</h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-8">
+              {selectedCollege.name}
+            </h2>
 
             {/* 內容區：左圖右文 */}
             <div className="flex flex-col md:flex-row gap-8 mb-10">
@@ -90,7 +92,9 @@ export default function Academic() {
                 COLLEGE IMG
               </div>
               <div className="flex-1 flex flex-col justify-center">
-                <h3 className="text-lg font-bold text-gray-700 mb-2">About the College</h3>
+                <h3 className="text-lg font-bold text-gray-700 mb-2">
+                  About the College
+                </h3>
                 {/* 加上 whitespace-pre-line 確保長文字換行正確 */}
                 <p className="text-gray-500 leading-relaxed whitespace-pre-line">
                   {selectedCollege.description}
@@ -110,28 +114,32 @@ export default function Academic() {
                     href={dept.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 p-3 rounded-lg bg-blue-50/50 text-blue-600 hover:bg-blue-100 hover:text-blue-800 transition-colors text-sm font-medium group"
+                    className="flex items-center gap-2 p-3 rounded-lg bg-green-50/50 text-green-600 hover:bg-green-100 hover:text-green-800 transition-colors text-sm font-medium group"
                   >
-                    <ExternalLink size={14} className="opacity-50 group-hover:opacity-100" />
+                    <ExternalLink
+                      size={14}
+                      className="opacity-50 group-hover:opacity-100"
+                    />
                     {dept.name}
                   </a>
                 ))}
               </div>
-              
+
               {/* 底部總連結 */}
               <div className="mt-8 pt-4 border-t border-gray-100">
-                <a 
-                  href="#" 
+                <a
+                  href={selectedCollege.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-emerald-600 font-bold hover:underline flex items-center gap-2 text-sm"
                 >
-                  Go to the Website of {selectedCollege.name} <ExternalLink size={14}/>
+                  Go to the Website of {selectedCollege.name}{" "}
+                  <ExternalLink size={14} />
                 </a>
               </div>
             </div>
-
           </motion.div>
         )}
-
       </AnimatePresence>
     </div>
   );

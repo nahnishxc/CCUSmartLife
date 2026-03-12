@@ -7,6 +7,7 @@ export interface Department {
 export interface College {
   id: string;
   name: string;
+  url: string;
   description: string;
   departments: Department[];
 }
@@ -60,6 +61,7 @@ export const ACADEMIC_UNITS: College[] = [
   {
     id: "humanities",
     name: "College of Humanities",
+    url: "https://colliber.ccu.edu.tw/p/406-1018-17262,r2501.php?Lang=en",
     description: HUMANITIES_DESC, // 引用上面的變數
     departments: [
       {
@@ -91,6 +93,7 @@ export const ACADEMIC_UNITS: College[] = [
   {
     id: "science",
     name: "College of Science",
+    url: "https://science.ccu.edu.tw/?Lang=en",
     description: SCIENCE_DESC,
     departments: [
       {
@@ -118,6 +121,7 @@ export const ACADEMIC_UNITS: College[] = [
   {
     id: "law",
     name: "College of Law",
+    url: "https://deptclaw.ccu.edu.tw/?Lang=en",
     description: LAW_DESC,
     departments: [
       {
@@ -133,6 +137,7 @@ export const ACADEMIC_UNITS: College[] = [
   {
     id: "engineering",
     name: "College of Engineering",
+    url: "https://coe.ccu.edu.tw/?Lang=en",
     description: ENGINEERING_DESC,
     departments: [
       {
@@ -168,6 +173,7 @@ export const ACADEMIC_UNITS: College[] = [
   {
     id: "social sciences",
     name: "College of Social Sciences",
+    url: "https://colsoc.ccu.edu.tw/?Lang=en",
     description: SOCIAL_SCIENCES_DESC,
     departments: [
       {
@@ -199,6 +205,7 @@ export const ACADEMIC_UNITS: College[] = [
   {
     id: "management",
     name: "College of Management",
+    url: "https://colmgt.ccu.edu.tw/",
     description: MANAGEMENT_DESC,
     departments: [
       {
@@ -231,6 +238,7 @@ export const ACADEMIC_UNITS: College[] = [
   {
     id: "education",
     name: "College of Education",
+    url: "https://coledu.ccu.edu.tw/?Lang=en",
     description: EDUCATION_DESC,
     departments: [
       {
@@ -262,6 +270,7 @@ export const ACADEMIC_UNITS: College[] = [
   {
     id: "others",
     name: "others",
+    url: "https://www.ccu.edu.tw/p/412-1000-792.php?Lang=en",
     description: OTHERS_DESC,
     departments: [
       {
@@ -275,6 +284,14 @@ export const ACADEMIC_UNITS: College[] = [
       {
         name: "Bachelor Program in Interdisciplinary Studies",
         url: "https://deptids.ccu.edu.tw/?Lang=en",
+      },
+            {
+        name: "Center for Teacher Education",
+        url: "https://resttc.ccu.edu.tw/",
+      },
+            {
+        name: "Ching-Jiang Learning Center",
+        url: "https://cjlc.ccu.edu.tw/en/",
       },
     ],
   },

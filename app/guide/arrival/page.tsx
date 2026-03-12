@@ -279,7 +279,7 @@ export default function HealthGuidePage() {
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search in Health & Insurance…"
+            placeholder="Search by keywords..."
             className="w-full bg-transparent text-base md:text-lg outline-none placeholder:text-gray-400"
           />
         </div>

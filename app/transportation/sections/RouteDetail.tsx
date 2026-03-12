@@ -152,8 +152,8 @@ interface RouteDetailProps {
   routeData: {
     id: string;
     name: string;
-    images: RouteImage[]; // 這裡要改成物件陣列
-    // imageSource 欄位可以刪除了，因為現在跟隨每張圖片
+    images: RouteImage[]; 
+    url: string;
     directions: Array<{
       label: string;
       fare: string;
@@ -301,12 +301,15 @@ return (
           </div>
 
           <div className="flex gap-3 mt-auto">
-            <button className="flex-1 py-3 bg-white border border-gray-200 rounded-xl flex items-center justify-center gap-2 text-sm font-bold text-gray-600 hover:border-emerald-400 shadow-sm">
-              <MapPin size={16} /> Google Maps
-            </button>
-            <button className="flex-1 py-3 bg-white border border-gray-200 rounded-xl flex items-center justify-center gap-2 text-sm font-bold text-gray-600 hover:border-orange-400 shadow-sm">
-              <ExternalLink size={16} /> Nearby Spots
-            </button>
+<a 
+  href={routeData.url} 
+  target="_blank" 
+  rel="noopener noreferrer"
+  className="flex-1 py-3 bg-white border border-gray-200 rounded-xl flex items-center justify-center gap-2 text-sm font-bold text-gray-600 hover:border-emerald-400 hover:text-emerald-600 shadow-sm transition-colors"
+>
+  <MapPin size={16} /> Open On Google Maps
+</a>
+
           </div>
         </div>
       </div>
@@ -325,7 +328,7 @@ return (
               }} 
               className="min-w-[26%] md:min-w-[28%] group cursor-pointer"
             >
-              <div className={`w-full aspect-video ${route.imageColor} rounded-2xl mb-3 flex items-center justify-center overflow-hidden transition-all group-hover:scale-[1.02] shadow-sm`}>
+              <div className={`w-full aspect-video rounded-2xl mb-3 flex items-center justify-center overflow-hidden transition-all group-hover:scale-[1.02] shadow-sm`}>
                 {route.images && route.images.length > 0 ? (
                   <img src={route.images[0].url} alt={route.name} className="w-full h-full object-cover" />
                 ) : (

@@ -11,8 +11,7 @@ export const FACILITIES: Facilities[] = [
     id: "lib",
     name: "Library",
     desc: "Provides book lending services, study seats, discussion rooms, and individual research rooms. Students may enter and borrow materials by scanning their student ID.",
-    hours:
-      "Term: Mon-Fri 08:10-21:30, Sat-Sun 09:00-17:00\nVacation: Mon-Fri 09:00-17:00, Closed on Weekends",
+    hours: "Semester: Mon-Fri 08:10-21:30, Sat 09:00-17:00, sun Closed\nWinter & Summer Break: Mon-Fri 08:10-20:30, Sat 09:00-17:00, sun Closed",
     location: "Central Campus",
   },
   {
@@ -107,6 +106,6 @@ export const FACILITIES: Facilities[] = [
     name: "Campus Co-op Store",
     desc: "Supermarket selling daily necessities, snacks, drinks, and household itemsat student-friendly prices. Cash is commonly used, and LINE Pay is also accepted.",
     hours: "Mon-Fri: 08:00 - 20:00\nSun: 12:00 - 20:00\n(Closed on Saturdays)",
-    location: "Basement of Activity Center",
+    location: " Next to OIA",
   },
 ];
