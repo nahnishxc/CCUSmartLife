@@ -18,7 +18,7 @@ export default function Footer() {
           <Link href="#" className="text-[#777777] hover:text-[#111111] transition-colors">
             Terms
           </Link>
-          <span className="text-[#777777]">Designed by CCU MIS & FLL</span>
+          <span className="text-[#777777]">Designed by CCU MIS & FLLD & FIN</span>
         </div>
       </div>
     </footer>

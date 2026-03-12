@@ -61,12 +61,12 @@ export default function Navbar() {
         
         <nav className="flex items-center gap-6 relative">
           <a href="https://oia.ccu.edu.tw/" target="_blank" rel="noreferrer" className={linkStyle}>OIA</a>
-          <a href="https://www.ccu.edu.tw/" target="_blank" rel="noreferrer" className={linkStyle}>ccu</a>
-          <Link href="/guides" className={linkStyle}>guides</Link>
+          <a href="https://www.ccu.edu.tw/" target="_blank" rel="noreferrer" className={linkStyle}>CCU</a>
+          {/* <Link href="/guides" className={linkStyle}>guides</Link>
 
           <button className="flex items-center gap-1 hover:text-black text-sm text-[#333333]">
             <Globe size={16} /> EN/ZH
-          </button>
+          </button> */}
 
           {!isLoggedIn ? (
             <button
