@@ -13,18 +13,16 @@ type FaqItem = {
 const FAQS: FaqItem[] = [
   {
     id: "f1",
-    question:"How do I open a post office or a bank account in Taiwan?",
-    answer: `1. Post ffice Accounts
-Currently, Chunghwa Post has suspended opening regular savings accounts for most foreign
-nationals due to financial security policies.
-2. Opening a Bank Account
+    question: "How do I open a post office or a bank account in Taiwan?",
+    answer: `**1. Post ffice Accounts**
+Currently, Chunghwa Post has suspended opening regular savings accounts for most foreign nationals due to financial security policies.
+**2. Opening a Bank Account**
 You can open an account at a commercial bank near your school or residence.
 Common banks used by students include:
 • Cathay United Bank
 • CTBC Bank
 • E.Sun Bank
 • HSBC Taiwan
-10
 • Mega International Commercial Bank
 You will usually need:
 • ARC (most important document)
@@ -37,15 +35,14 @@ You will usually need:
 • Confirm required documents with the bank beforehand
 • The process may take several hours
 • Consider applying for online banking and a Visa debit card
-• If you need to receive money from abroad, you may also consider opening a foreign
-currency account.`,
+• If you need to receive money from abroad, you may also consider opening a foreign currency account.`,
   },
   {
     id: "f2",
-    question: "Should I bring cash or use international credit cards? Where can I exchange money in Taiwan?",
-    answer: `It is recommended to prepare both cash and a credit card, but cash is especially important for
-daily life in Taiwan.
-1. Payment Methods in Taiwan
+    question:
+      "Should I bring cash or use international credit cards? Where can I exchange money in Taiwan?",
+    answer: `It is recommended to prepare both cash and a credit card, but cash is especially important for daily life in Taiwan.
+**1. Payment Methods in Taiwan**
 (1) Cash (Very Important)
 Cash is widely used, especially at:
 • Small shops
@@ -58,10 +55,8 @@ For everyday meals and small purchases, carrying enough cash is necessary.
 • Not always accepted by small businesses
 • Some online platforms accept foreign credit cards
 • LINE Pay and Apple Pay are common in chain stores and convenience stores
-When you arrive at the airport, it is a good idea to withdraw or exchange some New Taiwan
-4
-Dollars.
-2. Where Can I Exchange Money?
+When you arrive at the airport, it is a good idea to withdraw or exchange some New Taiwan Dollars.
+**2. Where Can I Exchange Money?**
 You can exchange foreign currency at:
 (1) Airport Exchange Counters (24 hours)
 • Available at Taoyuan International Airport
@@ -72,8 +67,7 @@ You can exchange foreign currency at:
 (3) ATMs
 • Many convenience stores (e.g., 7-Eleven, FamilyMart) have ATMs
 • International cards (Visa/Plus, MasterCard/Cirrus) are usually supported
-※ Important: If you bring more than USD 10,000 (or equivalent) in cash when entering Taiwan,
-you must declare it to customs.`,
+※ Important: If you bring more than USD 10,000 (or equivalent) in cash when entering Taiwan, you must declare it to customs.`,
   },
   {
     id: "f3",
@@ -121,7 +115,8 @@ export default function HealthGuidePage() {
         </h1>
 
         <p className="pl-5 mt-4 text-base md:text-lg text-gray-500 leading-relaxed max-w-2xl">
-          Financial related issues. Search a keyword to quickly find the right answer.
+          Financial related issues. Search a keyword to quickly find the right
+          answer.
         </p>
       </div>
 
@@ -168,23 +163,40 @@ export default function HealthGuidePage() {
 
                 {isOpen && (
                   <div className="border-t border-gray-100 bg-gray-50/30 px-10 py-8">
-                    {/* 答案內容：改善字體大小、行高與斷落感 */}
                     <div className="whitespace-pre-line font-sans text-base md:text-lg leading-8 text-gray-700">
                       {it.answer.split("\n").map((line, index) => {
-                        // 偵測標題行 (1. ..., 2. ... 或 問句) 加粗並增加間距
-                        const isHeading =
-                          /^\d+\.|\?$/.test(line.trim()) ||
-                          line.match(/^[A-Z][a-z]+ (?:Do|About|What|If)/);
+                        const trimmedLine = line.trim();
+                        const isHeadingChunk =
+                          (line.includes("**") && /^\d+\./.test(trimmedLine)) ||
+                          trimmedLine.includes("※");
+
+                        const isBulletPoint = trimmedLine.startsWith("•");
+                        const parts = line.split(/(\*\*.*?\*\*)/g);
+
                         return (
                           <span
                             key={index}
-                            className={
-                              isHeading
-                                ? "font-bold text-gray-900 block mt-5 mb-2"
-                                : "block"
-                            }
+                            className={`block 
+                              ${isHeadingChunk ? "mt-5 mb-1" : "mb-0.5"} 
+                               ${isBulletPoint ? "pl-4 md:pl-6" : ""} 
+                            `}
                           >
-                            {line}
+                            {parts.map((part, i) => {
+                              if (
+                                part.startsWith("**") &&
+                                part.endsWith("**")
+                              ) {
+                                return (
+                                  <strong
+                                    key={i}
+                                    className="font-black text-black tracking-tight"
+                                  >
+                                    {part.slice(2, -2)}
+                                  </strong>
+                                );
+                              }
+                              return <span key={i}>{part}</span>;
+                            })}
                           </span>
                         );
                       })}

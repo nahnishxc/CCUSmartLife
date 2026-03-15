@@ -19,15 +19,13 @@ const FAQS: FaqItem[] = [
 
     answer: `International students cannot join NHI immediately after arrival.
 
-1. Is NHI Mandatory?
+**1. Is NHI Mandatory?**
 
 Yes. For degree-seeking students, joining NHI is required by law once you meet the eligibility 
 
-conditions. The current monthly premium is NT$826, and universities usually assist with 
+conditions. The current monthly premium is NT$826, and universities usually assist with enrollment.
 
-enrollment.
-
-2. What About the First Six Months?
+**2. What About the First Six Months?**
 
 Before becoming eligible for NHI, you must have valid health insurance, such as:
 
@@ -35,9 +33,9 @@ Before becoming eligible for NHI, you must have valid health insurance, such as:
 
 • A private insurance policy from your home country (officially verified)
 
-※ Exchange students must have valid medical insurance for their entire stay.
+Additionally, exchange students must have valid medical insurance for their entire stay.
 
-3. When Can I Join NHI?
+**3. When Can I Join NHI?**
 
 You become eligible after:
 
@@ -59,13 +57,13 @@ After meeting these requirements, you can apply to join NHI.`,
 
     question: "How do I apply for NHI? What documents are required?",
 
-    answer: `1. If Applying Through Your University
+    answer: `**1. If Applying Through Your University**
 
 • The NHI premium is usually included in your tuition bill
 
 • The school will guide you through the enrollment process
 
-2. If Applying at an NHI Office
+**2. If Applying at an NHI Office**
 
 Prepare the following documents:
 
@@ -89,19 +87,15 @@ Prepare the following documents:
 
     question: "How much is the NHI premium and how do I pay it?",
 
-    answer: `The current National Health Insurance (NHI) premium for international students is: NT$826 per 
+    answer: `The current National Health Insurance (NHI) premium for international students is: NT$826 per month
 
-month
-
-How Do I Pay?
+**How Do I Pay?**
 
 • The NHI premium is usually included in your semester tuition and fees bill
 
 • You pay it together with your tuition during registration
 
-※ Once your NHI coverage starts in a given month, you must pay for the entire month, even if you 
-
-join near the end of the month.`,
+※ Once your NHI coverage starts in a given month, you must pay for the entire month, even if you join near the end of the month.`,
   },
 
   {
@@ -112,7 +106,7 @@ join near the end of the month.`,
 
     answer: `After joining NHI, you can receive medical care at NHI-contracted clinics and hospitals.
 
-1. What Is Covered?
+**1. What Is Covered?**
 
 NHI generally covers:
 
@@ -124,11 +118,9 @@ NHI generally covers:
 
 • Some preventive services (e.g., adult health checkups)
 
-※ In emergencies, if you visit a non-NHI-contracted hospital, you may apply for reimbursement 
+※ In emergencies, if you visit a non-NHI-contracted hospital, you may apply for reimbursement according to regulations.
 
-according to regulations.
-
-2. What Is Not Covered?
+**2. What Is Not Covered?**
 
 You still need to pay a small registration fee and co-payment for each visit.
 
@@ -142,7 +134,7 @@ NHI does not cover:
 
 • Choosing a specific doctor or hiring a private caregiver
 
-3. How to Use Your NHI Card
+**3. How to Use Your NHI Card**
 
 (1) Show your NHI card at the registration counter
 
@@ -160,7 +152,7 @@ NHI does not cover:
 
     answer: `If you lose your NHI card, apply for a replacement as soon as possible.
 
-How to Apply for a Replacement
+**How to Apply for a Replacement**
 
 Bring the following:
 
@@ -184,7 +176,7 @@ Once processed, you will receive a new NHI card.`,
 
     answer: `Yes. You can still see a doctor even if you do not speak Chinese.
 
-Communication Tips
+**Communication Tips**
 
 • Type your symptoms in English and show them to the doctor
 
@@ -192,11 +184,7 @@ Communication Tips
 
 • Translate your symptoms into Chinese before your visit
 
-※ Some doctors and nurses can speak basic English, but not all clinics provide full English 
-
-services. If possible, bringing a Chinese-speaking friend can make the visit easier and more 
-
-reassuring.`,
+※ Some doctors and nurses can speak basic English, but not all clinics provide full English services. If possible, bringing a Chinese-speaking friend can make the visit easier and more reassuring.`,
   },
 
   {
@@ -204,11 +192,9 @@ reassuring.`,
 
     question: "Where are the nearest hospitals or clinics?",
 
-    answer: `There is a clinic called Huide Clinic located about 400 meters from the school gate — simply turn 
+    answer: `There is a clinic called Huide Clinic located about 400 meters from the school gate — simply turn left after exiting the main entrance and walk straight ahead. 
 
-left after exiting the main entrance and walk straight ahead. 
-
-1. Clinics Near CCU (Minxiong Area)
+**1. Clinics Near CCU (Minxiong Area)**
 
 In the Minxiong area around CCU, there are many local clinics that can handle common health 
 
@@ -218,15 +204,11 @@ issues, such as:
 
 • Ho Chun Keng ENT Clinic
 
-These clinics are located in Minxiong town and are easy to reach from campus. They are suitable 
+These clinics are located in Minxiong town and are easy to reach from campus. They are suitable for general outpatient visits and minor illnesses.
 
-for general outpatient visits and minor illnesses.
+**2. Large Hospitals (Chiayi City)**
 
-2. Large Hospitals (Chiayi City)
-
-If you need more comprehensive examinations, hospitalization, or specialist treatment, you can 
-
-visit larger hospitals in Chiayi City, such as:
+If you need more comprehensive examinations, hospitalization, or specialist treatment, you can visit larger hospitals in Chiayi City, such as:
 
 • Chiayi Christian Hospital
 
@@ -242,7 +224,7 @@ These hospitals have full medical departments and provide emergency services.`,
     question:
       "What should I do in a medical emergency or accident (including at night or on weekends)?",
     answer: `Act immediately depending on the seriousness of the situation.
-1. For Serious Emergency
+**1. For Serious Emergency**
 For severe conditions such as:
 • Heavy bleeding
 • Broken bones
@@ -253,11 +235,10 @@ For severe conditions such as:
 • NHI card (if applicable)
 • ARC or passport
 • Cash or credit card
-2. For Minor Injuries
+**2. For Minor Injuries**
 For minor injuries, you can:
 • Visit a nearby clinic or hospital
-• On weekdays (9:00 a.m.–5:00 p.m.), go to the Health Center (2nd floor of the Activity 
-Center) for basic wound care and dressing changes (free of charge)
+• On weekdays (9:00 a.m.–5:00 p.m.), go to the Health Center (2nd floor of the Activity Center) for basic wound care and dressing changes (free of charge)
 ※ Additional Support
 • If you live in a dormitory, contact the dormitory office for assistance
 • If you have language difficulties, call 1990 for 24-hour foreign resident language support`,
@@ -346,23 +327,40 @@ export default function HealthGuidePage() {
 
                 {isOpen && (
                   <div className="border-t border-gray-100 bg-gray-50/30 px-10 py-8">
-                    {/* 答案內容：改善字體大小、行高與斷落感 */}
                     <div className="whitespace-pre-line font-sans text-base md:text-lg leading-8 text-gray-700">
                       {it.answer.split("\n").map((line, index) => {
-                        // 偵測標題行 (1. ..., 2. ... 或 問句) 加粗並增加間距
-                        const isHeading =
-                          /^\d+\.|\?$/.test(line.trim()) ||
-                          line.match(/^[A-Z][a-z]+ (?:Do|About|What|If)/);
+                        const trimmedLine = line.trim();
+                        const isHeadingChunk =
+                          (line.includes("**") && /^\d+\./.test(trimmedLine)) ||
+                          trimmedLine.includes("※");
+
+                        const isBulletPoint = trimmedLine.startsWith("•");
+                        const parts = line.split(/(\*\*.*?\*\*)/g);
+
                         return (
                           <span
                             key={index}
-                            className={
-                              isHeading
-                                ? "font-bold text-gray-900 block mt-5 mb-2"
-                                : "block"
-                            }
+                            className={`block 
+                              ${isHeadingChunk ? "mt-5 mb-1" : "mb-0.5"} 
+                               ${isBulletPoint ? "pl-4 md:pl-6" : ""} 
+                            `}
                           >
-                            {line}
+                            {parts.map((part, i) => {
+                              if (
+                                part.startsWith("**") &&
+                                part.endsWith("**")
+                              ) {
+                                return (
+                                  <strong
+                                    key={i}
+                                    className="font-black text-black tracking-tight"
+                                  >
+                                    {part.slice(2, -2)}
+                                  </strong>
+                                );
+                              }
+                              return <span key={i}>{part}</span>;
+                            })}
                           </span>
                         );
                       })}

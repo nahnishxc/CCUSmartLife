@@ -1,17 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Search, 
-  MapPin, 
-  Star, 
-  Phone, 
-  ArrowLeft, 
-  ExternalLink,
-  X,
-  Filter
-} from "lucide-react";
+import { Search, X, Filter } from "lucide-react";
+import RestaurantCard from "./RestaurantCard";
+import RestaurantDetail from "./RestaurantDetail";
 
+// 這裡假設你把介面放在 types.ts，或者直接留在這也行
 export interface RestaurantData {
   id: string;
   name: string;
@@ -125,138 +119,42 @@ const MOCK_RESTAURANTS: RestaurantData[] = [
 ];
 
 const BASIC_TAGS = ["All", "Breakfast", "Lunch", "Dinner", "Vegetarian", "Halal"];
-
 const MORE_TAGS = [
   { category: "Type", tags: ["Cafe", "Snack", "Drink", "Buffet", "Noodle", "Dumpling"] },
   { category: "Feature", tags: ["Cheap", "Gym", "Late Night", "Spicy", "Fried", "Sweet"] }
 ];
 
-async function fetchRestaurants(): Promise<RestaurantData[]> {
-  
-  // ---------------------------------------------------------
-  // [Option 1] CURRENT: Mock Data Mode
-  // Use this for development and demo.
-  // ---------------------------------------------------------
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(MOCK_RESTAURANTS);
-    }, 800);
-  });
-
-  // ---------------------------------------------------------
-  // [Option 2] FUTURE: Real API Mode
-  // When backend is ready:
-  // 1. Comment out or delete Option 1 above.
-  // 2. Uncomment the code below.
-  // 3. Update the API_URL variable.
-  // ---------------------------------------------------------
-  /*
-  const API_URL = "http://localhost:3000/api/restaurants"; // Change this to your real API
-
-  try {
-    const res = await fetch(API_URL, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // cache: "no-store", // Uncomment if you want fresh data every time (SSR/ISR settings)
-    });
-
-    if (!res.ok) {
-      throw new Error(`API Error: ${res.status}`);
-    }
-
-    const data = await res.json();
-    
-    // IMPORTANT: Make sure the backend data structure matches 'RestaurantData' interface.
-    // If your backend returns different field names (e.g. 'restaurant_name' instead of 'name'),
-    // you might need to map it here:
-    // return data.map((item: any) => ({
-    //   id: item.id,
-    //   name: item.restaurant_name,
-    //   ...
-    // }));
-
-    return data;
-
-  } catch (error) {
-    console.error("Failed to fetch restaurants:", error);
-    return []; // Return empty array on error to prevent crash
-  }
-  */
-}
-
-export default function Restaurant() {
-  const [restaurants, setRestaurants] = useState<RestaurantData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  
+export default function RestaurantPage() {
+  const [restaurants, setRestaurants] = useState<RestaurantData[]>(MOCK_RESTAURANTS);
+  const [isLoading, setIsLoading] = useState(false);
   const [view, setView] = useState<"list" | "detail">("list");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTag, setActiveTag] = useState("All");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetchRestaurants();
-        setRestaurants(data);
-      } catch (error) {
-        console.error("Failed to fetch restaurants:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadData();
-  }, []);
-
-  useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [view, selectedId]);
 
-  const filteredRestaurants = restaurants.filter((restaurant) => {
-    const matchTag = activeTag === "All" || restaurant.tags.includes(activeTag);
-    
+  const filteredRestaurants = restaurants.filter((r) => {
+    const matchTag = activeTag === "All" || r.tags.includes(activeTag);
     const query = searchQuery.toLowerCase();
-    const matchSearch = 
-      restaurant.name.toLowerCase().includes(query) || 
-      restaurant.brief.toLowerCase().includes(query) ||
-      restaurant.tags.some(t => t.toLowerCase().includes(query));
-
-    return matchTag && matchSearch;
+    return matchTag && (r.name.toLowerCase().includes(query) || r.tags.some(t => t.toLowerCase().includes(query)));
   });
 
   const selectedRestaurant = restaurants.find(r => r.id === selectedId);
-
   const relatedRestaurants = selectedRestaurant 
-    ? restaurants.filter(r => 
-        r.id !== selectedRestaurant.id && 
-        r.tags.some(t => selectedRestaurant.tags.includes(t))
-      ).slice(0, 3) 
+    ? restaurants.filter(r => r.id !== selectedId && r.tags.some(t => selectedRestaurant.tags.includes(t))).slice(0, 3) 
     : [];
-
-  const handleTagClick = (tag: string) => {
-    setActiveTag(tag);
-  };
 
   return (
     <div className="w-full relative">
       <AnimatePresence mode="wait">
-        
-        {view === "list" && (
-          <motion.div
-            key="list"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="w-full flex flex-col gap-8"
-          >
+        {view === "list" ? (
+          <motion.div key="list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex flex-col gap-8">
+            {/* 搜尋欄部分 */}
             <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 flex flex-col items-center justify-center relative z-20">
-              
               <div className="w-full max-w-2xl mb-6 relative">
                 <div className="relative w-full z-30">
                   <Search className={`absolute left-5 top-1/2 -translate-y-1/2 transition-colors ${isSearchFocused ? "text-emerald-600" : "text-gray-400"}`} size={22} />
@@ -266,49 +164,23 @@ export default function Restaurant() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onFocus={() => setIsSearchFocused(true)}
                     placeholder="Search for food..." 
-                    className={`w-full bg-gray-100 rounded-2xl py-4 pl-14 pr-10 text-base focus:outline-none transition-all placeholder-gray-400 font-medium ${isSearchFocused ? "ring-2 ring-emerald-200 bg-white shadow-lg" : ""}`}
+                    className={`w-full bg-gray-100 rounded-2xl py-4 pl-14 pr-10 text-base focus:outline-none transition-all ${isSearchFocused ? "ring-2 ring-emerald-200 bg-white shadow-lg" : ""}`}
                   />
-                  {searchQuery && (
-                    <button 
-                      onClick={() => setSearchQuery("")}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                    >
-                      <X size={18} />
-                    </button>
-                  )}
+                  {searchQuery && <button onClick={() => setSearchQuery("")} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"><X size={18} /></button>}
                 </div>
 
+                {/* 進階標籤選單 */}
                 <AnimatePresence>
                   {isSearchFocused && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10, height: 0 }}
-                      animate={{ opacity: 1, y: 0, height: "auto" }}
-                      exit={{ opacity: 0, y: -10, height: 0 }}
-                      className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-20"
-                    >
+                    <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-20">
                       <div className="p-6 bg-gray-50/50">
-                        <div className="flex items-center gap-2 mb-4 text-gray-500 text-xs font-bold uppercase tracking-wider">
-                          <Filter size={12} />
-                          More Filters
-                        </div>
-                        
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           {MORE_TAGS.map((group, idx) => (
                             <div key={idx}>
                               <h4 className="text-sm font-bold text-gray-800 mb-3">{group.category}</h4>
                               <div className="flex flex-wrap gap-2">
-                                {group.tags.map((tag) => (
-                                  <button
-                                    key={tag}
-                                    onClick={() => handleTagClick(tag)}
-                                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
-                                      activeTag === tag 
-                                        ? "bg-emerald-500 text-white border-emerald-500 shadow-md" 
-                                        : "bg-white text-gray-600 border-gray-200 hover:border-emerald-300 hover:text-emerald-600"
-                                    }`}
-                                  >
-                                    {tag}
-                                  </button>
+                                {group.tags.map(tag => (
+                                  <button key={tag} onClick={() => setActiveTag(tag)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${activeTag === tag ? "bg-emerald-500 text-white" : "bg-white text-gray-600 border"}`}>{tag}</button>
                                 ))}
                               </div>
                             </div>
@@ -320,233 +192,34 @@ export default function Restaurant() {
                 </AnimatePresence>
               </div>
 
+              {/* 基礎標籤 */}
               <div className="w-full flex justify-center flex-wrap gap-3">
-                {BASIC_TAGS.map((tag, i) => {
-                  const isActive = activeTag === tag;
-                  return (
-                    <button 
-                      key={i}
-                      onClick={() => handleTagClick(tag)}
-                      className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all border hover:scale-105 active:scale-95 ${
-                        isActive 
-                          ? "bg-emerald-500 text-white border-emerald-500 shadow-md"
-                          : "bg-gray-50 text-gray-600 border-gray-100 hover:bg-emerald-50 hover:text-emerald-600"
-                      }`}
-                    >
-                      {tag}
-                    </button>
-                  );
-                })}
+                {BASIC_TAGS.map((tag) => (
+                  <button key={tag} onClick={() => setActiveTag(tag)} className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all border ${activeTag === tag ? "bg-emerald-500 text-white shadow-md" : "bg-gray-50 text-gray-600 hover:text-emerald-600"}`}>{tag}</button>
+                ))}
               </div>
             </div>
 
-            {isSearchFocused && (
-              <div 
-                className="fixed inset-0 z-10 bg-black/5" 
-                onClick={() => setIsSearchFocused(false)}
-              />
-            )}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pb-10 relative z-0"> 
-              {isLoading ? (
-                Array.from({ length: 4 }).map((_, idx) => (
-                  <div key={idx} className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex gap-5 items-stretch h-[170px] animate-pulse">
-                    <div className="w-[130px] h-full bg-gray-200 rounded-2xl flex-shrink-0" />
-                    <div className="flex-1 flex flex-col justify-between py-1">
-                      <div className="space-y-3">
-                        <div className="h-6 bg-gray-200 rounded w-3/4" />
-                        <div className="h-4 bg-gray-200 rounded w-full" />
-                        <div className="h-4 bg-gray-200 rounded w-1/2" />
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : filteredRestaurants.length > 0 ? (
-                filteredRestaurants.map((item) => (
-                  <div 
-                    key={item.id}
-                    onClick={() => {
-                      setSelectedId(item.id);
-                      setView("detail");
-                    }}
-                    className="cursor-pointer group bg-white p-5 rounded-3xl border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-emerald-200 transition-all flex gap-5 items-stretch h-[170px]"
-                  >
-                    <div className={`w-[130px] h-full ${item.imageUrl} rounded-2xl flex-shrink-0 flex items-center justify-center text-gray-400/50 font-bold tracking-wider`}>
-                        IMG
-                    </div>
-
-                    <div className="flex-1 flex flex-col justify-between py-1">
-                      <div>
-                        <h3 className="font-bold text-gray-800 text-xl group-hover:text-emerald-600 transition-colors line-clamp-1">
-                          {item.name}
-                        </h3>
-                        <p className="text-sm text-gray-400 line-clamp-2 mt-1.5 leading-relaxed">
-                          {item.brief}
-                        </p>
-                      </div>
-
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                          <MapPin size={14} className="shrink-0" />
-                          <span className="truncate">{item.address}</span>
-                        </div>
-
-                        <div className="flex items-end justify-between">
-                            <div className="flex items-center gap-1.5">
-                              <Star size={16} className="fill-yellow-400 text-yellow-400" />
-                              <span className="text-sm font-bold text-gray-700">{item.rating}</span>
-                            </div>
-                            <div className="flex gap-1.5 flex-wrap overflow-hidden h-6 justify-end">
-                              {item.tags.slice(0, 2).map((t, idx) => (
-                                <span key={idx} className="bg-gray-100 text-gray-500 px-2 py-0.5 rounded-md text-[10px] font-medium whitespace-nowrap">
-                                  {t}
-                                </span>
-                              ))}
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="col-span-1 md:col-span-2 flex flex-col items-center justify-center py-20 text-gray-400">
-                  <Search size={48} className="mb-4 opacity-20" />
-                  <p>No restaurants found matching "{activeTag}" or "{searchQuery}"</p>
-                  <button 
-                    onClick={() => { setActiveTag("All"); setSearchQuery(""); }}
-                    className="mt-4 text-emerald-600 font-bold hover:underline"
-                  >
-                    Clear Filters
-                  </button>
-                </div>
-              )}
+            {/* 列表渲染 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pb-10">
+              {filteredRestaurants.map((item) => (
+                <RestaurantCard 
+                  key={item.id} 
+                  item={item} 
+                  onClick={(id) => { setSelectedId(id); setView("detail"); }} 
+                />
+              ))}
             </div>
           </motion.div>
-        )}
-
-        {view === "detail" && selectedRestaurant && (
-          <motion.div
-            key="detail"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }}
-            transition={{ duration: 0.3 }}
-            className="w-full flex flex-col bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100"
-          >
-            <button 
-              onClick={() => setView("list")}
-              className="self-start mb-6 flex items-center gap-2 text-sm text-gray-500 hover:text-black transition-colors bg-gray-50 px-4 py-2 rounded-full font-medium"
-            >
-              <ArrowLeft size={18} />
-              Back
-            </button>
-
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-10">
-              <div className={`md:col-span-5 w-full aspect-[4/3] ${selectedRestaurant.imageUrl} rounded-3xl shadow-inner relative overflow-hidden`}>
-                 <div className="absolute inset-0 flex items-center justify-center text-gray-400/30 font-bold text-2xl">
-                    4:3 IMAGE
-                 </div>
-              </div>
-              
-              <div className="md:col-span-7 flex flex-col justify-center space-y-6">
-                <div>
-                  <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3 leading-tight">
-                    {selectedRestaurant.name}
-                  </h2>
-                  <p className="text-base text-gray-500 font-medium">
-                    {selectedRestaurant.brief}
-                  </p>
-                </div>
-                
-                 <div className="flex items-center gap-3">
-                   <div className="flex">
-                     {[...Array(5)].map((_, i) => (
-                       <Star key={i} size={22} className={`${i < Math.floor(selectedRestaurant.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`} />
-                     ))}
-                   </div>
-                   <span className="text-xl font-bold text-gray-700">({selectedRestaurant.rating})</span>
-                </div>
-
-                <div className="space-y-4 text-base text-gray-600 pt-6 border-t border-gray-100">
-                  <div className="flex items-start gap-4">
-                    <MapPin size={22} className="mt-0.5 shrink-0 text-gray-400" />
-                    <span className="font-medium">{selectedRestaurant.address}</span>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <Phone size={22} className="text-gray-400" />
-                    <span className="font-medium">{selectedRestaurant.contact}</span>
-                  </div>
-                  <a href={selectedRestaurant.googleMapUrl} target="_blank" className="flex items-center gap-4 text-emerald-600 hover:underline font-bold transition-colors group">
-                    <ExternalLink size={22} className="group-hover:scale-110 transition-transform"/>
-                    View on Google Maps
-                  </a>
-                </div>
-
-                 <div className="flex gap-2 pt-2 flex-wrap">
-                  {selectedRestaurant.tags.map((t, i) => (
-                    <span key={i} className="bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg text-sm font-bold tracking-wide">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-16 max-w-4xl">
-              <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                About the Restaurant
-                <div className="h-px w-20 bg-gray-200"></div>
-              </h3>
-              <p className="text-gray-600 leading-relaxed text-lg text-justify">
-                {selectedRestaurant.intro}
-              </p>
-            </div>
-
-            <div className="border-t border-gray-100 pt-10">
-              <h3 className="text-sm font-bold text-gray-400 mb-6 uppercase tracking-wider flex items-center gap-2">
-                Explore More <ArrowLeft className="rotate-180" size={14}/>
-              </h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                {relatedRestaurants.length > 0 ? (
-                  relatedRestaurants.map((item) => (
-                    <div 
-                      key={item.id}
-                      onClick={() => {
-                        setSelectedId(item.id);
-                      }}
-                      className="cursor-pointer group bg-gray-50 p-4 rounded-2xl border border-gray-100 hover:bg-white hover:shadow-md hover:border-emerald-200 transition-all flex flex-col h-[220px]"
-                    >
-                      <div className={`w-full aspect-video ${item.imageUrl} rounded-xl mb-3 flex items-center justify-center text-gray-400/50 text-xs font-bold`}>
-                        IMG
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-gray-800 group-hover:text-emerald-600 transition-colors line-clamp-1 text-lg">
-                          {item.name}
-                        </h4>
-                        <div className="flex items-center gap-1 mt-1">
-                           <Star size={14} className="fill-yellow-400 text-yellow-400" />
-                           <span className="text-xs font-bold text-gray-600">{item.rating}</span>
-                        </div>
-                          <div className="flex gap-1 mt-3 flex-wrap h-6 overflow-hidden">
-                            {item.tags.slice(0, 2).map((t, i) => (
-                              <span key={i} className="text-[10px] bg-white border border-gray-200 px-2 py-0.5 rounded text-gray-500 font-medium">
-                                {t}
-                              </span>
-                            ))}
-                          </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="col-span-3 text-center text-gray-400 py-8 italic">
-                    No similar restaurants found nearby.
-                  </div>
-                )}
-              </div>
-            </div>
-
-          </motion.div>
+        ) : (
+          selectedRestaurant && (
+            <RestaurantDetail 
+              restaurant={selectedRestaurant}
+              relatedRestaurants={relatedRestaurants}
+              onBack={() => setView("list")}
+              onSelectRelated={(id) => setSelectedId(id)}
+            />
+          )
         )}
       </AnimatePresence>
     </div>
