@@ -185,7 +185,7 @@ export default function Transportation() {
               className="min-w-[21%] md:min-w-[23%] group cursor-pointer"
             >
               <div
-                className={`w-full aspect-square ${route.imageColor} rounded-2xl mb-3 overflow-hidden group-hover:scale-[1.02] transition-transform shadow-sm`}
+                className={`w-full aspect-square  rounded-2xl mb-3 overflow-hidden group-hover:scale-[1.02] transition-transform shadow-sm`}
               >
                 <div
                   className="w-full h-full bg-center bg-cover"
