@@ -254,29 +254,29 @@ export default function ClubPage() {
             {data[activeTab].clubs.map((item) => (
               <div
                 key={item.id}
-                className="bg-white p-5 rounded-2xl border border-gray-100 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-500/5 transition-all flex flex-col h-full group"
+                className="bg-white p-5 rounded-2xl border border-gray-100  flex flex-col h-full group"
               >
-                <div className="w-full aspect-video rounded-xl mb-5 overflow-hidden bg-gray-100 group-hover:bg-emerald-50 transition-colors relative">
+                <div className="w-full aspect-[4/3] rounded-xl mb-5 overflow-hidden bg-gray-100  relative">
                   {item.image ? (
                     <Image
                       src={item.image}
                       alt={item.name}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="object-cover "
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-300 font-bold tracking-widest group-hover:text-emerald-200 transition-colors">
+                    <div className="w-full h-full flex items-center justify-center text-gray-300 font-bold tracking-widest ">
                       NO IMAGE
                     </div>
                   )}
                 </div>
 
                 <div className="flex-1 px-1">
-                  <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-emerald-600 transition-colors">
+                  <h3 className="text-xl font-bold text-gray-800 mb-2 ">
                     {item.name}
                   </h3>
-                  <p className="text-sm text-gray-500 leading-relaxed mb-5 line-clamp-3">
+                  <p className="text-sm text-gray-500 leading-relaxed mb-5 line-clamp-5">
                     {item.desc}
                   </p>
 
@@ -302,7 +302,7 @@ export default function ClubPage() {
                       rel="noreferrer"
                       className="text-gray-400 hover:text-blue-600 transition-all hover:scale-110"
                     >
-                      <Facebook size={20} />
+                      <Facebook size={32} />
                     </a>
                   )}
                   {item.links.ig && (
@@ -312,7 +312,7 @@ export default function ClubPage() {
                       rel="noreferrer"
                       className="text-gray-400 hover:text-pink-600 transition-all hover:scale-110"
                     >
-                      <Instagram size={20} />
+                      <Instagram size={32} />
                     </a>
                   )}
                   {item.links.web && (
@@ -325,11 +325,8 @@ export default function ClubPage() {
                       <Globe size={20} />
                     </a>
                   )}
-                  <div className="ml-auto flex items-center gap-1.5 px-3 py-1 bg-gray-50 rounded-full">
-                    <Users size={13} className="text-gray-400" />
-                    <span className="text-[11px] text-gray-500 font-bold uppercase tracking-tighter">
-                      Join us
-                    </span>
+                  <div>
+
                   </div>
                 </div>
               </div>

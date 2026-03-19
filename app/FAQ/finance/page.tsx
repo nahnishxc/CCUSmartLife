@@ -12,123 +12,76 @@ type FaqItem = {
 
 const FAQS: FaqItem[] = [
   {
-    id: "e1",
-    question: "What emergency numbers should I save on my phone?",
-    answer: `As an international student in Taiwan, you should save the following important numbers:
-**1. Nationwide Emergency Numbers**
-• 110 – Police
-• 119 – Fire department & ambulance
-• 112 – Mobile emergency number (Can connect to 110 or 119 even if your signal is weak but another network is available)
-**2. Foreigners’ Hotline – 1990**
-• Free hotline provided by the National Immigration Agency
-• Available 24 hours a day
-• Languages: Chinese, English, Japanese
-• Some Southeast Asian languages available on weekdays
-You can ask about:
-• Visa and residence issues
-• Work permits
-• Health insurance
-• Medical care
-• Personal safety
-• Legal information
-**3. University Emergency Contacts**
-You should also save:
-• The Office of International Affairs (OIA) phone number
-• The campus emergency contact number`,
+    id: "f1",
+    question: "How do I open a post office or a bank account in Taiwan?",
+    answer: `**1. Post ffice Accounts**
+Currently, Chunghwa Post has suspended opening regular savings accounts for most foreign nationals due to financial security policies.
+**2. Opening a Bank Account**
+You can open an account at a commercial bank near your school or residence.
+Common banks used by students include:
+• Cathay United Bank
+• CTBC Bank
+• E.Sun Bank
+• HSBC Taiwan
+• Mega International Commercial Bank
+You will usually need:
+• ARC (most important document)
+• Passport or student ID
+• Taiwanese phone number
+• Proof of address
+※ Some banks may ask for a personal seal, but most accept a signature.
+※ Important Tips
+• Make an appointment in advance
+• Confirm required documents with the bank beforehand
+• The process may take several hours
+• Consider applying for online banking and a Visa debit card
+• If you need to receive money from abroad, you may also consider opening a foreign currency account.`,
   },
   {
-    id: "e2",
+    id: "f2",
     question:
-      "What should I do if I lose important documents (passport, ARC, or student ID)?",
-    answer: `If you lose important documents, stay calm and take action as soon as possible.
-**1. If You Lose Your Passport**
-(1) Report the loss at the nearest police station and obtain a police report
-(2) Contact your country’s representative o<ice or embassy in Taiwan to apply for a replacement passport
-(3) After receiving your new passport, update your ARC information within 30 days
-(4) Inform the Office of International Affairs (OIA) so your student records can be updated
-**2. If You Lose Your ARC**
-(1) Prepare required documents:
-• Written statement or police report
-• One recent ID photo (white background)
-• Passport (original + copy)
-• Proof of enrollment
-(2) Apply for a replacement:
-• Online through the National Immigration Agency system
-• Or in person at a local Immigration Service Center
-**3. If You Lose Your Student ID Card**
-(1) Report the loss immediately through the university online system (This will deactivate the card)
-(2) Apply for a replacement and pay the NT$300 fee
-(3) Submit required documents to the Academic Affairs Office
-(4) New card is usually ready in about 4 working days
-※ If there was stored value on the card, you can apply for a refund.`,
+      "Should I bring cash or use international credit cards? Where can I exchange money in Taiwan?",
+    answer: `It is recommended to prepare both cash and a credit card, but cash is especially important for daily life in Taiwan.
+**1. Payment Methods in Taiwan**
+(1) Cash (Very Important)
+Cash is widely used, especially at:
+• Small shops
+• Traditional markets
+• Street food stalls
+• Some local restaurants
+For everyday meals and small purchases, carrying enough cash is necessary.
+(2) Credit Cards & Digital Payments
+• Accepted at department stores and chain stores
+• Not always accepted by small businesses
+• Some online platforms accept foreign credit cards
+• LINE Pay and Apple Pay are common in chain stores and convenience stores
+When you arrive at the airport, it is a good idea to withdraw or exchange some New Taiwan Dollars.
+**2. Where Can I Exchange Money?**
+You can exchange foreign currency at:
+(1) Airport Exchange Counters (24 hours)
+• Available at Taoyuan International Airport
+• Convenient for exchanging money upon arrival
+(2) Bank Branches
+• Open Monday–Friday, 9:00 a.m.–3:30 p.m.
+• Bring your passport or ARC
+(3) ATMs
+• Many convenience stores (e.g., 7-Eleven, FamilyMart) have ATMs
+• International cards (Visa/Plus, MasterCard/Cirrus) are usually supported
+※ Important: If you bring more than USD 10,000 (or equivalent) in cash when entering Taiwan, you must declare it to customs.`,
   },
   {
-    id: "e3",
-    question: "What should I do in a medical emergency or accident?",
-    answer: `Act immediately depending on the seriousness of the situation.
-**1. For Serious Emergency**
-For severe conditions such as:
-• Heavy bleeding
-• Broken bones
-• Difficulty breathing
-• Loss of consciousness
-(3) Call 119 immediately for an ambulance. If it is a traffic accident, also call 110 to report it to the police.
-(4) When going to the hospital, bring:
-• NHI card (if applicable)
-• ARC or passport
-• Cash or credit card
-**2. For Minor Injuries**
-For minor injuries, you can:
-• Visit a nearby clinic or hospital
-• On weekdays (9:00 a.m.–5:00 p.m.), go to the Health Center (2nd floor of the Activity Center) for basic wound care and dressing changes (free of charge)
-※ Additional Support
-• If you live in a dormitory, contact the dormitory office for assistance
-• If you have language difficulties, call 1990 for 24-hour foreign resident language support`,
-  },
-  {
-    id: "e4",
-    question:
-      "What should I do during typhoons or earthquakes? Will classes be canceled?",
-    answer: `Taiwan experiences earthquakes and typhoons. Stay calm and follow safety guidelines.
-**1. During an Earthquake**
-Follow the “Drop, Cover, and Hold On” rule:
-• Drop to the ground
-• Take cover under a sturdy table
-• Hold on until the shaking stops
-If no table is nearby:
-• Stand next to a strong wall or pillar
-• Protect your head and neck
-• Stay away from windows and falling objects
-**2. During a Typhoon**
-• Monitor official weather updates
-• Stay indoors if your residence is safe
-• Avoid beaches, rivers, mountains, and flooded areas
-• Do not touch fallen power lines
-• Never drive through flooded roads
-**3. Will Classes Be Canceled?**
-Yes, classes or activities may be canceled during severe weather in Taiwan, especially during typhoons. When wind speeds or rainfall reach certain safety standards, the city or county government will officially announce whether work and classes are suspended.`,
-  },
-  {
-    id: "e5",
-    question: "What should I do if I lose my ARC?",
-    answer: `If you lose your ARC, apply for a replacement as soon as possible.
-**Step 1: Prepare Required Documents**
-• A written statement explaining the loss or a police report
-• One recent color photo (white background)
-• Passport (original and copy)
-• Proof of enrollment (e.g., student ID with current semester registration stamp)
-**Step 2: Submit Your Application**
-You can apply:
-• Through the National Immigration Agency’s online system (recommended for students)
-• Or in person at your local Immigration Service Center
-※ Replacement Fee
-• NT$500 (general applicants)
-• NT$2,600 (Hong Kong or Macau residents)
-※ Processing Time: Approximately 10 working days(Additional time may be required if documents are incomplete.)`,
+    id: "f3",
+    question: "Which banks are commonly used by students?",
+    answer: `Common banks used by students in Taiwan include:
+• Cathay United Bank
+• CTBC Bank
+• E.Sun Bank
+• Mega International Commercial Bank
+• HSBC Taiwan`,
   },
 ];
 
-export default function HealthGuidePage() {
+export default function FAQPage() {
   const [q, setQ] = useState("");
   const [open, setOpen] = useState<Record<string, boolean>>({});
 
@@ -158,12 +111,12 @@ export default function HealthGuidePage() {
         </Link>
 
         <h1 className="pl-4 mt-4 text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900">
-          Emergency & Safety
+          Money & Banking
         </h1>
 
         <p className="pl-5 mt-4 text-base md:text-lg text-gray-500 leading-relaxed max-w-2xl">
-          Lost Documents and Daily Security. Search a keyword to quickly find
-          the right answer.
+          Financial related issues. Search a keyword to quickly find the right
+          answer.
         </p>
       </div>
 

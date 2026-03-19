@@ -144,7 +144,7 @@ International Academic & Career Counselors can help with:
   },
 ];
 
-export default function HealthGuidePage() {
+export default function FAQPage() {
   const [q, setQ] = useState("");
   const [open, setOpen] = useState<Record<string, boolean>>({});
 

@@ -12,217 +12,59 @@ type FaqItem = {
 
 const FAQS: FaqItem[] = [
   {
-    id: "h1",
-
+    id: "e1",
+    question: "What emergency numbers should I save on my phone?",
+    answer: `As an international student in Taiwan, you should save the following important numbers:
+**1. Nationwide Emergency Numbers**
+• 110 – Police
+• 119 – Fire department & ambulance
+• 112 – Mobile emergency number (Can connect to 110 or 119 even if your signal is weak but another network is available)
+**2. Foreigners’ Hotline – 1990**
+• Free hotline provided by the National Immigration Agency
+• Available 24 hours a day
+• Languages: Chinese, English, Japanese
+• Some Southeast Asian languages available on weekdays
+You can ask about:
+• Visa and residence issues
+• Work permits
+• Health insurance
+• Medical care
+• Personal safety
+• Legal information
+**3. University Emergency Contacts**
+You should also save:
+• The Office of International Affairs (OIA) phone number
+• The campus emergency contact number`,
+  },
+  {
+    id: "e2",
     question:
-      "Is National Health Insurance (NHI) mandatory? When can international students join?",
-
-    answer: `International students cannot join NHI immediately after arrival.
-
-**1. Is NHI Mandatory?**
-
-Yes. For degree-seeking students, joining NHI is required by law once you meet the eligibility 
-
-conditions. The current monthly premium is NT$826, and universities usually assist with enrollment.
-
-**2. What About the First Six Months?**
-
-Before becoming eligible for NHI, you must have valid health insurance, such as:
-
-• A university group medical insurance plan in Taiwan
-
-• A private insurance policy from your home country (officially verified)
-
-Additionally, exchange students must have valid medical insurance for their entire stay.
-
-**3. When Can I Join NHI?**
-
-You become eligible after:
-
-• Obtaining an ARC
-
-• Living in Taiwan for six consecutive months
-
-During these six months:
-
-• You may leave Taiwan only once
-
-• The total number of days abroad must not exceed 29 days
-
-After meeting these requirements, you can apply to join NHI.`,
+      "What should I do if I lose important documents (passport, ARC, or student ID)?",
+    answer: `If you lose important documents, stay calm and take action as soon as possible.
+**1. If You Lose Your Passport**
+(1) Report the loss at the nearest police station and obtain a police report
+(2) Contact your country’s representative o<ice or embassy in Taiwan to apply for a replacement passport
+(3) After receiving your new passport, update your ARC information within 30 days
+(4) Inform the Office of International Affairs (OIA) so your student records can be updated
+**2. If You Lose Your ARC**
+(1) Prepare required documents:
+• Written statement or police report
+• One recent ID photo (white background)
+• Passport (original + copy)
+• Proof of enrollment
+(2) Apply for a replacement:
+• Online through the National Immigration Agency system
+• Or in person at a local Immigration Service Center
+**3. If You Lose Your Student ID Card**
+(1) Report the loss immediately through the university online system (This will deactivate the card)
+(2) Apply for a replacement and pay the NT$300 fee
+(3) Submit required documents to the Academic Affairs Office
+(4) New card is usually ready in about 4 working days
+※ If there was stored value on the card, you can apply for a refund.`,
   },
-
   {
-    id: "h2",
-
-    question: "How do I apply for NHI? What documents are required?",
-
-    answer: `**1. If Applying Through Your University**
-
-• The NHI premium is usually included in your tuition bill
-
-• The school will guide you through the enrollment process
-
-**2. If Applying at an NHI Office**
-
-Prepare the following documents:
-
-• ARC (original and copy)
-
-• Passport (original and copy)
-
-• One recent 2-inch color photo (white background)
-
-• Proof of enrollment (student ID with registration stamp or enrollment certificate)
-
-• NHI card application form
-
-• Card processing fee: NT$200
-
-※ The current NHI premium is NT$826 per month.`,
-  },
-
-  {
-    id: "h3",
-
-    question: "How much is the NHI premium and how do I pay it?",
-
-    answer: `The current National Health Insurance (NHI) premium for international students is: NT$826 per month
-
-**How Do I Pay?**
-
-• The NHI premium is usually included in your semester tuition and fees bill
-
-• You pay it together with your tuition during registration
-
-※ Once your NHI coverage starts in a given month, you must pay for the entire month, even if you join near the end of the month.`,
-  },
-
-  {
-    id: "h4",
-
-    question:
-      "What medical services are covered by NHI? How do I use my NHI card?",
-
-    answer: `After joining NHI, you can receive medical care at NHI-contracted clinics and hospitals.
-
-**1. What Is Covered?**
-
-NHI generally covers:
-
-• Outpatient visits
-
-• Hospitalization
-
-• Prescribed medications
-
-• Some preventive services (e.g., adult health checkups)
-
-※ In emergencies, if you visit a non-NHI-contracted hospital, you may apply for reimbursement according to regulations.
-
-**2. What Is Not Covered?**
-
-You still need to pay a small registration fee and co-payment for each visit.
-
-NHI does not cover:
-
-• Private hospital rooms
-
-• Expensive medications or special medical materials not listed under NHI
-
-• Cosmetic surgery or non-essential treatments
-
-• Choosing a specific doctor or hiring a private caregiver
-
-**3. How to Use Your NHI Card**
-
-(1) Show your NHI card at the registration counter
-
-(2) The doctor will use it during your visit
-
-(3) After treatment, pay the registration fee and co-payment
-
-(4) Collect your medicine at the hospital or a nearby NHI-contracted pharmacy`,
-  },
-
-  {
-    id: "h5",
-
-    question: "What should I do if I lose my NHI card?",
-
-    answer: `If you lose your NHI card, apply for a replacement as soon as possible.
-
-**How to Apply for a Replacement**
-
-Bring the following:
-
-• One recent 2-inch photo
-
-• Replacement fee: NT$200
-
-You can apply at:
-
-• A post office
-
-• The nearest NHI office
-
-Once processed, you will receive a new NHI card.`,
-  },
-
-  {
-    id: "m1",
-
-    question: "Can I see a doctor if I don’t speak Chinese?",
-
-    answer: `Yes. You can still see a doctor even if you do not speak Chinese.
-
-**Communication Tips**
-
-• Type your symptoms in English and show them to the doctor
-
-• Use a translation app for real-time communication
-
-• Translate your symptoms into Chinese before your visit
-
-※ Some doctors and nurses can speak basic English, but not all clinics provide full English services. If possible, bringing a Chinese-speaking friend can make the visit easier and more reassuring.`,
-  },
-
-  {
-    id: "m2",
-
-    question: "Where are the nearest hospitals or clinics?",
-
-    answer: `There is a clinic called Huide Clinic located about 400 meters from the school gate — simply turn left after exiting the main entrance and walk straight ahead. 
-
-**1. Clinics Near CCU (Minxiong Area)**
-
-In the Minxiong area around CCU, there are many local clinics that can handle common health 
-
-issues, such as:
-
-• Anxin Minxiong Clinic
-
-• Ho Chun Keng ENT Clinic
-
-These clinics are located in Minxiong town and are easy to reach from campus. They are suitable for general outpatient visits and minor illnesses.
-
-**2. Large Hospitals (Chiayi City)**
-
-If you need more comprehensive examinations, hospitalization, or specialist treatment, you can visit larger hospitals in Chiayi City, such as:
-
-• Chiayi Christian Hospital
-
-• Dalin Tzu Chi Hospital
-
-• St. Martin De Porres Hospital
-
-These hospitals have full medical departments and provide emergency services.`,
-  },
-
-  {
-    id: "m3",
-    question:
-      "What should I do in a medical emergency or accident (including at night or on weekends)?",
+    id: "e3",
+    question: "What should I do in a medical emergency or accident?",
     answer: `Act immediately depending on the seriousness of the situation.
 **1. For Serious Emergency**
 For severe conditions such as:
@@ -230,8 +72,8 @@ For severe conditions such as:
 • Broken bones
 • Difficulty breathing
 • Loss of consciousness
-(1) Call 119 immediately for an ambulance. If it is a traffic accident, also call 110 to report it to the police.
-(2) When going to the hospital, bring:
+(3) Call 119 immediately for an ambulance. If it is a traffic accident, also call 110 to report it to the police.
+(4) When going to the hospital, bring:
 • NHI card (if applicable)
 • ARC or passport
 • Cash or credit card
@@ -243,9 +85,50 @@ For minor injuries, you can:
 • If you live in a dormitory, contact the dormitory office for assistance
 • If you have language difficulties, call 1990 for 24-hour foreign resident language support`,
   },
+  {
+    id: "e4",
+    question:
+      "What should I do during typhoons or earthquakes? Will classes be canceled?",
+    answer: `Taiwan experiences earthquakes and typhoons. Stay calm and follow safety guidelines.
+**1. During an Earthquake**
+Follow the “Drop, Cover, and Hold On” rule:
+• Drop to the ground
+• Take cover under a sturdy table
+• Hold on until the shaking stops
+If no table is nearby:
+• Stand next to a strong wall or pillar
+• Protect your head and neck
+• Stay away from windows and falling objects
+**2. During a Typhoon**
+• Monitor official weather updates
+• Stay indoors if your residence is safe
+• Avoid beaches, rivers, mountains, and flooded areas
+• Do not touch fallen power lines
+• Never drive through flooded roads
+**3. Will Classes Be Canceled?**
+Yes, classes or activities may be canceled during severe weather in Taiwan, especially during typhoons. When wind speeds or rainfall reach certain safety standards, the city or county government will officially announce whether work and classes are suspended.`,
+  },
+  {
+    id: "e5",
+    question: "What should I do if I lose my ARC?",
+    answer: `If you lose your ARC, apply for a replacement as soon as possible.
+**Step 1: Prepare Required Documents**
+• A written statement explaining the loss or a police report
+• One recent color photo (white background)
+• Passport (original and copy)
+• Proof of enrollment (e.g., student ID with current semester registration stamp)
+**Step 2: Submit Your Application**
+You can apply:
+• Through the National Immigration Agency’s online system (recommended for students)
+• Or in person at your local Immigration Service Center
+※ Replacement Fee
+• NT$500 (general applicants)
+• NT$2,600 (Hong Kong or Macau residents)
+※ Processing Time: Approximately 10 working days(Additional time may be required if documents are incomplete.)`,
+  },
 ];
 
-export default function HealthGuidePage() {
+export default function FAQPage() {
   const [q, setQ] = useState("");
   const [open, setOpen] = useState<Record<string, boolean>>({});
 
@@ -275,12 +158,12 @@ export default function HealthGuidePage() {
         </Link>
 
         <h1 className="pl-4 mt-4 text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900">
-          Health & Insurance
+          Emergency & Safety
         </h1>
 
         <p className="pl-5 mt-4 text-base md:text-lg text-gray-500 leading-relaxed max-w-2xl">
-          NHI, clinics, and emergency care. Search a keyword to quickly find the
-          right answer.
+          Lost Documents and Daily Security. Search a keyword to quickly find
+          the right answer.
         </p>
       </div>
 
