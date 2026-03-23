@@ -365,32 +365,32 @@ import { Calendar, ArrowRight, Bell, ChevronLeft, ExternalLink } from "lucide-re
 
 
 
-const MOCK_ANNOUNCEMENTS: Announcement[] = [
-  {
-    id: 1,
-    category: "OIA",
-    title_en: "2026 Spring Semester International Student Enrollment Guide for Newcomers",
-    content_en: "This guide provides comprehensive information regarding the upcoming spring semester enrollment process, including visa requirements, course registration, and orientation schedules for all international students.",
-    url_en: "https://oia.ccu.edu.tw",
-    publish_date: "2026-03-20"
-  },
-  {
-    id: 2,
-    category: "活動訊息",
-    title_en: "Campus Cultural Festival: Food, Music, and Art from Around the Globe",
-    content_en: "Join us this Friday for a celebration of diversity! There will be over 30 stalls featuring traditional cuisine, live performances by international student groups, and interactive art workshops.",
-    url_en: "#",
-    publish_date: "2026-03-18"
-  },
-  {
-    id: 3,
-    category: "行政事務",
-    title_en: "Notice: Annual Power Maintenance in Dormitory Area District B",
-    content_en: "Please be advised that there will be a scheduled power outage in Dormitory District B on March 25th from 9:00 AM to 5:00 PM for essential grid maintenance and safety inspections.",
-    url_en: "#",
-    publish_date: "2026-03-15"
-  }
-];
+// const MOCK_ANNOUNCEMENTS: Announcement[] = [
+//   {
+//     id: 1,
+//     category: "OIA",
+//     title_en: "2026 Spring Semester International Student Enrollment Guide for Newcomers",
+//     content_en: "This guide provides comprehensive information regarding the upcoming spring semester enrollment process, including visa requirements, course registration, and orientation schedules for all international students.",
+//     url_en: "https://oia.ccu.edu.tw",
+//     publish_date: "2026-03-20"
+//   },
+//   {
+//     id: 2,
+//     category: "活動訊息",
+//     title_en: "Campus Cultural Festival: Food, Music, and Art from Around the Globe",
+//     content_en: "Join us this Friday for a celebration of diversity! There will be over 30 stalls featuring traditional cuisine, live performances by international student groups, and interactive art workshops.",
+//     url_en: "#",
+//     publish_date: "2026-03-18"
+//   },
+//   {
+//     id: 3,
+//     category: "行政事務",
+//     title_en: "Notice: Annual Power Maintenance in Dormitory Area District B",
+//     content_en: "Please be advised that there will be a scheduled power outage in Dormitory District B on March 25th from 9:00 AM to 5:00 PM for essential grid maintenance and safety inspections.",
+//     url_en: "#",
+//     publish_date: "2026-03-15"
+//   }
+// ];
 
 
 
@@ -421,17 +421,30 @@ export default function Announcement() {
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   // --- 抓取 API ---
-  useEffect(() => {
-    setAnnouncements(MOCK_ANNOUNCEMENTS);
-  setIsLoading(false);
-    // fetch("https://campus-ai-backend-1.onrender.com/api/announcements")
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     setAnnouncements(data);
-    //     setIsLoading(false);
-    //   })
-    //   .catch(() => setIsLoading(false));
+    //   setAnnouncements(MOCK_ANNOUNCEMENTS);
+  // setIsLoading(false);
+useEffect(() => {
+    setIsLoading(true);
+    // 使用環境變數，並加上 debug log
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || 'https://campus-ai-backend-1.onrender.com'}/api/announcements`;
+    console.log("Fetching from:", apiUrl);
+
+    fetch(apiUrl)
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        console.log("API Data received:", data); // 這裡很重要，看 category 欄位寫什麼
+        setAnnouncements(data);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error("Fetch error:", err);
+        setIsLoading(false);
+      });
   }, []);
+
 
   // --- 過濾英文資料 ---
   const filteredItems = useMemo(() => {

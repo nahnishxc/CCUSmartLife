@@ -10,31 +10,31 @@ export const CATEGORY_CARDS: Array<CategoryCardConfig> = [
     key: "活動訊息",
     title: "Campus Events",
     subtitle: "Activities, festivals, and student events",
-    imageSrc: "你的圖片URL", 
+    imageSrc: "https://images.unsplash.com/photo-1506784919141-93ad14948a4a?w=400", 
   },
   {
     key: "OIA",
     title: "OIA Announcements",
     subtitle: "International Office updates & guides",
-    imageSrc: "你的圖片URL",
+    imageSrc: "https://images.unsplash.com/photo-1506784919141-93ad14948a4a?w=400",
   },
   {
     key: "精選訊息",
     title: "Highlights",
     subtitle: "Featured & important notices",
-    imageSrc: "你的圖片URL",
+    imageSrc: "https://images.unsplash.com/photo-1506784919141-93ad14948a4a?w=400",
   },
   {
     key: "學術活動",
     title: "Academic Events",
     subtitle: "Talks, seminars, and academic activities",
-    imageSrc: "你的圖片URL",
+    imageSrc: "https://images.unsplash.com/photo-1506784919141-93ad14948a4a?w=400",
   },
   {
     key: "行政事務",
     title: "Administration Notice",
     subtitle: "Dorm, utilities, policies, deadlines",
-    imageSrc: "你的圖片URL",
+    imageSrc: "https://images.unsplash.com/photo-1506784919141-93ad14948a4a?w=400L",
   },
 ];
 
