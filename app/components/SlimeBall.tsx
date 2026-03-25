@@ -153,6 +153,9 @@
 //     </motion.div>
 //   );
 // }
+
+
+
 "use client";
 import { motion, useMotionValue, useSpring, useTransform, animate } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
@@ -299,7 +302,7 @@ export default function SlimeBall() {
           scaleY: squashY,
           y: jumpY,
           rotate: rotateZ,
-          originY: originY // 動態基準點
+          originY: originY 
         }}
         className="relative w-full h-full flex items-center justify-center"
       >

@@ -26,11 +26,11 @@ export default function Administrative() {
     <div className="w-full h-full bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 flex flex-col md:flex-row">
       
       <div className="w-full md:w-1/4 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-gray-100 pb-6 md:pb-0 md:pr-6">
-        <div className="w-24 h-24 bg-blue-50 rounded-3xl flex items-center justify-center text-blue-500 mb-6 shadow-sm">
+        <div className="w-24 h-24 bg-green-50 rounded-3xl flex items-center justify-center text-green-500 mb-6 shadow-sm">
           <Briefcase size={48} strokeWidth={1.5} />
         </div>
         <h2 className="text-xl font-bold text-gray-700">Administration</h2>
-        <div className="w-8 h-1 bg-blue-200 rounded-full mt-3"></div>
+        <div className="w-8 h-1 bg-green-200 rounded-full mt-3"></div>
       </div>
 
 

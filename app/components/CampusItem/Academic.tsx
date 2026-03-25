@@ -33,12 +33,12 @@ export default function Academic() {
 
             {/* 下半部：學院列表 */}
             <div className="flex-1 flex flex-col md:flex-row gap-8 overflow-y-auto custom-scrollbar">
-              <div className="flex flex-col items-center md:items-start md:w-1/4 border-b md:border-b-0 md:border-r border-gray-100 pb-6 md:pb-0 md:pr-6">
-                <div className="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500 mb-4 shadow-sm">
+      <div className="w-full md:w-1/4 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-gray-100 pb-6 md:pb-0 md:pr-6">
+        <div className="w-24 h-24 bg-green-50 rounded-3xl flex items-center justify-center text-green-500 mb-6 shadow-sm">
                   <BookOpen size={40} strokeWidth={1.5} />
                 </div>
                 <h2 className="text-xl font-bold text-gray-700">Academic</h2>
-                <div className="w-8 h-1 bg-blue-200 rounded-full mt-2"></div>
+                <div className="w-8 h-1 bg-green-200 rounded-full mt-2"></div>
               </div>
 
               <div className="flex-1">

@@ -32,16 +32,16 @@ export default function Facilities() {
           <div
             key={item.id}
             // h-full 確保卡片會填滿 grid cell 的高度，讓同一列的卡片等高
-            className="group bg-gray-50 rounded-2xl border border-gray-100 overflow-hidden hover:border-emerald-200 hover:shadow-md transition-all flex flex-col h-full"
+            className="group bg-gray-50 rounded-2xl border border-gray-100 overflow-hidden  transition-all flex flex-col h-full"
           >
             {/* 圖片區域 (16:9) */}
-            <div className="w-full aspect-video bg-gray-200 flex items-center justify-center text-gray-400 font-bold text-sm tracking-wider group-hover:bg-emerald-50 group-hover:text-emerald-300 transition-colors shrink-0">
+            <div className="w-full aspect-video bg-gray-200 flex items-center justify-center text-gray-400 font-bold text-sm tracking-wider  transition-colors shrink-0">
               IMG
             </div>
 
             {/* 內容區域 */}
             <div className="p-5 flex-1 flex flex-col">
-              <h3 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-emerald-600 transition-colors">
+              <h3 className="text-lg font-bold text-gray-800 mb-2  transition-colors">
                 {item.name}
               </h3>
 
