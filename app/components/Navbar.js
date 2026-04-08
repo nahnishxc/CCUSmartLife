@@ -6,6 +6,7 @@ import { Globe, User, ChevronRight } from "lucide-react";
 import LoginModal from "./LoginModal";
 import ProfileModal from "./ProfileModal";
 
+
 export default function Navbar() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
