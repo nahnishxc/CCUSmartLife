@@ -1,19 +1,25 @@
+
+
 // "use client";
 // import { motion } from "framer-motion";
-// import { ArrowLeft, MapPin, Phone, ExternalLink, Star } from "lucide-react";
+// import { ArrowLeft, MapPin, Phone, ExternalLink } from "lucide-react";
 
-// // 重複定義型別以保持組件自足
+// // 保持與後端 Schema 一致
 // export interface RestaurantData {
 //   id: string;
-//   name: string;
-//   brief: string;
-//   intro: string;
-//   rating: number;
-//   address: string;
-//   contact: string;
-//   googleMapUrl: string;
-//   tags: string[];
-//   imageUrl: string;
+//   label: string;
+//   data: {
+//     name: string;
+//     description: string;
+//     content: string;
+//     rating: number;
+//     address: string;
+//     contact: string;
+//     mapUrl: string;
+//     imageUrl: string;
+//     attributes: string[];
+//     tags: string[];
+//   };
 // }
 
 // interface RestaurantDetailProps {
@@ -29,6 +35,8 @@
 //   onBack, 
 //   onSelectRelated 
 // }: RestaurantDetailProps) {
+//   const { data } = restaurant; // 解構主資料
+
 //   return (
 //     <motion.div
 //       key="detail"
@@ -49,7 +57,7 @@
 
 //       {/* 上半部：圖片與基本資訊 */}
 //       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-10">
-//         <div className={`md:col-span-5 w-full aspect-[4/3] ${restaurant.imageUrl} rounded-3xl shadow-inner relative overflow-hidden`}>
+//         <div className={`md:col-span-5 w-full aspect-[4/3] ${data.imageUrl} rounded-3xl shadow-inner relative overflow-hidden`}>
 //           <div className="absolute inset-0 flex items-center justify-center text-gray-400/30 font-bold text-2xl">
 //             4:3 IMAGE
 //           </div>
@@ -58,39 +66,32 @@
 //         <div className="md:col-span-7 flex flex-col justify-center space-y-6">
 //           <div>
 //             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3 leading-tight">
-//               {restaurant.name}
+//               {data.name}
 //             </h2>
 //             <p className="text-base text-gray-500 font-medium">
-//               {restaurant.brief}
+//               {data.description}
 //             </p>
 //           </div>
           
-//           <div className="flex items-center gap-3">
-//             <div className="flex">
-//               {[...Array(5)].map((_, i) => (
-//                 <Star key={i} size={22} className={`${i < Math.floor(restaurant.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`} />
-//               ))}
-//             </div>
-//             <span className="text-xl font-bold text-gray-700">({restaurant.rating})</span>
-//           </div>
+//           {/* 星星評分區塊已移除 */}
 
 //           <div className="space-y-4 text-base text-gray-600 pt-6 border-t border-gray-100">
 //             <div className="flex items-start gap-4">
 //               <MapPin size={22} className="mt-0.5 shrink-0 text-gray-400" />
-//               <span className="font-medium">{restaurant.address}</span>
+//               <span className="font-medium">{data.address}</span>
 //             </div>
 //             <div className="flex items-center gap-4">
 //               <Phone size={22} className="text-gray-400" />
-//               <span className="font-medium">{restaurant.contact}</span>
+//               <span className="font-medium">{data.contact}</span>
 //             </div>
-//             <a href={restaurant.googleMapUrl} target="_blank" className="flex items-center gap-4 text-emerald-600 hover:underline font-bold transition-colors group">
+//             <a href={data.mapUrl} target="_blank" className="flex items-center gap-4 text-emerald-600 hover:underline font-bold transition-colors group">
 //               <ExternalLink size={22} className="group-hover:scale-110 transition-transform"/>
 //               View on Google Maps
 //             </a>
 //           </div>
 
 //           <div className="flex gap-2 pt-2 flex-wrap">
-//             {restaurant.tags.map((t, i) => (
+//             {data.tags.map((t, i) => (
 //               <span key={i} className="bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg text-sm font-bold tracking-wide">
 //                 {t}
 //               </span>
@@ -106,7 +107,7 @@
 //           <div className="h-px w-20 bg-gray-200"></div>
 //         </h3>
 //         <p className="text-gray-600 leading-relaxed text-lg text-justify">
-//           {restaurant.intro}
+//           {data.content}
 //         </p>
 //       </div>
 
@@ -116,7 +117,6 @@
 //           Explore More <ArrowLeft className="rotate-180" size={14}/>
 //         </h3>
         
-//         {/* 改為 grid-cols-1 到 md:grid-cols-2 或 3，並移除固定高度 */}
 //         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 //           {relatedRestaurants.length > 0 ? (
 //             relatedRestaurants.map((item) => (
@@ -125,20 +125,19 @@
 //                 onClick={() => onSelectRelated(item.id)}
 //                 className="cursor-pointer group bg-gray-50 p-4 rounded-2xl border border-gray-100 hover:bg-white hover:shadow-xl hover:border-emerald-200 transition-all flex flex-col"
 //               >
-//                 {/* 圖片容器：使用 aspect-video 並確保圖片填滿 */}
-//                 <div className={`w-full aspect-video ${item.imageUrl} rounded-xl mb-4 flex items-center justify-center text-gray-400/50 text-xs font-bold overflow-hidden shadow-inner`}>
+//                 {/* 相關推薦圖片 */}
+//                 <div className={`w-full aspect-video ${item.data.imageUrl} rounded-xl mb-4 flex items-center justify-center text-gray-400/50 text-xs font-bold overflow-hidden shadow-inner`}>
 //                   IMG
 //                 </div>
                 
-//                 {/* 文字內容區：移除固定高度限制 */}
 //                 <div className="px-1 pb-1">
 //                   <h4 className="font-bold text-gray-800 group-hover:text-emerald-600 transition-colors line-clamp-1 text-lg mb-1">
-//                     {item.name}
+//                     {item.data.name}
 //                   </h4>
-//                   <div className="flex items-center gap-1.5">
-//                     <Star size={16} className="fill-yellow-400 text-yellow-400" />
-//                     <span className="text-sm font-bold text-gray-600">{item.rating}</span>
-//                   </div>
+//                   {/* 下方星星與評分已移除 */}
+//                   <p className="text-xs text-gray-400 line-clamp-1 italic">
+//                     {item.data.description}
+//                   </p>
 //                 </div>
 //               </div>
 //             ))
@@ -190,6 +189,18 @@ export default function RestaurantDetail({
 }: RestaurantDetailProps) {
   const { data } = restaurant; // 解構主資料
 
+  // 輔助函式：判斷是否為真實網址
+  const renderImage = (url: string, alt: string) => {
+    if (url?.startsWith("http")) {
+      return <img src={url} alt={alt} className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />;
+    }
+    return (
+      <div className={`w-full h-full flex items-center justify-center text-gray-400/30 font-bold text-2xl bg-gray-100 ${url}`}>
+        IMAGE
+      </div>
+    );
+  };
+
   return (
     <motion.div
       key="detail"
@@ -210,10 +221,8 @@ export default function RestaurantDetail({
 
       {/* 上半部：圖片與基本資訊 */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-10">
-        <div className={`md:col-span-5 w-full aspect-[4/3] ${data.imageUrl} rounded-3xl shadow-inner relative overflow-hidden`}>
-          <div className="absolute inset-0 flex items-center justify-center text-gray-400/30 font-bold text-2xl">
-            4:3 IMAGE
-          </div>
+        <div className="md:col-span-5 w-full aspect-[4/3] rounded-3xl shadow-inner relative overflow-hidden bg-gray-100">
+          {renderImage(data.imageUrl, data.name)}
         </div>
         
         <div className="md:col-span-7 flex flex-col justify-center space-y-6">
@@ -226,8 +235,6 @@ export default function RestaurantDetail({
             </p>
           </div>
           
-          {/* 星星評分區塊已移除 */}
-
           <div className="space-y-4 text-base text-gray-600 pt-6 border-t border-gray-100">
             <div className="flex items-start gap-4">
               <MapPin size={22} className="mt-0.5 shrink-0 text-gray-400" />
@@ -237,7 +244,12 @@ export default function RestaurantDetail({
               <Phone size={22} className="text-gray-400" />
               <span className="font-medium">{data.contact}</span>
             </div>
-            <a href={data.mapUrl} target="_blank" className="flex items-center gap-4 text-emerald-600 hover:underline font-bold transition-colors group">
+            <a 
+              href={data.mapUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-4 text-emerald-600 hover:underline font-bold transition-colors group"
+            >
               <ExternalLink size={22} className="group-hover:scale-110 transition-transform"/>
               View on Google Maps
             </a>
@@ -279,15 +291,18 @@ export default function RestaurantDetail({
                 className="cursor-pointer group bg-gray-50 p-4 rounded-2xl border border-gray-100 hover:bg-white hover:shadow-xl hover:border-emerald-200 transition-all flex flex-col"
               >
                 {/* 相關推薦圖片 */}
-                <div className={`w-full aspect-video ${item.data.imageUrl} rounded-xl mb-4 flex items-center justify-center text-gray-400/50 text-xs font-bold overflow-hidden shadow-inner`}>
-                  IMG
+                <div className="w-full aspect-video rounded-xl mb-4 flex items-center justify-center overflow-hidden shadow-inner bg-gray-200">
+                  {item.data.imageUrl?.startsWith("http") ? (
+                    <img src={item.data.imageUrl} alt={item.data.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  ) : (
+                    <span className="text-gray-400/50 text-xs font-bold uppercase">No Image</span>
+                  )}
                 </div>
                 
                 <div className="px-1 pb-1">
                   <h4 className="font-bold text-gray-800 group-hover:text-emerald-600 transition-colors line-clamp-1 text-lg mb-1">
                     {item.data.name}
                   </h4>
-                  {/* 下方星星與評分已移除 */}
                   <p className="text-xs text-gray-400 line-clamp-1 italic">
                     {item.data.description}
                   </p>

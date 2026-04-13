@@ -69,7 +69,7 @@ export default function Navbar() {
             <Globe size={16} /> EN/ZH
           </button> */}
 
-          {!isLoggedIn ? (
+          {/* {!isLoggedIn ? (
             <button
               onClick={() => setIsLoginOpen(true)}
               className="hover:text-black flex items-center gap-1 text-sm text-[#333333] ml-2"
@@ -128,7 +128,7 @@ export default function Navbar() {
                 </>
               )}
             </div>
-          )}
+          )} */}
         </nav>
       </header>
     </>
