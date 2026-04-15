@@ -219,6 +219,8 @@ import { useState, useRef, useEffect } from "react";
 import { MapPin, Phone, ChevronLeft, ChevronRight, Stethoscope, BadgeDollarSign, Navigation } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+
+
 // 1. 定義符合新格式的型別
 export interface ClinicData {
   id: string;

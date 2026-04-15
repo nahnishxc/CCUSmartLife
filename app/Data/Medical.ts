@@ -1,18 +1,561 @@
-// export interface Clinic {
+// // export interface Clinic {
+// //   id: string;
+// //   name: string;
+// //   desc: string;
+// //   contact: string;
+// //   address: string;
+// //   tag: string;
+// //   imageColor: string;
+// // }
+
+// // export interface ClinicCategory {
+// //   title: string;
+// //   fullTitle: string;
+// //   clinics: Clinic[];
+// // }
+
+// // // --- 大型醫院資料 (Hospitals) ---
+// // export const hospitalData: ClinicCategory = {
+// //   title: "Hospitals",
+// //   fullTitle: "Hospitals & Medical Centers",
+// //   clinics: [
+// //     {
+// //       id: "hosp-01",
+// //       name: "St. Martin De Porres Hospital",
+// //       desc: "Reg Fee: 30% off (excl. ER)",
+// //       contact: "05-2756000",
+// //       address: "No. 565, Sec. 2, Daya Rd., Chiayi City",
+// //       tag: "General Hospital",
+// //       imageColor: "bg-emerald-100",
+// //     },
+// //     {
+// //       id: "hosp-02",
+// //       name: "Chia-Yi Christian Hospital",
+// //       desc: "Reg Fee: 10% off",
+// //       contact: "05-2765041",
+// //       address: "No. 539, Zhongxiao Rd., Chiayi City",
+// //       tag: "General Hospital",
+// //       imageColor: "bg-emerald-100",
+// //     },
+// //     {
+// //       id: "hosp-03",
+// //       name: "Taichung Veterans General Hospital (Chiayi)",
+// //       desc: "Regional teaching hospital",
+// //       contact: "05-2359630",
+// //       address: "No. 600, Sec. 2, Shixian Rd., Chiayi City",
+// //       tag: "General Hospital",
+// //       imageColor: "bg-emerald-100",
+// //     },
+// //     {
+// //       id: "hosp-04",
+// //       name: "Dalin Tzu Chi Hospital",
+// //       desc: "Reg Fee: 20% off",
+// //       contact: "05-2648000",
+// //       address: "No. 2, Minsheng Rd., Dalin Township",
+// //       tag: "General Hospital",
+// //       imageColor: "bg-emerald-100",
+// //     },
+// //     {
+// //       id: "hosp-05",
+// //       name: "Xinhemei Clinic",
+// //       desc: "Reg Fee: 50% off",
+// //       contact: "05-2867272",
+// //       address: "No. 89, Xingye W. Rd., Chiayi City",
+// //       tag: "General Clinic",
+// //       imageColor: "bg-blue-100",
+// //     },
+// //     {
+// //       id: "hosp-06",
+// //       name: "Ching Sheng Hospital",
+// //       desc: "Registration Fee: No charge",
+// //       contact: "05-2229191",
+// //       address: "No. 339-1, Xinrong Rd., Chiayi City",
+// //       tag: "Hospital",
+// //       imageColor: "bg-blue-100",
+// //     },
+// //   ],
+// // };
+
+// // // --- 一般診所分類資料 (Clinics) ---
+// // export const medicalData: ClinicCategory[] = [
+// //   {
+// //     title: "Internal & Surgery",
+// //     fullTitle: "Internal Medicine, Surgery & Pediatrics",
+// //     clinics: [
+// //       {
+// //         id: "surg-01",
+// //         name: "Enkel Surgical Clinic",
+// //         desc: "Registration Fee: Reduce NT.60",
+// //         contact: "05-2268611",
+// //         address: "No. 36-3, Xi'an Rd., Minxiong Township",
+// //         tag: "Surgery",
+// //         imageColor: "bg-blue-100",
+// //       },
+// //       {
+// //         id: "int-01",
+// //         name: "Huide Clinic",
+// //         desc: "Registration Fee: 50% off",
+// //         contact: "05-2721665",
+// //         address: "No. 281, Sec. 1, University Rd., Minxiong Township",
+// //         tag: "Internal Med",
+// //         imageColor: "bg-green-100",
+// //       },
+// //       {
+// //         id: "int-02",
+// //         name: "Ho Hing Tong Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2260728",
+// //         address: "No. 35-19, Xi'an Rd., Minxiong Township",
+// //         tag: "Internal Med",
+// //         imageColor: "bg-green-100",
+// //       },
+// //       {
+// //         id: "int-03",
+// //         name: "Zhang Jieshan Clinic",
+// //         desc: "Registration Fee: 40% off",
+// //         contact: "05-2261302",
+// //         address: "No. 22-3, Minzu Rd., Minxiong Township",
+// //         tag: "Internal Med",
+// //         imageColor: "bg-green-100",
+// //       },
+// //       {
+// //         id: "int-04",
+// //         name: "Hui An Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2269263",
+// //         address: "No. 3, Minquan Rd., Minxiong Township",
+// //         tag: "Internal Med",
+// //         imageColor: "bg-green-100",
+// //       },
+// //       {
+// //         id: "int-05",
+// //         name: "Lai Cheng Yau Clinic",
+// //         desc: "Registration Fee: 50% off",
+// //         contact: "05-2266550",
+// //         address: "No. 9, Heping Rd., Minxiong Township",
+// //         tag: "Internal Med",
+// //         imageColor: "bg-green-100",
+// //       },
+// //       {
+// //         id: "int-06",
+// //         name: "Siu Chi Yan Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2200858",
+// //         address: "No. 252, Sec. 3, Jianguo Rd., Minxiong Township",
+// //         tag: "Internal Med",
+// //         imageColor: "bg-green-100",
+// //       },
+// //       {
+// //         id: "int-07",
+// //         name: "Allianz Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2265104",
+// //         address: "1F., No. 211, Sec. 1, Jianguo Rd., Minxiong Township",
+// //         tag: "Internal Med",
+// //         imageColor: "bg-green-100",
+// //       },
+// //       {
+// //         id: "int-08",
+// //         name: "Yang Shuqing Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2776001",
+// //         address: "1F., No. 110, Minquan Rd., Chiayi City",
+// //         tag: "Internal Med",
+// //         imageColor: "bg-green-100",
+// //       },
+// //       {
+// //         id: "int-09",
+// //         name: "Universal Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2891966",
+// //         address: "No. 71-21, Zhongzhuang Vil., Shuishang Township",
+// //         tag: "Internal Med",
+// //         imageColor: "bg-green-100",
+// //       },
+// //       {
+// //         id: "neuro-01",
+// //         name: "Xin En Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2777937",
+// //         address: "No. 545, Xinsheng Rd., Chiayi City",
+// //         tag: "Neurology",
+// //         imageColor: "bg-purple-100",
+// //       },
+// //       {
+// //         id: "neuro-02",
+// //         name: "Cathay Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2215260",
+// //         address: "No. 519, Pijiao, Fule Vil., Minxiong Township",
+// //         tag: "Neurology",
+// //         imageColor: "bg-purple-100",
+// //       },
+// //       {
+// //         id: "gi-01",
+// //         name: "Huang Jingxiu Internal Medicine",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2776108",
+// //         address: "No. 389, Wufeng N. Rd., Chiayi City",
+// //         tag: "Gastric",
+// //         imageColor: "bg-yellow-100",
+// //       },
+// //       {
+// //         id: "ped-01",
+// //         name: "Herong Pediatric Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2621313",
+// //         address: "No. 195, Zhongshan Rd., Meishan Township",
+// //         tag: "Pediatrics",
+// //         imageColor: "bg-orange-100",
+// //       },
+// //     ],
+// //   },
+// //   {
+// //     title: "Dentistry",
+// //     fullTitle: "Dental Clinics",
+// //     clinics: [
+// //       {
+// //         id: "dent-01",
+// //         name: "Jiang Fengyu Dental Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2064900",
+// //         address: "No. 116, Zhongzhuang, Dongrong Vil., Minxiong Township",
+// //         tag: "Dental",
+// //         imageColor: "bg-indigo-100",
+// //       },
+// //       {
+// //         id: "dent-02",
+// //         name: "Fenghe Dentist",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2063942",
+// //         address: "No. 8, Dongrong Rd., Minxiong Township",
+// //         tag: "Dental",
+// //         imageColor: "bg-indigo-100",
+// //       },
+// //       {
+// //         id: "dent-03",
+// //         name: "Jiahe Dentist",
+// //         desc: "Reg Fee: NT.50 / Co-pay: NT.50",
+// //         contact: "05-2269919",
+// //         address: "No. 255, Sec. 1, Jianguo Rd., Minxiong Township",
+// //         tag: "Dental",
+// //         imageColor: "bg-indigo-100",
+// //       },
+// //       {
+// //         id: "dent-04",
+// //         name: "Jiang Dental Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2658919",
+// //         address: "No. 99-2, Zhongxing Rd., Dalin Township",
+// //         tag: "Dental",
+// //         imageColor: "bg-indigo-100",
+// //       },
+// //       {
+// //         id: "dent-05",
+// //         name: "Hong En Dental Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2762876",
+// //         address: "No. 183, Zhongxiao Rd., Chiayi City",
+// //         tag: "Dental",
+// //         imageColor: "bg-indigo-100",
+// //       },
+// //       {
+// //         id: "dent-06",
+// //         name: "Ming Ren Tang Dental Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2362726",
+// //         address: "No. 295, Xingye W. Rd., Chiayi City",
+// //         tag: "Dental",
+// //         imageColor: "bg-indigo-100",
+// //       },
+// //       {
+// //         id: "dent-07",
+// //         name: "Good News Dental Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2235242",
+// //         address: "4F., No. 201, Zhongshan Rd., Chiayi City",
+// //         tag: "Dental",
+// //         imageColor: "bg-indigo-100",
+// //       },
+// //       {
+// //         id: "dent-08",
+// //         name: "Xin Ming Dental Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2851179",
+// //         address: "No. 838, Xinmin Rd., Chiayi City",
+// //         tag: "Dental",
+// //         imageColor: "bg-indigo-100",
+// //       },
+// //       {
+// //         id: "dent-09",
+// //         name: "Chen Pixiu Dental Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2779901",
+// //         address: "No. 51, Zhongshan Rd., Chiayi City",
+// //         tag: "Dental",
+// //         imageColor: "bg-indigo-100",
+// //       },
+// //       {
+// //         id: "dent-10",
+// //         name: "Dentist for Humanity",
+// //         desc: "Registration Fee: Reduce NT.100",
+// //         contact: "05-2750809",
+// //         address: "No. 288, Wufeng N. Rd., East Dist., Chiayi City",
+// //         tag: "Dental",
+// //         imageColor: "bg-indigo-100",
+// //       },
+// //       {
+// //         id: "dent-11",
+// //         name: "Yogurt Dentist",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2168168",
+// //         address: "No. 134, Zhongshan Rd., Chiayi City",
+// //         tag: "Dental",
+// //         imageColor: "bg-indigo-100",
+// //       },
+// //     ],
+// //   },
+// //   {
+// //     title: "Chinese Medicine",
+// //     fullTitle: "Traditional Chinese Medicine (TCM)",
+// //     clinics: [
+// //       {
+// //         id: "tcm-01",
+// //         name: "Yan Hui TCM Clinic",
+// //         desc: "Registration Fee: Reduce NT.50",
+// //         contact: "05-2263370",
+// //         address: "No. 82-3, Xi'an Rd., Minxiong Township",
+// //         tag: "TCM",
+// //         imageColor: "bg-amber-100",
+// //       },
+// //       {
+// //         id: "tcm-02",
+// //         name: "Canaan TCM Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2332414",
+// //         address: "No. 123, Zhulan Rd., Chiayi City",
+// //         tag: "TCM",
+// //         imageColor: "bg-amber-100",
+// //       },
+// //       {
+// //         id: "tcm-03",
+// //         name: "Jiaguan TCM Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2222354",
+// //         address: "No. 174, Zhongyi St., Chiayi City",
+// //         tag: "TCM",
+// //         imageColor: "bg-amber-100",
+// //       },
+// //       {
+// //         id: "tcm-04",
+// //         name: "Yang Zhaoqin TCM Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2740826",
+// //         address: "No. 800, Linsen E. Rd., Chiayi City",
+// //         tag: "TCM",
+// //         imageColor: "bg-amber-100",
+// //       },
+// //       {
+// //         id: "tcm-05",
+// //         name: "Dacheng TCM Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2222650",
+// //         address: "No. 307, Xinrong Rd., Chiayi City",
+// //         tag: "TCM",
+// //         imageColor: "bg-amber-100",
+// //       },
+// //       {
+// //         id: "tcm-06",
+// //         name: "Jizhong TCM Clinic",
+// //         desc: "Registration Fee: 50% off",
+// //         contact: "05-2740868",
+// //         address: "No. 802, Linsen E. Rd., Chiayi City",
+// //         tag: "TCM",
+// //         imageColor: "bg-amber-100",
+// //       },
+// //     ],
+// //   },
+// //   {
+// //     title: "Specialized Care",
+// //     fullTitle: "Family, OB/GYN, ENT, Lab & Others",
+// //     clinics: [
+// //       {
+// //         id: "fam-01",
+// //         name: "Lam Heng Man Clinic (Dr. Lam)",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2266555",
+// //         address: "No. 30-1, Xi'an Rd., Minxiong Township",
+// //         tag: "Family Med",
+// //         imageColor: "bg-cyan-100",
+// //       },
+// //       {
+// //         id: "fam-02",
+// //         name: "Liu Zhenjia Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2649000",
+// //         address: "No. 264, Zhongxing Rd., Dalin Township",
+// //         tag: "Family Med",
+// //         imageColor: "bg-cyan-100",
+// //       },
+// //       {
+// //         id: "fam-03",
+// //         name: "Chen Ming Huang Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2337036",
+// //         address: "No. 442, Beixing St., Chiayi City",
+// //         tag: "Family Med",
+// //         imageColor: "bg-cyan-100",
+// //       },
+// //       {
+// //         id: "fam-04",
+// //         name: "Cai Yuanqing Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2305550",
+// //         address: "No. 34-63, Dingshanmen, Jinlan Vil., Zhongpu Township",
+// //         tag: "Family Med",
+// //         imageColor: "bg-cyan-100",
+// //       },
+// //       {
+// //         id: "pt-01",
+// //         name: "Gospel United Clinic",
+// //         desc: "Registration Fee: 50% off",
+// //         contact: "05-2782036",
+// //         address: "No. 340, Wufeng N. Rd., Chiayi City",
+// //         tag: "Physical Therapy",
+// //         imageColor: "bg-teal-100",
+// //       },
+// //       {
+// //         id: "pt-02",
+// //         name: "Lam Heng Man Clinic (Dr. Kwok)",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2266555",
+// //         address: "No. 30-1, Xi'an Rd., Minxiong Township",
+// //         tag: "Physical Therapy",
+// //         imageColor: "bg-teal-100",
+// //       },
+// //       {
+// //         id: "obgyn-01",
+// //         name: "Huide Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2721665",
+// //         address: "No. 281, Sec. 1, University Rd., Minxiong Township",
+// //         tag: "OB/GYN",
+// //         imageColor: "bg-pink-100",
+// //       },
+// //       {
+// //         id: "obgyn-02",
+// //         name: "Jianxing Hospital",
+// //         desc: "Registration Fee: 50% off",
+// //         contact: "05-2270302",
+// //         address: "No. 148, Zhongshan Rd., Chiayi City",
+// //         tag: "OB/GYN",
+// //         imageColor: "bg-pink-100",
+// //       },
+// //       {
+// //         id: "derm-01",
+// //         name: "Tian Jin Pei Dermatology",
+// //         desc: "Registration Fee: 50% off",
+// //         contact: "05-2063300",
+// //         address: "No. 36-2, Xi'an Rd., Minxiong Township",
+// //         tag: "Dermatology",
+// //         imageColor: "bg-rose-100",
+// //       },
+// //       {
+// //         id: "derm-02",
+// //         name: "Dai Changlong Dermatology",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2328888",
+// //         address: "No. 277, Sec. 2, Bo'ai Rd., Chiayi City",
+// //         tag: "Dermatology",
+// //         imageColor: "bg-rose-100",
+// //       },
+// //       {
+// //         id: "ent-01",
+// //         name: "Yan Tak Clinic (ENT)",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2262592",
+// //         address: "No. 36, Minsheng Rd., Minxiong Township",
+// //         tag: "ENT",
+// //         imageColor: "bg-orange-100",
+// //       },
+// //       {
+// //         id: "ent-02",
+// //         name: "Ho Chun Keng ENT Clinic",
+// //         desc: "Reg Fee reduced by NT.50",
+// //         contact: "05-2269307",
+// //         address: "No. 40-2, Minzu Rd., Minxiong Township",
+// //         tag: "ENT",
+// //         imageColor: "bg-orange-100",
+// //       },
+// //       {
+// //         id: "ent-03",
+// //         name: "Chung Yee Chun ENT Clinic",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2856506",
+// //         address: "No. 758, Xinmin Rd., Chiayi City",
+// //         tag: "ENT",
+// //         imageColor: "bg-orange-100",
+// //       },
+// //       {
+// //         id: "eye-01",
+// //         name: "Caitangzhen Ophthalmology",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2368019",
+// //         address: "No. 653, Xinmin Rd., Chiayi City",
+// //         tag: "Ophthalmology",
+// //         imageColor: "bg-blue-200",
+// //       },
+// //       {
+// //         id: "plast-01",
+// //         name: "Ding Xiaotseng Plastic Surgery",
+// //         desc: "Registration Fee: No charge",
+// //         contact: "05-2222188",
+// //         address: "No. 229, Zhongshan Rd., Chiayi City",
+// //         tag: "Plastic Surgery",
+// //         imageColor: "bg-red-200",
+// //       },
+// //       {
+// //         id: "lab-01",
+// //         name: "Xinglin Medical Laboratory",
+// //         desc: "Medical Laboratory Services",
+// //         contact: "05-2167881",
+// //         address: "No. 151, Xinrong Rd., West Dist., Chiayi City",
+// //         tag: "Lab",
+// //         imageColor: "bg-gray-100",
+// //       },
+// //     ],
+// //   },
+// // ];
+
+// // 1. 定義型別
+// export interface ClinicData {
 //   id: string;
-//   name: string;
-//   desc: string;
-//   contact: string;
-//   address: string;
-//   tag: string;
-//   imageColor: string;
+//   label: "clinic";
+//   data: {
+//     name: string;
+//     fare: string;
+//     contact: string;
+//     address: string;
+//     tags: string[]; // [科別, 市鄉鎮, 診所/醫院]
+//     distance: string;
+//   };
 // }
 
 // export interface ClinicCategory {
 //   title: string;
 //   fullTitle: string;
-//   clinics: Clinic[];
+//   clinics: ClinicData[];
 // }
+
+// // 輔助函式：判斷地區與距離模擬
+// const getMockDetails = (address: string, tag: string) => {
+//   const isMinxiong = address.includes("Minxiong");
+//   const isDalin = address.includes("Dalin");
+//   const dist = isMinxiong ? (1 + Math.random() * 2).toFixed(1) : (10 + Math.random() * 5).toFixed(1);
+//   const location = isMinxiong ? "Minxiong" : isDalin ? "Dalin" : "Chiayi City";
+//   const type = tag.includes("Hospital") ? "Hospital" : "Clinic";
+//   return { dist: `${dist} km`, location, type };
+// };
 
 // // --- 大型醫院資料 (Hospitals) ---
 // export const hospitalData: ClinicCategory = {
@@ -21,59 +564,77 @@
 //   clinics: [
 //     {
 //       id: "hosp-01",
-//       name: "St. Martin De Porres Hospital",
-//       desc: "Reg Fee: 30% off (excl. ER)",
-//       contact: "05-2756000",
-//       address: "No. 565, Sec. 2, Daya Rd., Chiayi City",
-//       tag: "General Hospital",
-//       imageColor: "bg-emerald-100",
+//       label: "clinic",
+//       data: {
+//         name: "St. Martin De Porres Hospital",
+//         fare: "30% off (excl. ER)",
+//         contact: "05-2756000",
+//         address: "No. 565, Sec. 2, Daya Rd., Chiayi City",
+//         tags: ["General", "Chiayi City", "Hospital"],
+//         distance: "12.4 km"
+//       }
 //     },
 //     {
 //       id: "hosp-02",
-//       name: "Chia-Yi Christian Hospital",
-//       desc: "Reg Fee: 10% off",
-//       contact: "05-2765041",
-//       address: "No. 539, Zhongxiao Rd., Chiayi City",
-//       tag: "General Hospital",
-//       imageColor: "bg-emerald-100",
+//       label: "clinic",
+//       data: {
+//         name: "Chia-Yi Christian Hospital",
+//         fare: "10% off",
+//         contact: "05-2765041",
+//         address: "No. 539, Zhongxiao Rd., Chiayi City",
+//         tags: ["General", "Chiayi City", "Hospital"],
+//         distance: "10.8 km"
+//       }
 //     },
 //     {
 //       id: "hosp-03",
-//       name: "Taichung Veterans General Hospital (Chiayi)",
-//       desc: "Regional teaching hospital",
-//       contact: "05-2359630",
-//       address: "No. 600, Sec. 2, Shixian Rd., Chiayi City",
-//       tag: "General Hospital",
-//       imageColor: "bg-emerald-100",
+//       label: "clinic",
+//       data: {
+//         name: "Taichung Veterans General Hospital (Chiayi)",
+//         fare: "Regional teaching hospital",
+//         contact: "05-2359630",
+//         address: "No. 600, Sec. 2, Shixian Rd., Chiayi City",
+//         tags: ["General", "Chiayi City", "Hospital"],
+//         distance: "13.2 km"
+//       }
 //     },
 //     {
 //       id: "hosp-04",
-//       name: "Dalin Tzu Chi Hospital",
-//       desc: "Reg Fee: 20% off",
-//       contact: "05-2648000",
-//       address: "No. 2, Minsheng Rd., Dalin Township",
-//       tag: "General Hospital",
-//       imageColor: "bg-emerald-100",
+//       label: "clinic",
+//       data: {
+//         name: "Dalin Tzu Chi Hospital",
+//         fare: "20% off",
+//         contact: "05-2648000",
+//         address: "No. 2, Minsheng Rd., Dalin Township",
+//         tags: ["General", "Dalin", "Hospital"],
+//         distance: "8.5 km"
+//       }
 //     },
 //     {
 //       id: "hosp-05",
-//       name: "Xinhemei Clinic",
-//       desc: "Reg Fee: 50% off",
-//       contact: "05-2867272",
-//       address: "No. 89, Xingye W. Rd., Chiayi City",
-//       tag: "General Clinic",
-//       imageColor: "bg-blue-100",
+//       label: "clinic",
+//       data: {
+//         name: "Xinhemei Clinic",
+//         fare: "50% off",
+//         contact: "05-2867272",
+//         address: "No. 89, Xingye W. Rd., Chiayi City",
+//         tags: ["General", "Chiayi City", "Clinic"],
+//         distance: "14.1 km"
+//       }
 //     },
 //     {
 //       id: "hosp-06",
-//       name: "Ching Sheng Hospital",
-//       desc: "Registration Fee: No charge",
-//       contact: "05-2229191",
-//       address: "No. 339-1, Xinrong Rd., Chiayi City",
-//       tag: "Hospital",
-//       imageColor: "bg-blue-100",
-//     },
-//   ],
+//       label: "clinic",
+//       data: {
+//         name: "Ching Sheng Hospital",
+//         fare: "No charge",
+//         contact: "05-2229191",
+//         address: "No. 339-1, Xinrong Rd., Chiayi City",
+//         tags: ["General", "Chiayi City", "Hospital"],
+//         distance: "11.9 km"
+//       }
+//     }
+//   ]
 // };
 
 // // --- 一般診所分類資料 (Clinics) ---
@@ -84,131 +645,78 @@
 //     clinics: [
 //       {
 //         id: "surg-01",
-//         name: "Enkel Surgical Clinic",
-//         desc: "Registration Fee: Reduce NT.60",
-//         contact: "05-2268611",
-//         address: "No. 36-3, Xi'an Rd., Minxiong Township",
-//         tag: "Surgery",
-//         imageColor: "bg-blue-100",
+//         label: "clinic",
+//         data: {
+//           name: "Enkel Surgical Clinic",
+//           fare: "Reduce NT.60",
+//           contact: "05-2268611",
+//           address: "No. 36-3, Xi'an Rd., Minxiong Township",
+//           tags: ["Surgery", "Minxiong", "Clinic"],
+//           distance: "1.8 km"
+//         }
 //       },
 //       {
 //         id: "int-01",
-//         name: "Huide Clinic",
-//         desc: "Registration Fee: 50% off",
-//         contact: "05-2721665",
-//         address: "No. 281, Sec. 1, University Rd., Minxiong Township",
-//         tag: "Internal Med",
-//         imageColor: "bg-green-100",
+//         label: "clinic",
+//         data: {
+//           name: "Huide Clinic",
+//           fare: "50% off",
+//           contact: "05-2721665",
+//           address: "No. 281, Sec. 1, University Rd., Minxiong Township",
+//           tags: ["Internal Med", "Minxiong", "Clinic"],
+//           distance: "0.5 km"
+//         }
 //       },
 //       {
 //         id: "int-02",
-//         name: "Ho Hing Tong Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2260728",
-//         address: "No. 35-19, Xi'an Rd., Minxiong Township",
-//         tag: "Internal Med",
-//         imageColor: "bg-green-100",
+//         label: "clinic",
+//         data: {
+//           name: "Ho Hing Tong Clinic",
+//           fare: "No charge",
+//           contact: "05-2260728",
+//           address: "No. 35-19, Xi'an Rd., Minxiong Township",
+//           tags: ["Internal Med", "Minxiong", "Clinic"],
+//           distance: "2.1 km"
+//         }
 //       },
 //       {
 //         id: "int-03",
-//         name: "Zhang Jieshan Clinic",
-//         desc: "Registration Fee: 40% off",
-//         contact: "05-2261302",
-//         address: "No. 22-3, Minzu Rd., Minxiong Township",
-//         tag: "Internal Med",
-//         imageColor: "bg-green-100",
-//       },
-//       {
-//         id: "int-04",
-//         name: "Hui An Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2269263",
-//         address: "No. 3, Minquan Rd., Minxiong Township",
-//         tag: "Internal Med",
-//         imageColor: "bg-green-100",
-//       },
-//       {
-//         id: "int-05",
-//         name: "Lai Cheng Yau Clinic",
-//         desc: "Registration Fee: 50% off",
-//         contact: "05-2266550",
-//         address: "No. 9, Heping Rd., Minxiong Township",
-//         tag: "Internal Med",
-//         imageColor: "bg-green-100",
-//       },
-//       {
-//         id: "int-06",
-//         name: "Siu Chi Yan Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2200858",
-//         address: "No. 252, Sec. 3, Jianguo Rd., Minxiong Township",
-//         tag: "Internal Med",
-//         imageColor: "bg-green-100",
+//         label: "clinic",
+//         data: {
+//           name: "Zhang Jieshan Clinic",
+//           fare: "40% off",
+//           contact: "05-2261302",
+//           address: "No. 22-3, Minzu Rd., Minxiong Township",
+//           tags: ["Internal Med", "Minxiong", "Clinic"],
+//           distance: "2.3 km"
+//         }
 //       },
 //       {
 //         id: "int-07",
-//         name: "Allianz Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2265104",
-//         address: "1F., No. 211, Sec. 1, Jianguo Rd., Minxiong Township",
-//         tag: "Internal Med",
-//         imageColor: "bg-green-100",
-//       },
-//       {
-//         id: "int-08",
-//         name: "Yang Shuqing Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2776001",
-//         address: "1F., No. 110, Minquan Rd., Chiayi City",
-//         tag: "Internal Med",
-//         imageColor: "bg-green-100",
-//       },
-//       {
-//         id: "int-09",
-//         name: "Universal Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2891966",
-//         address: "No. 71-21, Zhongzhuang Vil., Shuishang Township",
-//         tag: "Internal Med",
-//         imageColor: "bg-green-100",
-//       },
-//       {
-//         id: "neuro-01",
-//         name: "Xin En Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2777937",
-//         address: "No. 545, Xinsheng Rd., Chiayi City",
-//         tag: "Neurology",
-//         imageColor: "bg-purple-100",
+//         label: "clinic",
+//         data: {
+//           name: "Allianz Clinic",
+//           fare: "No charge",
+//           contact: "05-2265104",
+//           address: "1F., No. 211, Sec. 1, Jianguo Rd., Minxiong Township",
+//           tags: ["Internal Med", "Minxiong", "Clinic"],
+//           distance: "1.9 km"
+//         }
 //       },
 //       {
 //         id: "neuro-02",
-//         name: "Cathay Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2215260",
-//         address: "No. 519, Pijiao, Fule Vil., Minxiong Township",
-//         tag: "Neurology",
-//         imageColor: "bg-purple-100",
-//       },
-//       {
-//         id: "gi-01",
-//         name: "Huang Jingxiu Internal Medicine",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2776108",
-//         address: "No. 389, Wufeng N. Rd., Chiayi City",
-//         tag: "Gastric",
-//         imageColor: "bg-yellow-100",
-//       },
-//       {
-//         id: "ped-01",
-//         name: "Herong Pediatric Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2621313",
-//         address: "No. 195, Zhongshan Rd., Meishan Township",
-//         tag: "Pediatrics",
-//         imageColor: "bg-orange-100",
-//       },
-//     ],
+//         label: "clinic",
+//         data: {
+//           name: "Cathay Clinic",
+//           fare: "No charge",
+//           contact: "05-2215260",
+//           address: "No. 519, Pijiao, Fule Vil., Minxiong Township",
+//           tags: ["Neurology", "Minxiong", "Clinic"],
+//           distance: "4.2 km"
+//         }
+//       }
+//       // ... 其餘 Internal 診所比照此格式轉換
+//     ]
 //   },
 //   {
 //     title: "Dentistry",
@@ -216,104 +724,29 @@
 //     clinics: [
 //       {
 //         id: "dent-01",
-//         name: "Jiang Fengyu Dental Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2064900",
-//         address: "No. 116, Zhongzhuang, Dongrong Vil., Minxiong Township",
-//         tag: "Dental",
-//         imageColor: "bg-indigo-100",
-//       },
-//       {
-//         id: "dent-02",
-//         name: "Fenghe Dentist",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2063942",
-//         address: "No. 8, Dongrong Rd., Minxiong Township",
-//         tag: "Dental",
-//         imageColor: "bg-indigo-100",
+//         label: "clinic",
+//         data: {
+//           name: "Jiang Fengyu Dental Clinic",
+//           fare: "No charge",
+//           contact: "05-2064900",
+//           address: "No. 116, Zhongzhuang, Dongrong Vil., Minxiong Township",
+//           tags: ["Dental", "Minxiong", "Clinic"],
+//           distance: "2.5 km"
+//         }
 //       },
 //       {
 //         id: "dent-03",
-//         name: "Jiahe Dentist",
-//         desc: "Reg Fee: NT.50 / Co-pay: NT.50",
-//         contact: "05-2269919",
-//         address: "No. 255, Sec. 1, Jianguo Rd., Minxiong Township",
-//         tag: "Dental",
-//         imageColor: "bg-indigo-100",
-//       },
-//       {
-//         id: "dent-04",
-//         name: "Jiang Dental Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2658919",
-//         address: "No. 99-2, Zhongxing Rd., Dalin Township",
-//         tag: "Dental",
-//         imageColor: "bg-indigo-100",
-//       },
-//       {
-//         id: "dent-05",
-//         name: "Hong En Dental Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2762876",
-//         address: "No. 183, Zhongxiao Rd., Chiayi City",
-//         tag: "Dental",
-//         imageColor: "bg-indigo-100",
-//       },
-//       {
-//         id: "dent-06",
-//         name: "Ming Ren Tang Dental Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2362726",
-//         address: "No. 295, Xingye W. Rd., Chiayi City",
-//         tag: "Dental",
-//         imageColor: "bg-indigo-100",
-//       },
-//       {
-//         id: "dent-07",
-//         name: "Good News Dental Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2235242",
-//         address: "4F., No. 201, Zhongshan Rd., Chiayi City",
-//         tag: "Dental",
-//         imageColor: "bg-indigo-100",
-//       },
-//       {
-//         id: "dent-08",
-//         name: "Xin Ming Dental Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2851179",
-//         address: "No. 838, Xinmin Rd., Chiayi City",
-//         tag: "Dental",
-//         imageColor: "bg-indigo-100",
-//       },
-//       {
-//         id: "dent-09",
-//         name: "Chen Pixiu Dental Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2779901",
-//         address: "No. 51, Zhongshan Rd., Chiayi City",
-//         tag: "Dental",
-//         imageColor: "bg-indigo-100",
-//       },
-//       {
-//         id: "dent-10",
-//         name: "Dentist for Humanity",
-//         desc: "Registration Fee: Reduce NT.100",
-//         contact: "05-2750809",
-//         address: "No. 288, Wufeng N. Rd., East Dist., Chiayi City",
-//         tag: "Dental",
-//         imageColor: "bg-indigo-100",
-//       },
-//       {
-//         id: "dent-11",
-//         name: "Yogurt Dentist",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2168168",
-//         address: "No. 134, Zhongshan Rd., Chiayi City",
-//         tag: "Dental",
-//         imageColor: "bg-indigo-100",
-//       },
-//     ],
+//         label: "clinic",
+//         data: {
+//           name: "Jiahe Dentist",
+//           fare: "NT.50 / Co-pay: NT.50",
+//           contact: "05-2269919",
+//           address: "No. 255, Sec. 1, Jianguo Rd., Minxiong Township",
+//           tags: ["Dental", "Minxiong", "Clinic"],
+//           distance: "2.0 km"
+//         }
+//       }
+//     ]
 //   },
 //   {
 //     title: "Chinese Medicine",
@@ -321,59 +754,17 @@
 //     clinics: [
 //       {
 //         id: "tcm-01",
-//         name: "Yan Hui TCM Clinic",
-//         desc: "Registration Fee: Reduce NT.50",
-//         contact: "05-2263370",
-//         address: "No. 82-3, Xi'an Rd., Minxiong Township",
-//         tag: "TCM",
-//         imageColor: "bg-amber-100",
-//       },
-//       {
-//         id: "tcm-02",
-//         name: "Canaan TCM Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2332414",
-//         address: "No. 123, Zhulan Rd., Chiayi City",
-//         tag: "TCM",
-//         imageColor: "bg-amber-100",
-//       },
-//       {
-//         id: "tcm-03",
-//         name: "Jiaguan TCM Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2222354",
-//         address: "No. 174, Zhongyi St., Chiayi City",
-//         tag: "TCM",
-//         imageColor: "bg-amber-100",
-//       },
-//       {
-//         id: "tcm-04",
-//         name: "Yang Zhaoqin TCM Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2740826",
-//         address: "No. 800, Linsen E. Rd., Chiayi City",
-//         tag: "TCM",
-//         imageColor: "bg-amber-100",
-//       },
-//       {
-//         id: "tcm-05",
-//         name: "Dacheng TCM Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2222650",
-//         address: "No. 307, Xinrong Rd., Chiayi City",
-//         tag: "TCM",
-//         imageColor: "bg-amber-100",
-//       },
-//       {
-//         id: "tcm-06",
-//         name: "Jizhong TCM Clinic",
-//         desc: "Registration Fee: 50% off",
-//         contact: "05-2740868",
-//         address: "No. 802, Linsen E. Rd., Chiayi City",
-//         tag: "TCM",
-//         imageColor: "bg-amber-100",
-//       },
-//     ],
+//         label: "clinic",
+//         data: {
+//           name: "Yan Hui TCM Clinic",
+//           fare: "Reduce NT.50",
+//           contact: "05-2263370",
+//           address: "No. 82-3, Xi'an Rd., Minxiong Township",
+//           tags: ["TCM", "Minxiong", "Clinic"],
+//           distance: "1.7 km"
+//         }
+//       }
+//     ]
 //   },
 //   {
 //     title: "Specialized Care",
@@ -381,431 +772,40 @@
 //     clinics: [
 //       {
 //         id: "fam-01",
-//         name: "Lam Heng Man Clinic (Dr. Lam)",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2266555",
-//         address: "No. 30-1, Xi'an Rd., Minxiong Township",
-//         tag: "Family Med",
-//         imageColor: "bg-cyan-100",
-//       },
-//       {
-//         id: "fam-02",
-//         name: "Liu Zhenjia Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2649000",
-//         address: "No. 264, Zhongxing Rd., Dalin Township",
-//         tag: "Family Med",
-//         imageColor: "bg-cyan-100",
-//       },
-//       {
-//         id: "fam-03",
-//         name: "Chen Ming Huang Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2337036",
-//         address: "No. 442, Beixing St., Chiayi City",
-//         tag: "Family Med",
-//         imageColor: "bg-cyan-100",
-//       },
-//       {
-//         id: "fam-04",
-//         name: "Cai Yuanqing Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2305550",
-//         address: "No. 34-63, Dingshanmen, Jinlan Vil., Zhongpu Township",
-//         tag: "Family Med",
-//         imageColor: "bg-cyan-100",
-//       },
-//       {
-//         id: "pt-01",
-//         name: "Gospel United Clinic",
-//         desc: "Registration Fee: 50% off",
-//         contact: "05-2782036",
-//         address: "No. 340, Wufeng N. Rd., Chiayi City",
-//         tag: "Physical Therapy",
-//         imageColor: "bg-teal-100",
-//       },
-//       {
-//         id: "pt-02",
-//         name: "Lam Heng Man Clinic (Dr. Kwok)",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2266555",
-//         address: "No. 30-1, Xi'an Rd., Minxiong Township",
-//         tag: "Physical Therapy",
-//         imageColor: "bg-teal-100",
-//       },
-//       {
-//         id: "obgyn-01",
-//         name: "Huide Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2721665",
-//         address: "No. 281, Sec. 1, University Rd., Minxiong Township",
-//         tag: "OB/GYN",
-//         imageColor: "bg-pink-100",
-//       },
-//       {
-//         id: "obgyn-02",
-//         name: "Jianxing Hospital",
-//         desc: "Registration Fee: 50% off",
-//         contact: "05-2270302",
-//         address: "No. 148, Zhongshan Rd., Chiayi City",
-//         tag: "OB/GYN",
-//         imageColor: "bg-pink-100",
+//         label: "clinic",
+//         data: {
+//           name: "Lam Heng Man Clinic (Dr. Lam)",
+//           fare: "No charge",
+//           contact: "05-2266555",
+//           address: "No. 30-1, Xi'an Rd., Minxiong Township",
+//           tags: ["Family Med", "Minxiong", "Clinic"],
+//           distance: "1.6 km"
+//         }
 //       },
 //       {
 //         id: "derm-01",
-//         name: "Tian Jin Pei Dermatology",
-//         desc: "Registration Fee: 50% off",
-//         contact: "05-2063300",
-//         address: "No. 36-2, Xi'an Rd., Minxiong Township",
-//         tag: "Dermatology",
-//         imageColor: "bg-rose-100",
-//       },
-//       {
-//         id: "derm-02",
-//         name: "Dai Changlong Dermatology",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2328888",
-//         address: "No. 277, Sec. 2, Bo'ai Rd., Chiayi City",
-//         tag: "Dermatology",
-//         imageColor: "bg-rose-100",
+//         label: "clinic",
+//         data: {
+//           name: "Tian Jin Pei Dermatology",
+//           fare: "50% off",
+//           contact: "05-2063300",
+//           address: "No. 36-2, Xi'an Rd., Minxiong Township",
+//           tags: ["Dermatology", "Minxiong", "Clinic"],
+//           distance: "1.8 km"
+//         }
 //       },
 //       {
 //         id: "ent-01",
-//         name: "Yan Tak Clinic (ENT)",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2262592",
-//         address: "No. 36, Minsheng Rd., Minxiong Township",
-//         tag: "ENT",
-//         imageColor: "bg-orange-100",
-//       },
-//       {
-//         id: "ent-02",
-//         name: "Ho Chun Keng ENT Clinic",
-//         desc: "Reg Fee reduced by NT.50",
-//         contact: "05-2269307",
-//         address: "No. 40-2, Minzu Rd., Minxiong Township",
-//         tag: "ENT",
-//         imageColor: "bg-orange-100",
-//       },
-//       {
-//         id: "ent-03",
-//         name: "Chung Yee Chun ENT Clinic",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2856506",
-//         address: "No. 758, Xinmin Rd., Chiayi City",
-//         tag: "ENT",
-//         imageColor: "bg-orange-100",
-//       },
-//       {
-//         id: "eye-01",
-//         name: "Caitangzhen Ophthalmology",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2368019",
-//         address: "No. 653, Xinmin Rd., Chiayi City",
-//         tag: "Ophthalmology",
-//         imageColor: "bg-blue-200",
-//       },
-//       {
-//         id: "plast-01",
-//         name: "Ding Xiaotseng Plastic Surgery",
-//         desc: "Registration Fee: No charge",
-//         contact: "05-2222188",
-//         address: "No. 229, Zhongshan Rd., Chiayi City",
-//         tag: "Plastic Surgery",
-//         imageColor: "bg-red-200",
-//       },
-//       {
-//         id: "lab-01",
-//         name: "Xinglin Medical Laboratory",
-//         desc: "Medical Laboratory Services",
-//         contact: "05-2167881",
-//         address: "No. 151, Xinrong Rd., West Dist., Chiayi City",
-//         tag: "Lab",
-//         imageColor: "bg-gray-100",
-//       },
-//     ],
-//   },
+//         label: "clinic",
+//         data: {
+//           name: "Yan Tak Clinic (ENT)",
+//           fare: "No charge",
+//           contact: "05-2262592",
+//           address: "No. 36, Minsheng Rd., Minxiong Township",
+//           tags: ["ENT", "Minxiong", "Clinic"],
+//           distance: "2.2 km"
+//         }
+//       }
+//     ]
+//   }
 // ];
-
-// 1. 定義型別
-export interface ClinicData {
-  id: string;
-  label: "clinic";
-  data: {
-    name: string;
-    fare: string;
-    contact: string;
-    address: string;
-    tags: string[]; // [科別, 市鄉鎮, 診所/醫院]
-    distance: string;
-  };
-}
-
-export interface ClinicCategory {
-  title: string;
-  fullTitle: string;
-  clinics: ClinicData[];
-}
-
-// 輔助函式：判斷地區與距離模擬
-const getMockDetails = (address: string, tag: string) => {
-  const isMinxiong = address.includes("Minxiong");
-  const isDalin = address.includes("Dalin");
-  const dist = isMinxiong ? (1 + Math.random() * 2).toFixed(1) : (10 + Math.random() * 5).toFixed(1);
-  const location = isMinxiong ? "Minxiong" : isDalin ? "Dalin" : "Chiayi City";
-  const type = tag.includes("Hospital") ? "Hospital" : "Clinic";
-  return { dist: `${dist} km`, location, type };
-};
-
-// --- 大型醫院資料 (Hospitals) ---
-export const hospitalData: ClinicCategory = {
-  title: "Hospitals",
-  fullTitle: "Hospitals & Medical Centers",
-  clinics: [
-    {
-      id: "hosp-01",
-      label: "clinic",
-      data: {
-        name: "St. Martin De Porres Hospital",
-        fare: "30% off (excl. ER)",
-        contact: "05-2756000",
-        address: "No. 565, Sec. 2, Daya Rd., Chiayi City",
-        tags: ["General", "Chiayi City", "Hospital"],
-        distance: "12.4 km"
-      }
-    },
-    {
-      id: "hosp-02",
-      label: "clinic",
-      data: {
-        name: "Chia-Yi Christian Hospital",
-        fare: "10% off",
-        contact: "05-2765041",
-        address: "No. 539, Zhongxiao Rd., Chiayi City",
-        tags: ["General", "Chiayi City", "Hospital"],
-        distance: "10.8 km"
-      }
-    },
-    {
-      id: "hosp-03",
-      label: "clinic",
-      data: {
-        name: "Taichung Veterans General Hospital (Chiayi)",
-        fare: "Regional teaching hospital",
-        contact: "05-2359630",
-        address: "No. 600, Sec. 2, Shixian Rd., Chiayi City",
-        tags: ["General", "Chiayi City", "Hospital"],
-        distance: "13.2 km"
-      }
-    },
-    {
-      id: "hosp-04",
-      label: "clinic",
-      data: {
-        name: "Dalin Tzu Chi Hospital",
-        fare: "20% off",
-        contact: "05-2648000",
-        address: "No. 2, Minsheng Rd., Dalin Township",
-        tags: ["General", "Dalin", "Hospital"],
-        distance: "8.5 km"
-      }
-    },
-    {
-      id: "hosp-05",
-      label: "clinic",
-      data: {
-        name: "Xinhemei Clinic",
-        fare: "50% off",
-        contact: "05-2867272",
-        address: "No. 89, Xingye W. Rd., Chiayi City",
-        tags: ["General", "Chiayi City", "Clinic"],
-        distance: "14.1 km"
-      }
-    },
-    {
-      id: "hosp-06",
-      label: "clinic",
-      data: {
-        name: "Ching Sheng Hospital",
-        fare: "No charge",
-        contact: "05-2229191",
-        address: "No. 339-1, Xinrong Rd., Chiayi City",
-        tags: ["General", "Chiayi City", "Hospital"],
-        distance: "11.9 km"
-      }
-    }
-  ]
-};
-
-// --- 一般診所分類資料 (Clinics) ---
-export const medicalData: ClinicCategory[] = [
-  {
-    title: "Internal & Surgery",
-    fullTitle: "Internal Medicine, Surgery & Pediatrics",
-    clinics: [
-      {
-        id: "surg-01",
-        label: "clinic",
-        data: {
-          name: "Enkel Surgical Clinic",
-          fare: "Reduce NT.60",
-          contact: "05-2268611",
-          address: "No. 36-3, Xi'an Rd., Minxiong Township",
-          tags: ["Surgery", "Minxiong", "Clinic"],
-          distance: "1.8 km"
-        }
-      },
-      {
-        id: "int-01",
-        label: "clinic",
-        data: {
-          name: "Huide Clinic",
-          fare: "50% off",
-          contact: "05-2721665",
-          address: "No. 281, Sec. 1, University Rd., Minxiong Township",
-          tags: ["Internal Med", "Minxiong", "Clinic"],
-          distance: "0.5 km"
-        }
-      },
-      {
-        id: "int-02",
-        label: "clinic",
-        data: {
-          name: "Ho Hing Tong Clinic",
-          fare: "No charge",
-          contact: "05-2260728",
-          address: "No. 35-19, Xi'an Rd., Minxiong Township",
-          tags: ["Internal Med", "Minxiong", "Clinic"],
-          distance: "2.1 km"
-        }
-      },
-      {
-        id: "int-03",
-        label: "clinic",
-        data: {
-          name: "Zhang Jieshan Clinic",
-          fare: "40% off",
-          contact: "05-2261302",
-          address: "No. 22-3, Minzu Rd., Minxiong Township",
-          tags: ["Internal Med", "Minxiong", "Clinic"],
-          distance: "2.3 km"
-        }
-      },
-      {
-        id: "int-07",
-        label: "clinic",
-        data: {
-          name: "Allianz Clinic",
-          fare: "No charge",
-          contact: "05-2265104",
-          address: "1F., No. 211, Sec. 1, Jianguo Rd., Minxiong Township",
-          tags: ["Internal Med", "Minxiong", "Clinic"],
-          distance: "1.9 km"
-        }
-      },
-      {
-        id: "neuro-02",
-        label: "clinic",
-        data: {
-          name: "Cathay Clinic",
-          fare: "No charge",
-          contact: "05-2215260",
-          address: "No. 519, Pijiao, Fule Vil., Minxiong Township",
-          tags: ["Neurology", "Minxiong", "Clinic"],
-          distance: "4.2 km"
-        }
-      }
-      // ... 其餘 Internal 診所比照此格式轉換
-    ]
-  },
-  {
-    title: "Dentistry",
-    fullTitle: "Dental Clinics",
-    clinics: [
-      {
-        id: "dent-01",
-        label: "clinic",
-        data: {
-          name: "Jiang Fengyu Dental Clinic",
-          fare: "No charge",
-          contact: "05-2064900",
-          address: "No. 116, Zhongzhuang, Dongrong Vil., Minxiong Township",
-          tags: ["Dental", "Minxiong", "Clinic"],
-          distance: "2.5 km"
-        }
-      },
-      {
-        id: "dent-03",
-        label: "clinic",
-        data: {
-          name: "Jiahe Dentist",
-          fare: "NT.50 / Co-pay: NT.50",
-          contact: "05-2269919",
-          address: "No. 255, Sec. 1, Jianguo Rd., Minxiong Township",
-          tags: ["Dental", "Minxiong", "Clinic"],
-          distance: "2.0 km"
-        }
-      }
-    ]
-  },
-  {
-    title: "Chinese Medicine",
-    fullTitle: "Traditional Chinese Medicine (TCM)",
-    clinics: [
-      {
-        id: "tcm-01",
-        label: "clinic",
-        data: {
-          name: "Yan Hui TCM Clinic",
-          fare: "Reduce NT.50",
-          contact: "05-2263370",
-          address: "No. 82-3, Xi'an Rd., Minxiong Township",
-          tags: ["TCM", "Minxiong", "Clinic"],
-          distance: "1.7 km"
-        }
-      }
-    ]
-  },
-  {
-    title: "Specialized Care",
-    fullTitle: "Family, OB/GYN, ENT, Lab & Others",
-    clinics: [
-      {
-        id: "fam-01",
-        label: "clinic",
-        data: {
-          name: "Lam Heng Man Clinic (Dr. Lam)",
-          fare: "No charge",
-          contact: "05-2266555",
-          address: "No. 30-1, Xi'an Rd., Minxiong Township",
-          tags: ["Family Med", "Minxiong", "Clinic"],
-          distance: "1.6 km"
-        }
-      },
-      {
-        id: "derm-01",
-        label: "clinic",
-        data: {
-          name: "Tian Jin Pei Dermatology",
-          fare: "50% off",
-          contact: "05-2063300",
-          address: "No. 36-2, Xi'an Rd., Minxiong Township",
-          tags: ["Dermatology", "Minxiong", "Clinic"],
-          distance: "1.8 km"
-        }
-      },
-      {
-        id: "ent-01",
-        label: "clinic",
-        data: {
-          name: "Yan Tak Clinic (ENT)",
-          fare: "No charge",
-          contact: "05-2262592",
-          address: "No. 36, Minsheng Rd., Minxiong Township",
-          tags: ["ENT", "Minxiong", "Clinic"],
-          distance: "2.2 km"
-        }
-      }
-    ]
-  }
-];
