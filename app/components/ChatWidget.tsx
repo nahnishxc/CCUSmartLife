@@ -501,6 +501,14 @@ export default function ChatWidget() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isSending]);
 
+  // ... 其他 useEffect
+  useEffect(() => {
+    // 當元件被卸載時，確保解鎖網頁背景滾動
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   // 1. 抓取所有對話列表 (整合為一個)
   useEffect(() => {
     const fetchSessions = async () => {
@@ -734,6 +742,9 @@ export default function ChatWidget() {
             transition={{ type: "spring", damping: 26, stiffness: 240 }}
             style={{ width: size.width, height: size.height }}
             className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col relative"
+          
+            onMouseEnter={() => { document.body.style.overflow = "hidden"; }}
+            onMouseLeave={() => { document.body.style.overflow = ""; }}
           >
             <div
               onPointerDown={(e) => dragControls.start(e)}
@@ -763,7 +774,10 @@ export default function ChatWidget() {
               </div>
             </div>
 
-            <div className="flex-1 bg-gray-50 p-6 overflow-y-auto relative">
+            <div 
+              className="flex-1 bg-gray-50 p-6 overflow-y-auto relative overscroll-contain"
+              onWheelCapture={(e: any) => e.stopPropagation()}
+  onPointerDownCapture={(e: any) => e.stopPropagation()}>
               <div className="flex flex-col gap-3">
                 <div className="self-start bg-white px-5 py-3.5 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 text-sm text-gray-700 max-w-[85%]">
                   Hi! I&apos;m your AI assistant. How can I help you today?
