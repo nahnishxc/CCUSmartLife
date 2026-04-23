@@ -97,20 +97,20 @@ export default function About() {
 
         {/* 4. 校園平面地圖 (新增區塊) */}
         <div className="w-full mb-10">
-          <div className="flex items-center gap-3 mb-6">
+          {/* <div className="flex items-center gap-3 mb-6">
             <h3 className="text-2xl font-bold text-gray-800">Campus Map</h3>
             <div className="h-px bg-gray-200 flex-1"></div>
-          </div>
+          </div> */}
 
           {/* 地圖容器：設定高度為 600px，確保有足夠空間操作 */}
-          <div className="w-full h-[600px] rounded-2xl border border-gray-200 overflow-hidden shadow-inner">
+          {/* <div className="w-full h-[600px] rounded-2xl border border-gray-200 overflow-hidden shadow-inner">
             <MapContainer>
               <MainCampusMap />
             </MapContainer>
-          </div>
-          <p className="text-center text-slate-400 text-sm mt-3">
+          </div> */}
+          {/* <p className="text-center text-slate-400 text-sm mt-3">
             * You can zoom and drag the map to explore.
-          </p>
+          </p> */}
             <div className="text-gray-500 leading-loose text-lg text-justify space-y-6 mt-12 md:mt-16">
           <p>
             At CCU, you will discover that it is more than just a university —

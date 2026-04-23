@@ -56,8 +56,8 @@ export default function Navbar() {
       />
 
       <header className="fixed top-0 left-0 right-0 h-20 px-8 flex items-center justify-between bg-white border-b border-[#e5e5e5] z-[100]">
-        <Link href="/" className="font-bold text-lg tracking-wider text-black">
-          OIA STAMP
+        <Link href="/" className="font-bold text-xl tracking-wider text-black">
+          CCU SmartLife
         </Link>
         
         <nav className="flex items-center gap-6 relative">
