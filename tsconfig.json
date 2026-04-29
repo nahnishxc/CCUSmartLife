@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "app/components/EssentialsItem", "app/components/Navbar.js"  ],
+, "app/components/EssentialsItem", "app/components/Navbar.js", "app/campus(default page)/page.tsx"  ],
   "exclude": ["node_modules"]
 }

@@ -8,6 +8,7 @@ export interface College {
   id: string;
   name: string;
   url: string;
+  images: string[];
   description: string;
   departments: Department[];
 }
@@ -62,6 +63,7 @@ export const ACADEMIC_UNITS: College[] = [
     id: "humanities",
     name: "College of Humanities",
     url: "https://colliber.ccu.edu.tw/p/406-1018-17262,r2501.php?Lang=en",
+    images: [],
     description: HUMANITIES_DESC, // 引用上面的變數
     departments: [
       {
@@ -94,6 +96,7 @@ export const ACADEMIC_UNITS: College[] = [
     id: "science",
     name: "College of Science",
     url: "https://science.ccu.edu.tw/?Lang=en",
+    images: [],
     description: SCIENCE_DESC,
     departments: [
       {
@@ -122,6 +125,7 @@ export const ACADEMIC_UNITS: College[] = [
     id: "law",
     name: "College of Law",
     url: "https://deptclaw.ccu.edu.tw/?Lang=en",
+    images: [],
     description: LAW_DESC,
     departments: [
       {
@@ -138,6 +142,7 @@ export const ACADEMIC_UNITS: College[] = [
     id: "engineering",
     name: "College of Engineering",
     url: "https://coe.ccu.edu.tw/?Lang=en",
+    images: [],
     description: ENGINEERING_DESC,
     departments: [
       {
@@ -174,6 +179,7 @@ export const ACADEMIC_UNITS: College[] = [
     id: "social sciences",
     name: "College of Social Sciences",
     url: "https://colsoc.ccu.edu.tw/?Lang=en",
+    images: [],
     description: SOCIAL_SCIENCES_DESC,
     departments: [
       {
@@ -206,6 +212,7 @@ export const ACADEMIC_UNITS: College[] = [
     id: "management",
     name: "College of Management",
     url: "https://colmgt.ccu.edu.tw/",
+    images: [],
     description: MANAGEMENT_DESC,
     departments: [
       {
@@ -239,6 +246,7 @@ export const ACADEMIC_UNITS: College[] = [
     id: "education",
     name: "College of Education",
     url: "https://coledu.ccu.edu.tw/?Lang=en",
+    images: [],
     description: EDUCATION_DESC,
     departments: [
       {
@@ -271,6 +279,7 @@ export const ACADEMIC_UNITS: College[] = [
     id: "others",
     name: "others",
     url: "https://www.ccu.edu.tw/p/412-1000-792.php?Lang=en",
+    images: [],
     description: OTHERS_DESC,
     departments: [
       {

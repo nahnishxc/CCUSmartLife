@@ -55,7 +55,7 @@ export default function TrainDetail({ onBack }: TrainDetailProps) {
   };
 
   return (
-    <div className="w-full h-full flex flex-col relative">
+    <div className="w-full h-full bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 flex flex-col overflow-y-auto custom-scrollbar">
       
       {/* Header */}
       <div className="flex items-center gap-2 mb-4 border-b border-gray-100 pb-3 flex-shrink-0">

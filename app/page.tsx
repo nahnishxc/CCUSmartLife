@@ -114,7 +114,7 @@
 
 "use client";
 import { useState } from "react";
-import Campus from "./components/Campus";
+import Campus from "./campus(default page)/page";
 
 export default function Page() {
   const [campusSubTab, setCampusSubTab] = useState("About CCU");

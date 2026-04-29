@@ -24,17 +24,17 @@ export default function Academic() {
             className="w-full h-full flex flex-col"
           >
             {/* 上半部：地圖區 */}
-            <div className="w-full h-48 md:h-64 bg-gray-100 rounded-2xl mb-8 flex items-center justify-center border border-gray-200 relative overflow-hidden group">
+            {/* <div className="w-full h-48 md:h-64 bg-gray-100 rounded-2xl mb-8 flex items-center justify-center border border-gray-200 relative overflow-hidden group">
               <div className="text-gray-400 font-bold text-lg tracking-widest z-10">
                 MAP OF ACADEMIC UNITS
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-gray-200/50 to-transparent"></div>
-            </div>
+            </div> */}
 
             {/* 下半部：學院列表 */}
             <div className="flex-1 flex flex-col md:flex-row gap-8 overflow-y-auto custom-scrollbar">
-      <div className="w-full md:w-1/4 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-gray-100 pb-6 md:pb-0 md:pr-6">
-        <div className="w-24 h-24 bg-green-50 rounded-3xl flex items-center justify-center text-green-500 mb-6 shadow-sm">
+              <div className="w-full md:w-1/4 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-gray-100 pb-6 md:pb-0 md:pr-6">
+                <div className="w-24 h-24 bg-green-50 rounded-3xl flex items-center justify-center text-green-500 mb-6 shadow-sm">
                   <BookOpen size={40} strokeWidth={1.5} />
                 </div>
                 <h2 className="text-xl font-bold text-gray-700">Academic</h2>

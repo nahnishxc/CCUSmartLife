@@ -393,9 +393,6 @@ import { Calendar, ArrowRight, Bell, ChevronLeft, ExternalLink } from "lucide-re
 // ];
 
 
-
-
-// 1. 定義你「真的要用」的英文型別 (防止紅字)
 interface Announcement {
   id: number;
   category: string;
@@ -533,6 +530,9 @@ useEffect(() => {
 
         {/* 中間：標題與內文 */}
         <div className="flex-1">
+{/* 中間：標題與內文 */}
+        {/* 加上 min-w-0 w-full 限制它絕對不能撐破外層 */}
+        <div className="flex-1 min-w-0 w-full">
           <motion.h3 
             layout="position"
             className={`font-bold text-gray-800 mb-2 group-hover:text-emerald-700 transition-colors leading-snug ${
@@ -544,7 +544,18 @@ useEffect(() => {
           
           <motion.p 
             layout="position"
-            className={`text-gray-500 leading-relaxed ${
+            // 保留 break-all，這樣網址才會斷開
+            className={`text-gray-500 leading-relaxed break-all ${
+              isExpanded ? "text-sm mt-4 whitespace-pre-wrap" : "text-sm line-clamp-2"
+            }`}
+          >
+            {item.content_en}
+          </motion.p>
+        </div>
+          
+          <motion.p 
+            layout="position"
+            className={`text-gray-500 leading-relaxed break-all${
               isExpanded ? "text-sm mt-4 whitespace-pre-wrap" : "text-sm line-clamp-2"
             }`}
           >

@@ -7,13 +7,13 @@ export default function Facilities() {
   return (
     <div className="w-full h-full bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 flex flex-col overflow-y-auto custom-scrollbar">
       {/* 1. 上方：設施地圖區 (Map Placeholder) */}
-      <div className="w-full h-64 bg-gray-100 rounded-2xl mb-10 flex items-center justify-center border border-gray-200 relative overflow-hidden group flex-shrink-0">
-        <div className="text-gray-400 font-bold text-lg tracking-widest z-10 uppercase">
+      {/* <div className="w-full h-64 bg-gray-100 rounded-2xl mb-10 flex items-center justify-center border border-gray-200 relative overflow-hidden group flex-shrink-0">
+        {/* <div className="text-gray-400 font-bold text-lg tracking-widest z-10 uppercase">
           MAP OF CAMPUS FACILITIES
-        </div>
-        {/* 背景裝飾 */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-gray-200 opacity-50"></div>
-      </div>
+        </div> */}
+
+        {/* <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-gray-200 opacity-50"></div> */}
+      {/* </div> */} 
 
       {/* 2. 標題與簡介 */}
       <div className="mb-8 flex-shrink-0">

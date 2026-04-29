@@ -77,28 +77,28 @@
 //       // 路徑修正：${API_BASE_URL}/api/chat
 //       const res = await fetch(`${API_BASE_URL}/api/chat`, {
 //         method: "POST",
-//         headers: { 
+//         headers: {
 //           "Content-Type": "application/json",
 //           ...(token ? { "Authorization": `Bearer ${token}` } : {})
 //         },
-//         body: JSON.stringify({ 
+//         body: JSON.stringify({
 //           message: text, // 如果後端噴錯，試試看改回 query: text
-//           sessionId: currentSessionId 
+//           sessionId: currentSessionId
 //         }),
 //       });
 
 //       if (!res.ok) throw new Error(`API Error: ${res.status}`);
 
 //       const data = await res.json();
-//       const assistantMessage = { 
-//         role: "assistant", 
-//         content: data.answer || data.message || "I received an empty response." 
+//       const assistantMessage = {
+//         role: "assistant",
+//         content: data.answer || data.message || "I received an empty response."
 //       };
 //       setMessages((prev) => [...prev, assistantMessage]);
 //     } catch (error) {
 //       console.error("API failed:", error);
 //       setMessages((prev) => [
-//         ...prev, 
+//         ...prev,
 //         { role: "assistant", content: "抱歉，目前連線似乎有點問題，請稍後再試。" }
 //       ]);
 //     } finally {
@@ -137,7 +137,6 @@
 //     }
 //   };
 
-  
 //   const handleNewChat = async () => {
 //     setMessages([]); // 清空目前對話
 //     setCurrentSessionId(null); // 重設 Session ID
@@ -473,7 +472,8 @@ import {
 import { X, Send, MoreVertical } from "lucide-react";
 import SlimeBall from "./SlimeBall";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://campus-ai-backend-1.onrender.com";
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://campus-ai-backend-1.onrender.com";
 
 export default function ChatWidget() {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -482,7 +482,9 @@ export default function ChatWidget() {
   const [isSending, setIsSending] = useState(false);
   const [currentSessionId, setCurrentSessionId] = useState<number | null>(null);
 
-  const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
+  const [messages, setMessages] = useState<{ role: string; content: string }[]>(
+    [],
+  );
   const [history, setHistory] = useState<{ id: number; title: string }[]>([]);
 
   const [size] = useState({ width: 400, height: 550 });
@@ -562,29 +564,32 @@ export default function ChatWidget() {
     try {
       const res = await fetch(`${API_BASE_URL}/api/chat`, {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
-          ...(token ? { "Authorization": `Bearer ${token}` } : {})
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ 
-          message: text, 
-          sessionId: currentSessionId 
+        body: JSON.stringify({
+          message: text,
+          sessionId: currentSessionId,
         }),
       });
 
       if (!res.ok) throw new Error(`API Error: ${res.status}`);
 
       const data = await res.json();
-      const assistantMessage = { 
-        role: "assistant", 
-        content: data.answer || data.message || "I received an empty response." 
+      const assistantMessage = {
+        role: "assistant",
+        content: data.answer || data.message || "I received an empty response.",
       };
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
       console.error("API failed:", error);
       setMessages((prev) => [
-        ...prev, 
-        { role: "assistant", content: "抱歉，目前連線似乎有點問題，請稍後再試。" }
+        ...prev,
+        {
+          role: "assistant",
+          content: "抱歉，目前連線似乎有點問題，請稍後再試。",
+        },
       ]);
     } finally {
       setIsSending(false);
@@ -709,9 +714,13 @@ export default function ChatWidget() {
       dragControls={dragControls}
       dragListener={!isChatOpen}
       dragMomentum={false}
-      onDragStart={() => { isDragging.current = true; }}
+      onDragStart={() => {
+        isDragging.current = true;
+      }}
       onDragEnd={() => {
-        setTimeout(() => { isDragging.current = false; }, 50);
+        setTimeout(() => {
+          isDragging.current = false;
+        }, 50);
         snap(isChatOpen ? "panel" : "bubble");
       }}
       style={{ x, y, opacity: ready ? 1 : 0 }}
@@ -742,9 +751,12 @@ export default function ChatWidget() {
             transition={{ type: "spring", damping: 26, stiffness: 240 }}
             style={{ width: size.width, height: size.height }}
             className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col relative"
-          
-            onMouseEnter={() => { document.body.style.overflow = "hidden"; }}
-            onMouseLeave={() => { document.body.style.overflow = ""; }}
+            onMouseEnter={() => {
+              document.body.style.overflow = "hidden";
+            }}
+            onMouseLeave={() => {
+              document.body.style.overflow = "";
+            }}
           >
             <div
               onPointerDown={(e) => dragControls.start(e)}
@@ -774,10 +786,11 @@ export default function ChatWidget() {
               </div>
             </div>
 
-            <div 
+            <div
               className="flex-1 bg-gray-50 p-6 overflow-y-auto relative overscroll-contain"
               onWheelCapture={(e: any) => e.stopPropagation()}
-  onPointerDownCapture={(e: any) => e.stopPropagation()}>
+              onPointerDownCapture={(e: any) => e.stopPropagation()}
+            >
               <div className="flex flex-col gap-3">
                 <div className="self-start bg-white px-5 py-3.5 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 text-sm text-gray-700 max-w-[85%]">
                   Hi! I&apos;m your AI assistant. How can I help you today?
