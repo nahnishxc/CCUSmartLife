@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 // 引入子頁面元件
 import About from "./section/About";
@@ -12,9 +13,9 @@ import Facilities from "./section/Facilities";
 // --- 假資料：Banner 圖片 ---
 // --- 真實資料：Banner 圖片路徑 ---
 const BANNER_IMAGES = [
-  "/banner/校園3.png",
-  "/banner/校園4.png",
-  "/banner/校園5.png",
+  "/homepage/banner1.png",
+  "/homepage/banner2.png",
+  "/homepage/banner3.png",
 ];
 
 interface CampusViewProps {
@@ -71,26 +72,27 @@ export default function Campus({ subTab }: CampusViewProps) {
               </div>
 
               {/* 卡片區：改為大圖 + 下方文字包在一起 */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <ImageNavCard
-                  title="Administrative"
-                  subtitle="Offices & Services"
-                  imageColor="bg-blue-100"
-                  onClick={() => setCurrentView("Administrative")}
-                />
-                <ImageNavCard
-                  title="Academic Units"
-                  subtitle="Colleges & Departments"
-                  imageColor="bg-emerald-100"
-                  onClick={() => setCurrentView("Academic")}
-                />
-                <ImageNavCard
-                  title="Facilities"
-                  subtitle="Sports & Dormitories"
-                  imageColor="bg-orange-100"
-                  onClick={() => setCurrentView("Facilities")}
-                />
-              </div>
+              {/* 卡片區：傳入正確的 imageSrc */}
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <ImageNavCard
+    title="Administrative"
+    subtitle="Offices & Services"
+    imageSrc="/homepage/Administration.JPG" // 對應你的檔案
+    onClick={() => setCurrentView("Administrative")}
+  />
+  <ImageNavCard
+    title="Academic Units"
+    subtitle="Colleges & Departments"
+    imageSrc="/homepage/Academic.JPG" // 對應你的檔案
+    onClick={() => setCurrentView("Academic")}
+  />
+  <ImageNavCard
+    title="Facilities"
+    subtitle="Sports & Dormitories"
+    imageSrc="/homepage/facilities.JPG" // 對應你的檔案
+    onClick={() => setCurrentView("Facilities")}
+  />
+</div>
             </div>
           </motion.div>
         )}
@@ -211,27 +213,34 @@ function BannerCarousel({ onBannerClick }: { onBannerClick: () => void }) {
 }
 
 // --- 元件：圖片導航卡片 (新設計：一體成形大卡片) ---
-function ImageNavCard({ title, subtitle, imageColor, onClick }: any) {
+function ImageNavCard({ title, subtitle, imageSrc, onClick }: any) {
   return (
     <div
       onClick={onClick}
-      // 修改：這裡加入了 border 和 bg-white，讓整張卡片變成一個實體
-      // 移除之前的 w-full aspect-[4/3] 限制，改用 h-[240px] 固定圖片高度，讓卡片更大張
       className="group cursor-pointer flex flex-col bg-white border border-gray-100 rounded-3xl overflow-hidden hover:shadow-xl hover:border-gray-200 transition-all duration-300 h-full"
     >
       {/* 圖片區域 (上半部) */}
-      <div
-        className={`w-full h-[200px] md:h-[240px] ${imageColor} relative overflow-hidden`}
-      >
-        {/* 圖片 hover 放大效果 */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 z-10" />
+      <div className="w-full h-[200px] md:h-[240px] relative overflow-hidden bg-gray-100">
+        {/* 圖片 hover 遮罩層 */}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 z-10" />
 
-        <div className="w-full h-full flex items-center justify-center text-gray-400/30 font-bold text-3xl tracking-widest group-hover:scale-105 transition-transform duration-700">
-          IMAGE
-        </div>
+        {/* 使用 Next.js Image 優化渲染 */}
+        {imageSrc ? (
+          <Image
+            src={imageSrc}
+            alt={title}
+            fill
+            className="object-cover group-hover:scale-110 transition-transform duration-700"
+            sizes="(max-width: 768px) 100vw, 33vw"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-400/30 font-bold text-3xl tracking-widest">
+            IMAGE
+          </div>
+        )}
       </div>
 
-      {/* 文字區域 (下半部，包在同一個卡片裡) */}
+      {/* 文字區域 (下半部) */}
       <div className="p-5 text-center flex flex-col justify-center flex-1 bg-gray-50/50 group-hover:bg-white transition-colors">
         <h4 className="text-xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors">
           {title}
@@ -240,7 +249,7 @@ function ImageNavCard({ title, subtitle, imageColor, onClick }: any) {
           {subtitle}
         </p>
 
-        {/* 裝飾線條，增加精緻感 */}
+        {/* 裝飾線條 */}
         <div className="h-1 w-10 bg-gray-200 rounded-full mx-auto mt-4 group-hover:w-16 group-hover:bg-emerald-300 transition-all duration-300" />
       </div>
     </div>

@@ -63,7 +63,7 @@ export const ACADEMIC_UNITS: College[] = [
     id: "humanities",
     name: "College of Humanities",
     url: "https://colliber.ccu.edu.tw/p/406-1018-17262,r2501.php?Lang=en",
-    images: [],
+    images: ["/homepage_academic/College of Humanities.JPG"],
     description: HUMANITIES_DESC, // 引用上面的變數
     departments: [
       {
@@ -96,7 +96,7 @@ export const ACADEMIC_UNITS: College[] = [
     id: "science",
     name: "College of Science",
     url: "https://science.ccu.edu.tw/?Lang=en",
-    images: [],
+    images: ["/homepage_academic/College of Science.JPG"],
     description: SCIENCE_DESC,
     departments: [
       {
@@ -125,7 +125,7 @@ export const ACADEMIC_UNITS: College[] = [
     id: "law",
     name: "College of Law",
     url: "https://deptclaw.ccu.edu.tw/?Lang=en",
-    images: [],
+    images: ["/homepage_academic/College of Law.JPG"],
     description: LAW_DESC,
     departments: [
       {
@@ -142,7 +142,7 @@ export const ACADEMIC_UNITS: College[] = [
     id: "engineering",
     name: "College of Engineering",
     url: "https://coe.ccu.edu.tw/?Lang=en",
-    images: [],
+    images: ["/homepage_academic/College of Engineering.JPG"],
     description: ENGINEERING_DESC,
     departments: [
       {
@@ -179,7 +179,7 @@ export const ACADEMIC_UNITS: College[] = [
     id: "social sciences",
     name: "College of Social Sciences",
     url: "https://colsoc.ccu.edu.tw/?Lang=en",
-    images: [],
+    images: ["/homepage_academic/College of Social Sciences.JPG"],
     description: SOCIAL_SCIENCES_DESC,
     departments: [
       {
@@ -212,7 +212,7 @@ export const ACADEMIC_UNITS: College[] = [
     id: "management",
     name: "College of Management",
     url: "https://colmgt.ccu.edu.tw/",
-    images: [],
+    images: ["/homepage_academic/College of Management.JPG"],
     description: MANAGEMENT_DESC,
     departments: [
       {
@@ -246,7 +246,7 @@ export const ACADEMIC_UNITS: College[] = [
     id: "education",
     name: "College of Education",
     url: "https://coledu.ccu.edu.tw/?Lang=en",
-    images: [],
+    images: ["/homepage_academic/College of Education.JPG"],
     description: EDUCATION_DESC,
     departments: [
       {
@@ -279,7 +279,7 @@ export const ACADEMIC_UNITS: College[] = [
     id: "others",
     name: "others",
     url: "https://www.ccu.edu.tw/p/412-1000-792.php?Lang=en",
-    images: [],
+    images: ["/homepage_academic/Center for General Education.JPG"],
     description: OTHERS_DESC,
     departments: [
       {

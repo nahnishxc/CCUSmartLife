@@ -216,7 +216,7 @@
 // }
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { MapPin, Phone, ChevronLeft, ChevronRight, Stethoscope, BadgeDollarSign, Navigation } from "lucide-react";
+import { MapPin, Clock, Phone, ChevronLeft, ChevronRight, Stethoscope, BadgeDollarSign, Navigation } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 
@@ -288,7 +288,7 @@ export default function Healthcare() {
 
         const transformedData = Object.keys(categoriesMap).map(key => ({
           title: key,
-          fullTitle: `${key}類特約機構`,
+          fullTitle: `${key}`,
           clinics: categoriesMap[key]
         }));
 
@@ -430,31 +430,38 @@ function ClinicRow({
         </button>
       </div>
 
-      <div ref={rowRef} className="flex gap-4 overflow-x-auto pb-4 px-2 no-scrollbar scroll-smooth">
+  <div ref={rowRef} className="flex gap-4 overflow-x-auto pb-4 px-2 no-scrollbar scroll-smooth">
         {category.clinics.map((clinic) => {
           const { data } = clinic;
+          
+          // 邏輯拆分：提取公里數與時間
+          const kmText = data.distance.split('(')[0].trim(); // 得到 "10 km"
+          const timeDetail = data.distance.match(/\(([^)]+)\)/)?.[1]; // 得到 "around 17 mins from CCU"
+
           return (
             <div
               key={clinic.id}
               onClick={() => handleCardClick(clinic)}
               className="flex-shrink-0 w-[380px] bg-gray-50 p-6 rounded-2xl border border-gray-100 flex flex-col hover:border-emerald-300 hover:shadow-lg hover:-translate-y-1 transition-all select-none cursor-pointer active:scale-95 group"
             >
-              <div className="flex justify-between items-start mb-4">
-                <span className="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-md font-bold uppercase tracking-wider">
+              {/* --- 上方區域：恢復簡潔，僅保留公里數 --- */}
+              <div className="flex justify-between items-start mb-6"> 
+                <span className="bg-emerald-100 text-emerald-700 text-[10px] px-2.5 py-1.5 rounded-lg font-black uppercase tracking-wider leading-none">
                   {data.tags[0]}
                 </span>
-                <div className="flex items-center gap-1 text-emerald-600 font-bold text-xs">
-                  <Navigation size={12} />
-                  {data.distance}
+                <div className="flex items-center gap-1 text-emerald-600 font-bold text-[11px] mt-1">
+                  <Navigation size={12} fill="currentColor" />
+                  {kmText}
                 </div>
               </div>
 
-              <h4 className="font-bold text-gray-800 text-xl truncate mb-4">{data.name}</h4>
+              {/* --- 標題與內容區：保持不變 --- */}
+              <h4 className="font-bold text-gray-800 text-xl truncate mb-5 leading-tight">{data.name}</h4>
 
               <div className="space-y-3 flex-1">
                 <div className="flex items-center gap-3 text-sm text-gray-600">
                   <Phone size={16} className="shrink-0 text-emerald-500" />
-                  <span className="font-medium">{data.contact}</span>
+                  <span className="font-semibold">{data.contact}</span>
                 </div>
                 <div className="flex items-start gap-3 text-sm text-gray-600">
                   <MapPin size={16} className="shrink-0 text-emerald-500 mt-0.5" />
@@ -462,19 +469,29 @@ function ClinicRow({
                 </div>
                 <div className="flex items-center gap-3 text-sm text-gray-600">
                   <BadgeDollarSign size={16} className="shrink-0 text-emerald-500" />
-                  <span>{data.fare}</span>
+                  <span className="font-medium">{data.fare}</span>
                 </div>
               </div>
 
-              <div className="mt-5 pt-4 border-t border-gray-200/60 flex justify-between items-center">
-                <div className="flex gap-1.5">
+              {/* --- 底部區域：將時間膠囊塞入 Tags 旁邊 --- */}
+              <div className="mt-6 pt-4 border-t border-gray-200/60 flex justify-between items-center">
+                <div className="flex gap-1.5 overflow-hidden items-center">
+                  {/* 新增的時間膠囊 */}
+                  {timeDetail && (
+                    <div className="flex items-center gap-1 text-[10px] bg-white text-emerald-600 px-2 py-1 rounded-md border border-emerald-100 shadow-sm font-bold whitespace-nowrap">
+                      <Clock size={10} />
+                      {timeDetail.replace('around ', '') /* 縮短文字，去掉預設的 around */}
+                    </div>
+                  )}
+                  {/* 原本的其他標籤 */}
                   {data.tags.slice(1).map((tag, idx) => (
-                    <span key={idx} className="text-[10px] bg-gray-200/50 text-gray-500 px-2 py-0.5 rounded-md">
+                    <span key={idx} className="text-[10px] bg-gray-200/50 text-gray-500 px-2 py-1 rounded-md font-medium whitespace-nowrap">
                       {tag}
                     </span>
                   ))}
                 </div>
-                <span className="text-xs text-emerald-500 font-bold flex items-center gap-1">
+                
+                <span className="text-xs text-emerald-500 font-bold flex items-center gap-1 shrink-0 ml-2">
                   View Map <ChevronRight size={12} />
                 </span>
               </div>

@@ -303,16 +303,16 @@ export default function BusDetail({ onBack, routeId = "7309" }: BusDetailProps) 
   };
 
   return (
-    <div className="w-full h-full bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 flex flex-col overflow-y-auto custom-scrollbar">
-      
-      {/* --- Header: Back & Route Title --- */}
-      <div className="flex items-center gap-2 mb-6 border-b border-gray-100 pb-4">
-        <button 
-          onClick={onBack}
-          className="p-2 -ml-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
-        >
-          <ArrowLeft size={20} />
-        </button>
+  <div className="w-full h-full bg-white rounded-3xl p-6 md:p-8 pt-16 shadow-sm border border-gray-100 flex flex-col overflow-y-auto custom-scrollbar">
+    {/* --- Header --- */}
+    <div className="flex items-center gap-4 mb-6 border-b border-gray-100 pb-4">
+      <button
+        onClick={onBack}
+        className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-50 hover:bg-gray-100 text-gray-600 font-bold text-sm transition-colors"
+      >
+        <ArrowLeft size={16} />
+        Back
+      </button>
         <div>
            <div className="text-xs text-gray-400 font-bold uppercase tracking-wider">Bus Real Time</div>
            <div className="text-lg font-bold text-gray-800">Route {selectedRouteId}</div>

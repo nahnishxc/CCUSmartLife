@@ -93,7 +93,7 @@ export default function Transportation() {
           onClick={() => setSelectedMode("ubike")}
           className="group bg-gray-50 p-5 rounded-2xl border border-gray-100 hover:border-emerald-200 hover:shadow-md transition-all cursor-pointer flex flex-col h-[220px] relative overflow-hidden"
         >
-          <Bike className="absolute -right-4 -bottom-4 text-gray-200/50 w-32 h-32 group-hover:text-orange-100/50 transition-colors" />
+          <Bike className="absolute -right-4 -bottom-4 text-gray-200/50 w-32 h-32 group-hover:text-green-100/50 transition-colors" />
           <div className="mb-4 relative z-10">
             <h3 className="text-lg font-bold text-gray-800 leading-tight mb-1">
               CCU Activity Center
@@ -123,7 +123,7 @@ export default function Transportation() {
           onClick={() => setSelectedMode("train")}
           className="group bg-gray-50 p-5 rounded-2xl border border-gray-100 hover:border-emerald-200 hover:shadow-md transition-all cursor-pointer flex flex-col h-[220px] relative overflow-hidden"
         >
-          <Train className="absolute -right-4 -bottom-4 text-gray-200/50 w-32 h-32 group-hover:text-blue-100/50 transition-colors" />
+          <Train className="absolute -right-4 -bottom-4 text-gray-200/50 w-32 h-32 group-hover:text-green-100/50 transition-colors" />
           <div className="mb-3 relative z-10 flex justify-between items-center">
             <h3 className="text-lg font-bold text-gray-800">
               Minxiong Station
@@ -179,9 +179,7 @@ export default function Transportation() {
                 setSelectedMode("route");
                 setActiveRouteId(route.id);
               }}
-              /* 1. 這裡使用 min-w 控制每張卡片佔比 
-                 2. 在螢幕寬度內，min-w-[22%] 左右會讓使用者看到約四張半
-              */
+
               className="min-w-[21%] md:min-w-[23%] group cursor-pointer"
             >
               <div
@@ -206,4 +204,6 @@ export default function Transportation() {
       </div>
     </div>
   );
+
 }
+
