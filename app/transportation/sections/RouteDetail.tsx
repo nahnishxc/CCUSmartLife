@@ -185,11 +185,15 @@ export default function RouteDetail({ routeData, onBack, onSelectRoute }: RouteD
   };
 
 return (
-    <div className="w-full h-full flex flex-col relative overflow-y-auto custom-scrollbar">
+    <div className="w-full h-full bg-white rounded-3xl p-6 md:p-8 pt-16 shadow-sm border border-gray-100 flex flex-col overflow-y-auto custom-scrollbar">
       {/* Header 保持文字放大後的 text-2xl */}
       <div className="flex items-center gap-2 mb-6 border-b border-gray-100 pb-4 flex-shrink-0">
-        <button onClick={onBack} className="p-2 -ml-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors">
-          <ArrowLeft size={20} />
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-50 hover:bg-gray-100 text-gray-600 font-bold text-sm transition-colors"
+        >
+          <ArrowLeft size={16} />
+          Back
         </button>
         <div>
           <div className="text-xs text-gray-400 font-bold uppercase tracking-wider">Route Guide</div>

@@ -136,6 +136,8 @@ export default function RestaurantPage() {
           "buffet",
           "dumpling",
           "taiwanese",
+          "vegetarian",
+          "halal",
         ];
         const timeKeywords = [
           "breakfast",
@@ -149,8 +151,6 @@ export default function RestaurantPage() {
         const featureKeywords = [
           "dine-in",
           "takeout",
-          "vegetarian",
-          "halal",
           "cheap",
           "gym",
           "spicy",

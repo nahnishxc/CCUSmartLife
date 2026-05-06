@@ -481,6 +481,7 @@ export default function ChatWidget() {
   const [inputValue, setInputValue] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [currentSessionId, setCurrentSessionId] = useState<number | null>(null);
+  const [loadingTime, setLoadingTime] = useState<number | null>(null);
 
   const [messages, setMessages] = useState<{ role: string; content: string }[]>(
     [],
@@ -551,15 +552,62 @@ export default function ChatWidget() {
   };
 
   // 3. 發送訊息
-  const handleSend = async (textOverride?: string) => {
+  // const handleSend = async (textOverride?: string) => {
+  //   const text = (textOverride ?? inputValue).trim();
+  //   if (!text || isSending) return;
+
+  //   setMessages((prev) => [...prev, { role: "user", content: text }]);
+  //   setInputValue("");
+  //   setIsSending(true);
+
+  //   const token = localStorage.getItem("token");
+
+  //   try {
+  //     const res = await fetch(`${API_BASE_URL}/api/chat`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  //       },
+  //       body: JSON.stringify({
+  //         message: text,
+  //         sessionId: currentSessionId,
+  //       }),
+  //     });
+
+  //     if (!res.ok) throw new Error(`API Error: ${res.status}`);
+
+  //     const data = await res.json();
+  //     const assistantMessage = {
+  //       role: "assistant",
+  //       content: data.answer || data.message || "I received an empty response.",
+  //     };
+  //     setMessages((prev) => [...prev, assistantMessage]);
+  //   } catch (error) {
+  //     console.error("API failed:", error);
+  //     setMessages((prev) => [
+  //       ...prev,
+  //       {
+  //         role: "assistant",
+  //         content: "抱歉，目前連線似乎有點問題，請稍後再試。",
+  //       },
+  //     ]);
+  //   } finally {
+  //     setIsSending(false);
+  //   }
+  // };
+
+const handleSend = async (textOverride?: string) => {
     const text = (textOverride ?? inputValue).trim();
     if (!text || isSending) return;
 
     setMessages((prev) => [...prev, { role: "user", content: text }]);
     setInputValue("");
     setIsSending(true);
+    setLoadingTime(null); // 【新增】每次發送新訊息就重置時間
 
     const token = localStorage.getItem("token");
+    const startTime = performance.now(); // 【新增】就在 fetch 發生前開始計時
 
     try {
       const res = await fetch(`${API_BASE_URL}/api/chat`, {
@@ -577,6 +625,12 @@ export default function ChatWidget() {
       if (!res.ok) throw new Error(`API Error: ${res.status}`);
 
       const data = await res.json();
+
+      // 【新增】資料一拿到，馬上計算時間
+      const endTime = performance.now();
+      const duration = (endTime - startTime) / 1000;
+      setLoadingTime(Number(duration.toFixed(2))); 
+
       const assistantMessage = {
         role: "assistant",
         content: data.answer || data.message || "I received an empty response.",
