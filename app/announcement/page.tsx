@@ -404,7 +404,7 @@ interface Announcement {
 
 // 2. 五格大卡片的配置 (直接寫在這邊，不用開新檔)
 const CATEGORY_CONFIG = [
-  { key: "活動訊息", title: "Campus Events", subtitle: "Activities & festivals", img: "/announcement/Campus event.jpg" },
+  { key: "活動訊息", title: "Campus Events", subtitle: "Activities & festivals", img: "/announcement/Campus Event.jpg" },
   { key: "OIA", title: "OIA News", subtitle: "International Office", img: "/announcement/OIA News.jpg" },
   { key: "精選訊息", title: "Highlights", subtitle: "Important notices", img: "/announcement/Highlight.jpg" },
   { key: "學術活動", title: "Academic", subtitle: "Talks & Seminars", img: "/announcement/Announcement Academic.JPG" },
