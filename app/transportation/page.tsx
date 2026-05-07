@@ -58,15 +58,25 @@ export default function Transportation() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-10">
         <div
           onClick={() => setSelectedMode("bus")}
-          className="group bg-gray-50 p-5 rounded-2xl border border-gray-100 hover:border-emerald-200 hover:shadow-md transition-all cursor-pointer flex flex-col h-[220px] relative overflow-hidden"
+          className="group bg-gray-50 p-5 rounded-2xl border border-gray-100 hover:border-emerald-200 hover:shadow-md transition-all cursor-pointer flex flex-col h-[280px] relative overflow-hidden"
         >
           <Bus className="absolute -right-4 -bottom-4 text-gray-200/50 w-32 h-32 group-hover:text-emerald-100/50 transition-colors" />
+
+          <div className="relative z-10 mb-4">
+            <div className="inline-flex items-center gap-2 text-[11px] font-black tracking-[0.18em] uppercase text-emerald-600">
+              <span className="w-7 h-7 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+                <Bus size={15} />
+              </span>
+              Bus
+            </div>
+          </div>
+
           <div className="flex justify-between items-start mb-4 relative z-10">
             <div>
-              <h3 className="text-3xl font-black text-gray-800">7309</h3>
+              <h3 className="text-4xl font-black text-gray-800">7309</h3>
               <p className="text-xs text-gray-500 font-bold">Chiayi - CCU</p>
             </div>
-            <span className="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-full animate-pulse">
+            <span className="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-full animate-pulse mt-2">
               Approaching
             </span>
           </div>
@@ -84,18 +94,28 @@ export default function Transportation() {
               <span className="text-lg font-bold text-gray-400">18 mins</span>
             </div>
           </div>
-          <div className="mt-auto pt-2 text-xs text-gray-400 font-medium flex items-center gap-1">
+          <div className="mt-auto pt-2 text-xs text-gray-400 font-medium flex items-center gap-1 relative z-10">
             <Map size={12} /> Stop: University Gate
           </div>
         </div>
 
         <div
           onClick={() => setSelectedMode("ubike")}
-          className="group bg-gray-50 p-5 rounded-2xl border border-gray-100 hover:border-emerald-200 hover:shadow-md transition-all cursor-pointer flex flex-col h-[220px] relative overflow-hidden"
+          className="group bg-gray-50 p-5 rounded-2xl border border-gray-100 hover:border-emerald-200 hover:shadow-md transition-all cursor-pointer flex flex-col h-[280px] relative overflow-hidden"
         >
           <Bike className="absolute -right-4 -bottom-4 text-gray-200/50 w-32 h-32 group-hover:text-green-100/50 transition-colors" />
+
+          <div className="relative z-10 mb-4">
+            <div className="inline-flex items-center gap-2 text-[11px] font-black tracking-[0.18em] uppercase text-emerald-600">
+              <span className="w-7 h-7 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+                <Bike size={15} />
+              </span>
+              YouBike
+            </div>
+          </div>
+
           <div className="mb-4 relative z-10">
-            <h3 className="text-lg font-bold text-gray-800 leading-tight mb-1">
+            <h3 className="text-2xl font-bold text-gray-800 leading-tight mb-1">
               CCU Activity Center
             </h3>
             <p className="text-xs text-gray-500">Ubike 2.0 Station</p>
@@ -114,18 +134,28 @@ export default function Transportation() {
               </span>
             </div>
           </div>
-          <div className="mt-4 pt-2 text-xs text-gray-400 font-medium flex items-center gap-1">
+          <div className="mt-auto pt-4 text-xs text-gray-400 font-medium flex items-center gap-1 relative z-10">
             <Navigation size={12} /> Distance: 50m
           </div>
         </div>
 
         <div
           onClick={() => setSelectedMode("train")}
-          className="group bg-gray-50 p-5 rounded-2xl border border-gray-100 hover:border-emerald-200 hover:shadow-md transition-all cursor-pointer flex flex-col h-[220px] relative overflow-hidden"
+          className="group bg-gray-50 p-5 rounded-2xl border border-gray-100 hover:border-emerald-200 hover:shadow-md transition-all cursor-pointer flex flex-col h-[280px] relative overflow-hidden"
         >
           <Train className="absolute -right-4 -bottom-4 text-gray-200/50 w-32 h-32 group-hover:text-green-100/50 transition-colors" />
+
+          <div className="relative z-10 mb-4">
+            <div className="inline-flex items-center gap-2 text-[11px] font-black tracking-[0.18em] uppercase text-emerald-600">
+              <span className="w-7 h-7 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+                <Train size={15} />
+              </span>
+              Train
+            </div>
+          </div>
+
           <div className="mb-3 relative z-10 flex justify-between items-center">
-            <h3 className="text-lg font-bold text-gray-800">
+            <h3 className="text-2xl font-bold text-gray-800">
               Minxiong Station
             </h3>
             <Clock size={16} className="text-gray-400" />
@@ -179,7 +209,6 @@ export default function Transportation() {
                 setSelectedMode("route");
                 setActiveRouteId(route.id);
               }}
-
               className="min-w-[21%] md:min-w-[23%] group cursor-pointer"
             >
               <div
@@ -204,6 +233,4 @@ export default function Transportation() {
       </div>
     </div>
   );
-
 }
-

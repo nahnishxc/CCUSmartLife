@@ -471,6 +471,7 @@ import {
 } from "framer-motion";
 import { X, Send, MoreVertical } from "lucide-react";
 import SlimeBall from "./SlimeBall";
+import ReactMarkdown from "react-markdown";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "https://campus-ai-backend-1.onrender.com";
@@ -597,7 +598,7 @@ export default function ChatWidget() {
   //   }
   // };
 
-const handleSend = async (textOverride?: string) => {
+  const handleSend = async (textOverride?: string) => {
     const text = (textOverride ?? inputValue).trim();
     if (!text || isSending) return;
 
@@ -629,7 +630,7 @@ const handleSend = async (textOverride?: string) => {
       // 【新增】資料一拿到，馬上計算時間
       const endTime = performance.now();
       const duration = (endTime - startTime) / 1000;
-      setLoadingTime(Number(duration.toFixed(2))); 
+      setLoadingTime(Number(duration.toFixed(2)));
 
       const assistantMessage = {
         role: "assistant",
@@ -755,9 +756,9 @@ const handleSend = async (textOverride?: string) => {
   );
 
   const faqOptions = [
+    "NHI application",
+    "Lost ARC",
     "Tell me about CCU Campus",
-    "How to get to Minxiong?",
-    "Food recommendations",
     "Bus schedule",
     "Library hours",
   ];
@@ -858,7 +859,51 @@ const handleSend = async (textOverride?: string) => {
                     <div
                       className={`px-5 py-3.5 rounded-2xl text-sm max-w-[85%] shadow-sm ${m.role === "user" ? "bg-emerald-600 text-white rounded-tr-none" : "bg-white text-gray-700 border border-gray-100 rounded-tl-none"}`}
                     >
-                      {m.content}
+                      {m.role === "user" ? (
+                        // 使用者的訊息保持純文字即可
+                        <div className="whitespace-pre-wrap">{m.content}</div>
+                      ) : (
+                        // AI 的訊息交給 ReactMarkdown 處理，並套用 Tailwind 樣式
+                        <div className="prose prose-sm prose-emerald max-w-none flex flex-col gap-2">
+                          <ReactMarkdown
+                            components={{
+                              // 客製化 ul (無序清單 - 點點)
+                              ul: ({ node, ...props }: any) => (
+                                <ul
+                                  className="list-disc list-inside ml-2 space-y-1"
+                                  {...props}
+                                />
+                              ),
+                              // 客製化 ol (有序清單 - 數字)
+                              ol: ({ node, ...props }: any) => (
+                                <ol
+                                  className="list-decimal list-inside ml-2 space-y-1"
+                                  {...props}
+                                />
+                              ),
+                              // 客製化 li (清單項目)
+                              li: ({ node, ...props }: any) => (
+                                <li className="leading-relaxed" {...props} />
+                              ),
+                              // 客製化 p (段落)
+                              p: ({ node, ...props }: any) => (
+                                <p className="leading-relaxed m-0" {...props} />
+                              ),
+                              // 客製化 a (超連結)
+                              a: ({ node, ...props }: any) => (
+                                <a
+                                  className="text-emerald-600 underline hover:text-emerald-800 transition-colors break-all"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  {...props}
+                                />
+                              ),
+                            }}
+                          >
+                            {m.content}
+                          </ReactMarkdown>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
