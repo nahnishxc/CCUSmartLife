@@ -21,10 +21,10 @@ export default function MainNav() {
 
   return (
     <div className="max-w-6xl mx-auto mb-12 px-4"> {/* 加入 px-4 防止滑動時貼邊 */}
-      <div 
-        className="flex flex-nowrap items-center justify-start md:justify-between gap-4 overflow-x-auto pb-4 scrollbar-hide"
-        style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }} // 隱藏 IE/Firefox 捲軸
-      >
+<div 
+  className="flex flex-nowrap items-center justify-start md:justify-between gap-4 overflow-x-auto pb-40 -mb-36 scrollbar-hide"
+  style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
+>
         {/* 隱藏 Chrome/Safari 捲軸的 inline style 或可在 globals.css 處理 */}
         <style jsx>{`
           div::-webkit-scrollbar { display: none; }

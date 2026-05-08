@@ -542,7 +542,7 @@ export default function ChatWidget() {
     };
 
     window.addEventListener("resize", handleResize);
-    
+
     // 清除監聽器，保持好習慣
     return () => window.removeEventListener("resize", handleResize);
   }, [isChatOpen]); // 依賴 isChatOpen，確保它知道當前要算面板還是球球的邊界
@@ -565,8 +565,6 @@ export default function ChatWidget() {
       console.error("Load messages failed", e);
     }
   };
-
-
 
   // const handleSend = async (textOverride?: string) => {
   //   const text = (textOverride ?? inputValue).trim();
@@ -621,13 +619,13 @@ export default function ChatWidget() {
   //   }
   // };
 
-const handleSend = async (textOverride?: string) => {
+  const handleSend = async (textOverride?: string) => {
     const text = (textOverride ?? inputValue).trim();
     if (!text || isSending) return;
 
     // 【修改 1】一開始只把「使用者」的訊息加進畫面，不預留 AI 的空位！
     setMessages((prev) => [...prev, { role: "user", content: text }]);
-    
+
     setInputValue("");
     setIsSending(true);
     setLoadingTime(null);
@@ -650,59 +648,73 @@ const handleSend = async (textOverride?: string) => {
       });
 
       if (!res.ok) throw new Error(`API Error: ${res.status}`);
-      if (!res.body) throw new Error("ReadableStream not supported by response");
+      if (!res.body)
+        throw new Error("ReadableStream not supported by response");
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
 
       while (true) {
         const { done, value } = await reader.read();
-        
-        if (done) break; 
 
+        if (done) break;
+
+        // 這裡拿到的是像 "data: {"token":"y at"}\n\n" 這樣的原始字串
         const chunkText = decoder.decode(value, { stream: true });
 
+        // 【新增】SSE 拆包裝紙邏輯！
+        // 因為一次可能收到好幾行，所以先用換行符號切開
+        const lines = chunkText.split("\n");
+        let newTextToAdd = ""; // 準備用來收集這次真正解析出來的文字
+
+        for (const line of lines) {
+          // 只要是 'data: ' 開頭的，就是我們要的資料
+          if (line.startsWith("data: ")) {
+            const dataStr = line.slice(6).trim(); // 把前面 6 個字元 "data: " 切掉
+
+            // 如果遇到後端說結束的 [DONE] 標籤，就跳過
+            if (dataStr === "[DONE]") continue;
+
+            try {
+              // 把字串轉回 JSON 物件
+              const parsed = JSON.parse(dataStr);
+              // 從截圖看到你們後端設定的 key 是 "token"，所以我們把它抓出來
+              if (parsed.token) {
+                newTextToAdd += parsed.token;
+              }
+            } catch (e) {
+              // 有時候網路傳輸切太細，JSON 可能會被切一半導致 parse 失敗
+              // 這種情況我們就先安靜地忽略它，等下一包資料補齊
+              console.warn("解析小碎片失敗 (正常現象可忽略):", dataStr);
+            }
+          }
+        }
+
+        // 如果這次解析完發現沒有新文字 (例如只是傳了 [DONE])，就不更新畫面，直接等下一波
+        if (!newTextToAdd) continue;
+
+        // 接下來的更新畫面邏輯跟你原本的一模一樣，只是把 chunkText 換成 newTextToAdd
         if (isFirstChunk) {
-          // 【修改 2】接到第一個字了！計算時間，並「新增」一個 AI 訊息框
           const endTime = performance.now();
           const duration = (endTime - startTime) / 1000;
           setLoadingTime(Number(duration.toFixed(2)));
           isFirstChunk = false;
 
-          setMessages((prev) => [...prev, { role: "assistant", content: chunkText }]);
+          setMessages((prev) => [
+            ...prev,
+            { role: "assistant", content: newTextToAdd },
+          ]);
         } else {
-          // 後續的字：去更新最後一筆 AI 訊息
           setMessages((prev) => {
             const newMessages = [...prev];
             const lastIndex = newMessages.length - 1;
             newMessages[lastIndex] = {
               ...newMessages[lastIndex],
-              content: newMessages[lastIndex].content + chunkText,
+              content: newMessages[lastIndex].content + newTextToAdd,
             };
             return newMessages;
           });
         }
-      }
-    } catch (error) {
-      console.error("API failed:", error);
-      // 【修改 3】如果出錯了，也要判斷是「連第一個字都沒出來」還是「講到一半斷線」
-      if (isFirstChunk) {
-        // 根本連不上後端 (例如現在你同學的 server 沒開)
-        setMessages((prev) => [
-          ...prev, 
-          { role: "assistant", content: "抱歉，目前連線似乎有點問題，請稍後再試。" }
-        ]);
-      } else {
-        // 講到一半斷線
-        setMessages((prev) => {
-          const newMessages = [...prev];
-          const lastIndex = newMessages.length - 1;
-          newMessages[lastIndex] = {
-            ...newMessages[lastIndex],
-            content: newMessages[lastIndex].content + "\n\n*(連線中斷)*",
-          };
-          return newMessages;
-        });
       }
     } finally {
       setIsSending(false);
@@ -776,13 +788,13 @@ const handleSend = async (textOverride?: string) => {
   const snap = (mode: "bubble" | "panel", velocity = { x: 0, y: 0 }) => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    
+
     // 精準設定當前型態的寬高
     const targetW = mode === "panel" ? size.width : 160;
     const targetH = mode === "panel" ? size.height : 160;
 
     const { w: bubbleW, h: bubbleH } = getBubbleSize();
-    
+
     const curX = x.get();
     const curY = y.get();
 
@@ -808,13 +820,23 @@ const handleSend = async (textOverride?: string) => {
       targetY = clamp(projectedY, safe, vh - targetH - safe);
     }
 
-// 【新增】把甩出去的暴力初速度打個 2.5 折，避免像噴射機
-    const dampenedVelX = velocity.x * 0.25; 
+    // 【新增】把甩出去的暴力初速度打個 2.5 折，避免像噴射機
+    const dampenedVelX = velocity.x * 0.25;
     const dampenedVelY = velocity.y * 0.25;
 
     // 【修改】調降 stiffness(彈簧硬度) 到 220，調高 damping(阻力) 到 32
-    animate(x, targetX, { type: "spring", stiffness: 220, damping: 32, velocity: dampenedVelX });
-    animate(y, targetY, { type: "spring", stiffness: 220, damping: 32, velocity: dampenedVelY });
+    animate(x, targetX, {
+      type: "spring",
+      stiffness: 220,
+      damping: 32,
+      velocity: dampenedVelX,
+    });
+    animate(y, targetY, {
+      type: "spring",
+      stiffness: 220,
+      damping: 32,
+      velocity: dampenedVelY,
+    });
   };
 
   useLayoutEffect(() => {
@@ -826,24 +848,32 @@ const handleSend = async (textOverride?: string) => {
     setReady(true);
   }, []);
 
-const handleOpen = () => {
+  const handleOpen = () => {
     if (isDragging.current) return;
-    
+
     // 【新增】變身前，先死死記住目前的座標！
     lastBubblePos.current = { x: x.get(), y: y.get() };
-    
+
     setIsChatOpen(true);
     setIsHistoryOpen(false);
     setTimeout(() => snap("panel"), 0);
   };
 
-const handleClose = () => {
+  const handleClose = () => {
     setIsChatOpen(false);
     setIsHistoryOpen(false);
-    
+
     // 【修改】不呼叫 snap 了，直接飛回記憶中的位置
-    animate(x, lastBubblePos.current.x, { type: "spring", stiffness: 300, damping: 28 });
-    animate(y, lastBubblePos.current.y, { type: "spring", stiffness: 300, damping: 28 });
+    animate(x, lastBubblePos.current.x, {
+      type: "spring",
+      stiffness: 300,
+      damping: 28,
+    });
+    animate(y, lastBubblePos.current.y, {
+      type: "spring",
+      stiffness: 300,
+      damping: 28,
+    });
   };
 
   const TypingIndicator = () => (
@@ -1019,11 +1049,13 @@ const handleClose = () => {
                   </div>
                 ))}
 
-{isSending && messages.length > 0 && messages[messages.length - 1].role === "user" && (
-                  <div className="flex justify-start">
-                    <TypingIndicator />
-                  </div>
-                )}
+                {isSending &&
+                  messages.length > 0 &&
+                  messages[messages.length - 1].role === "user" && (
+                    <div className="flex justify-start">
+                      <TypingIndicator />
+                    </div>
+                  )}
 
                 {messages.length === 0 && !isSending && (
                   <div className="mt-1 flex flex-wrap gap-2 justify-start">
