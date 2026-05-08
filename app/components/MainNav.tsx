@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { MapPin, Bus, Utensils, Megaphone, Calendar, BookOpen, ChevronDown } from "lucide-react";
 
 export default function MainNav() {
-  
   const pathname = usePathname();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -21,41 +20,52 @@ export default function MainNav() {
   const isOthersActive = pathname.startsWith("/others");
 
   return (
-    <div className="max-w-6xl mx-auto mb-12">
-      <div className="flex flex-wrap items-center justify-between gap-y-6">
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            scroll={false}
-            className={`flex flex-row items-center gap-3 group cursor-pointer p-2 rounded-lg transition-all duration-200 ${
-              pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href)) 
-              ? "bg-white shadow-sm ring-1 ring-emerald-100" : "hover:bg-white/60"
-            }`}
-          >
-            <div className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-              (pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href)))
-              ? "bg-emerald-100 text-emerald-600 scale-110" : "bg-emerald-50 text-emerald-600 group-hover:bg-emerald-100"
-            }`}>
-              <item.icon size={20} />
-            </div>
-            <span className={`text-base font-bold tracking-wide transition-colors ${
-              (pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))) ? "text-black" : "text-gray-500 group-hover:text-gray-800"
-            }`}>
-              {item.name}
-            </span>
-          </Link>
-        ))}
+    <div className="max-w-6xl mx-auto mb-12 px-4"> {/* 加入 px-4 防止滑動時貼邊 */}
+      <div 
+        className="flex flex-nowrap items-center justify-start md:justify-between gap-4 overflow-x-auto pb-4 scrollbar-hide"
+        style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }} // 隱藏 IE/Firefox 捲軸
+      >
+        {/* 隱藏 Chrome/Safari 捲軸的 inline style 或可在 globals.css 處理 */}
+        <style jsx>{`
+          div::-webkit-scrollbar { display: none; }
+        `}</style>
 
-        {/* Others Dropdown - 修正感應區域 */}
+        {navItems.map((item) => {
+          const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+          
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              scroll={false}
+              // flex-shrink-0 是關鍵，防止文字被擠壓
+              className={`flex flex-row items-center gap-3 flex-shrink-0 group cursor-pointer p-2 rounded-xl transition-all duration-200 ${
+                isActive ? "bg-white shadow-sm ring-1 ring-emerald-100" : "hover:bg-white/60"
+              }`}
+            >
+              <div className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+                isActive ? "bg-emerald-100 text-emerald-600 scale-110" : "bg-emerald-50 text-emerald-600 group-hover:bg-emerald-100"
+              }`}>
+                <item.icon size={20} />
+              </div>
+              <span className={`text-base font-bold tracking-wide transition-colors ${
+                isActive ? "text-black" : "text-gray-500 group-hover:text-gray-800"
+              }`}>
+                {item.name}
+              </span>
+            </Link>
+          );
+        })}
+
+        {/* Others Dropdown */}
         <div 
-          className="relative"
+          className="relative flex-shrink-0"
           onMouseEnter={() => setIsDropdownOpen(true)}
           onMouseLeave={() => setIsDropdownOpen(false)}
         >
           <Link
             href="/others"
-            className={`flex flex-row items-center gap-3 cursor-pointer p-2 rounded-lg transition-all duration-200 ${
+            className={`flex flex-row items-center gap-3 cursor-pointer p-2 rounded-xl transition-all duration-200 ${
               isOthersActive ? "bg-white shadow-sm ring-1 ring-emerald-100" : "hover:bg-white/60"
             }`}
           >
@@ -72,7 +82,6 @@ export default function MainNav() {
             </span>
           </Link>
 
-          {/* 下拉容器：增加 mt-0 確保與上方按鈕無縫接軌 */}
           {isDropdownOpen && (
             <div className="absolute top-full right-0 pt-1 w-44 z-50 animate-in fade-in slide-in-from-top-1 duration-200">
               <div className="bg-white border border-gray-100 rounded-2xl shadow-xl py-2">

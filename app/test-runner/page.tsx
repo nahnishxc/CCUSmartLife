@@ -44,7 +44,7 @@ export default function TestRunner() {
     reader.readAsText(file);
   };
 
-  // 2. 核心迴圈：開始跑測試
+// 2. 核心迴圈：開始跑測試
   const runTests = async () => {
     if (questions.length === 0) {
       alert("請先上傳題庫！");
@@ -56,22 +56,21 @@ export default function TestRunner() {
     setMessages([]);
     setProgress({ current: 0, total: questions.length, isWarmup: true });
     
-    // 每次開始測試前，確保煞車是放開的
     abortTest.current = false;
-
     const token = localStorage.getItem("token");
-    // 解決 TypeScript 報錯的關鍵：加上 any[]
     const testResults: any[] = [];
 
+    // 紀錄正式題目的計數器（用來判斷每 50 題休息一次）
+    let validQuestionCounter = 0;
+
     for (let i = 0; i < questions.length; i++) {
-      // 每次進迴圈前，檢查有沒有人按煞車
       if (abortTest.current) {
         console.log("⚠️ 測試已手動中斷");
-        break; // 直接跳出迴圈
+        break;
       }
 
       const q = questions[i];
-      const isWarmupPhase = i < 69; // 索引 0~68 為前 69 題 (暖身題)
+      const isWarmupPhase = i < 69; 
 
       setProgress({ current: i + 1, total: questions.length, isWarmup: isWarmupPhase });
 
@@ -88,7 +87,6 @@ export default function TestRunner() {
           body: JSON.stringify({ message: q, sessionId: null }),
         });
         
-        // 為了避免後端回傳非 JSON 格式導致前端白畫面，加了一層防護
         if (!res.ok) {
            aiReply = `API 錯誤 (Status: ${res.status})`;
         } else {
@@ -96,7 +94,6 @@ export default function TestRunner() {
            aiReply = data.answer || data.message || "Empty response";
         }
       } catch (e) {
-        console.error("API 請求發生例外錯誤", e);
         aiReply = "網路連線失敗或跨域錯誤";
       }
 
@@ -104,7 +101,6 @@ export default function TestRunner() {
       const apiDuration = apiEndTime - apiStartTime;
 
       const renderStartTime = performance.now();
-      
       setMessages((prev) => [...prev, { role: "user", content: q }, { role: "ai", content: aiReply }]);
 
       await new Promise<void>((resolve) => {
@@ -113,7 +109,6 @@ export default function TestRunner() {
             const renderEndTime = performance.now();
             const renderDuration = renderEndTime - renderStartTime;
             
-            // 紀錄該題數據，並標記是否為暖身題
             testResults.push({
               id: i + 1,
               question: q,
@@ -126,7 +121,22 @@ export default function TestRunner() {
         });
       });
 
-      // 暫停 1 秒避免把伺服器打掛
+      // --- 休息與冷卻邏輯 ---
+      if (!isWarmupPhase) {
+        validQuestionCounter++;
+        
+        // 如果剛好跑滿 50 題，且不是最後一題
+        if (validQuestionCounter % 50 === 0 && i < questions.length - 1) {
+          console.log(`❄️ 已完成 ${validQuestionCounter} 題正式測試，進入 10 秒冷卻期...`);
+          
+          // 在介面上提示正在休息，你可以透過修改 progress 的文字來呈現
+          // 這裡我們簡單用一個 10 秒的等待
+          await new Promise((r) => setTimeout(r, 10000)); 
+          continue; // 跳過下面的 1 秒暫停，因為已經休息 10 秒了
+        }
+      }
+
+      // 每題之間固定的 1 秒緩衝
       await new Promise((r) => setTimeout(r, 1000)); 
     }
 

@@ -12,13 +12,13 @@ export default function Footer() {
           <span className="text-[#999999]">© 2025</span>
         </div>
         <div className="flex items-center gap-4">
-          <Link href="#" className="text-[#777777] hover:text-[#111111] transition-colors">
+          <p href="#" className="text-[#777777] hover:text-[#111111] transition-colors">
             Privacy
-          </Link>
-          <Link href="#" className="text-[#777777] hover:text-[#111111] transition-colors">
+          </p>
+          <p href="#" className="text-[#777777] hover:text-[#111111] transition-colors">
             Terms
-          </Link>
-          <span className="text-[#777777]">Designed by CCU MIS & FLLD & FIN</span>
+          </p>
+          <span className="text-[#777777]">Designed by CCU MIS & FLLD</span>
         </div>
       </div>
     </footer>
