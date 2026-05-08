@@ -495,6 +495,7 @@ export default function ChatWidget() {
   const bubbleRef = useRef<HTMLButtonElement>(null);
   const dragControls = useDragControls();
   const isDragging = useRef(false);
+  const lastBubblePos = useRef({ x: 0, y: 0 });
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const x = useMotionValue(0);
@@ -533,6 +534,19 @@ export default function ChatWidget() {
     fetchSessions();
   }, [isChatOpen]);
 
+  // 監聽視窗縮放與設備旋轉
+  useEffect(() => {
+    const handleResize = () => {
+      // 當視窗大小改變時，叫 snap 重新計算一次當前型態的安全範圍
+      snap(isChatOpen ? "panel" : "bubble");
+    };
+
+    window.addEventListener("resize", handleResize);
+    
+    // 清除監聽器，保持好習慣
+    return () => window.removeEventListener("resize", handleResize);
+  }, [isChatOpen]); // 依賴 isChatOpen，確保它知道當前要算面板還是球球的邊界
+
   // 2. 切換對話：抓取歷史訊息
   const handleSelectSession = async (id: number) => {
     const token = localStorage.getItem("token");
@@ -552,7 +566,8 @@ export default function ChatWidget() {
     }
   };
 
-  // 3. 發送訊息
+
+
   // const handleSend = async (textOverride?: string) => {
   //   const text = (textOverride ?? inputValue).trim();
   //   if (!text || isSending) return;
@@ -560,8 +575,10 @@ export default function ChatWidget() {
   //   setMessages((prev) => [...prev, { role: "user", content: text }]);
   //   setInputValue("");
   //   setIsSending(true);
+  //   setLoadingTime(null); // 【新增】每次發送新訊息就重置時間
 
   //   const token = localStorage.getItem("token");
+  //   const startTime = performance.now(); // 【新增】就在 fetch 發生前開始計時
 
   //   try {
   //     const res = await fetch(`${API_BASE_URL}/api/chat`, {
@@ -579,6 +596,12 @@ export default function ChatWidget() {
   //     if (!res.ok) throw new Error(`API Error: ${res.status}`);
 
   //     const data = await res.json();
+
+  //     // 【新增】資料一拿到，馬上計算時間
+  //     const endTime = performance.now();
+  //     const duration = (endTime - startTime) / 1000;
+  //     setLoadingTime(Number(duration.toFixed(2)));
+
   //     const assistantMessage = {
   //       role: "assistant",
   //       content: data.answer || data.message || "I received an empty response.",
@@ -598,17 +621,20 @@ export default function ChatWidget() {
   //   }
   // };
 
-  const handleSend = async (textOverride?: string) => {
+const handleSend = async (textOverride?: string) => {
     const text = (textOverride ?? inputValue).trim();
     if (!text || isSending) return;
 
+    // 【修改 1】一開始只把「使用者」的訊息加進畫面，不預留 AI 的空位！
     setMessages((prev) => [...prev, { role: "user", content: text }]);
+    
     setInputValue("");
     setIsSending(true);
-    setLoadingTime(null); // 【新增】每次發送新訊息就重置時間
+    setLoadingTime(null);
 
     const token = localStorage.getItem("token");
-    const startTime = performance.now(); // 【新增】就在 fetch 發生前開始計時
+    const startTime = performance.now();
+    let isFirstChunk = true; // 記錄是不是第一個字
 
     try {
       const res = await fetch(`${API_BASE_URL}/api/chat`, {
@@ -624,28 +650,60 @@ export default function ChatWidget() {
       });
 
       if (!res.ok) throw new Error(`API Error: ${res.status}`);
+      if (!res.body) throw new Error("ReadableStream not supported by response");
 
-      const data = await res.json();
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
 
-      // 【新增】資料一拿到，馬上計算時間
-      const endTime = performance.now();
-      const duration = (endTime - startTime) / 1000;
-      setLoadingTime(Number(duration.toFixed(2)));
+      while (true) {
+        const { done, value } = await reader.read();
+        
+        if (done) break; 
 
-      const assistantMessage = {
-        role: "assistant",
-        content: data.answer || data.message || "I received an empty response.",
-      };
-      setMessages((prev) => [...prev, assistantMessage]);
+        const chunkText = decoder.decode(value, { stream: true });
+
+        if (isFirstChunk) {
+          // 【修改 2】接到第一個字了！計算時間，並「新增」一個 AI 訊息框
+          const endTime = performance.now();
+          const duration = (endTime - startTime) / 1000;
+          setLoadingTime(Number(duration.toFixed(2)));
+          isFirstChunk = false;
+
+          setMessages((prev) => [...prev, { role: "assistant", content: chunkText }]);
+        } else {
+          // 後續的字：去更新最後一筆 AI 訊息
+          setMessages((prev) => {
+            const newMessages = [...prev];
+            const lastIndex = newMessages.length - 1;
+            newMessages[lastIndex] = {
+              ...newMessages[lastIndex],
+              content: newMessages[lastIndex].content + chunkText,
+            };
+            return newMessages;
+          });
+        }
+      }
     } catch (error) {
       console.error("API failed:", error);
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "抱歉，目前連線似乎有點問題，請稍後再試。",
-        },
-      ]);
+      // 【修改 3】如果出錯了，也要判斷是「連第一個字都沒出來」還是「講到一半斷線」
+      if (isFirstChunk) {
+        // 根本連不上後端 (例如現在你同學的 server 沒開)
+        setMessages((prev) => [
+          ...prev, 
+          { role: "assistant", content: "抱歉，目前連線似乎有點問題，請稍後再試。" }
+        ]);
+      } else {
+        // 講到一半斷線
+        setMessages((prev) => {
+          const newMessages = [...prev];
+          const lastIndex = newMessages.length - 1;
+          newMessages[lastIndex] = {
+            ...newMessages[lastIndex],
+            content: newMessages[lastIndex].content + "\n\n*(連線中斷)*",
+          };
+          return newMessages;
+        });
+      }
     } finally {
       setIsSending(false);
     }
@@ -693,26 +751,70 @@ export default function ChatWidget() {
     return { w: r?.width ?? 160, h: r?.height ?? 160 };
   };
 
-  const snap = (mode: "bubble" | "panel") => {
+  // const snap = (mode: "bubble" | "panel") => {
+  //   const vw = window.innerWidth;
+  //   const vh = window.innerHeight;
+  //   const targetW = mode === "panel" ? size.width : 160;
+  //   const targetH = mode === "panel" ? size.height : 160;
+  //   const curX = x.get();
+  //   const curY = y.get();
+  //   const currentW = mode === "panel" ? 160 : size.width;
+  //   const centerX = curX + currentW / 2;
+  //   const targetX = centerX < vw / 2 ? safe : vw - targetW - safe;
+  //   const currentH = mode === "panel" ? 160 : size.height;
+  //   const centerY = curY + currentH / 2;
+  //   let targetY;
+  //   if (mode === "bubble" && centerY > vh / 2) {
+  //     targetY = vh - targetH - safe;
+  //   } else {
+  //     targetY = clamp(curY, safe, vh - targetH - safe);
+  //   }
+  //   animate(x, targetX, { type: "spring", stiffness: 360, damping: 32 });
+  //   animate(y, targetY, { type: "spring", stiffness: 360, damping: 32 });
+  // };
+
+  const snap = (mode: "bubble" | "panel", velocity = { x: 0, y: 0 }) => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
+    
+    // 精準設定當前型態的寬高
     const targetW = mode === "panel" ? size.width : 160;
     const targetH = mode === "panel" ? size.height : 160;
+
+    const { w: bubbleW, h: bubbleH } = getBubbleSize();
+    
     const curX = x.get();
     const curY = y.get();
-    const currentW = mode === "panel" ? 160 : size.width;
-    const centerX = curX + currentW / 2;
-    const targetX = centerX < vw / 2 ? safe : vw - targetW - safe;
-    const currentH = mode === "panel" ? 160 : size.height;
-    const centerY = curY + currentH / 2;
-    let targetY;
-    if (mode === "bubble" && centerY > vh / 2) {
-      targetY = vh - targetH - safe;
+
+    // 1. X 軸邏輯：左右靠邊 + 甩動預判
+    let targetX;
+    if (velocity.x < -400) {
+      targetX = safe; // 往左甩
+    } else if (velocity.x > 400) {
+      targetX = vw - targetW - safe; // 往右甩
     } else {
-      targetY = clamp(curY, safe, vh - targetH - safe);
+      // 慢速放開，依賴中心點判斷
+      const centerX = curX + targetW / 2;
+      targetX = centerX < vw / 2 ? safe : vw - targetW - safe;
     }
-    animate(x, targetX, { type: "spring", stiffness: 360, damping: 32 });
-    animate(y, targetY, { type: "spring", stiffness: 360, damping: 32 });
+
+    // 2. Y 軸邏輯：面板固定底部，球球高度自由
+    let targetY;
+    if (mode === "panel") {
+      targetY = vh - targetH - safe; // 面板統一吸到底部
+    } else {
+      // 球球模式：加上一點點滑動慣性，但絕對不能超出螢幕安全範圍
+      const projectedY = curY + velocity.y * 0.15;
+      targetY = clamp(projectedY, safe, vh - targetH - safe);
+    }
+
+// 【新增】把甩出去的暴力初速度打個 2.5 折，避免像噴射機
+    const dampenedVelX = velocity.x * 0.25; 
+    const dampenedVelY = velocity.y * 0.25;
+
+    // 【修改】調降 stiffness(彈簧硬度) 到 220，調高 damping(阻力) 到 32
+    animate(x, targetX, { type: "spring", stiffness: 220, damping: 32, velocity: dampenedVelX });
+    animate(y, targetY, { type: "spring", stiffness: 220, damping: 32, velocity: dampenedVelY });
   };
 
   useLayoutEffect(() => {
@@ -724,17 +826,24 @@ export default function ChatWidget() {
     setReady(true);
   }, []);
 
-  const handleOpen = () => {
+const handleOpen = () => {
     if (isDragging.current) return;
+    
+    // 【新增】變身前，先死死記住目前的座標！
+    lastBubblePos.current = { x: x.get(), y: y.get() };
+    
     setIsChatOpen(true);
     setIsHistoryOpen(false);
     setTimeout(() => snap("panel"), 0);
   };
 
-  const handleClose = () => {
+const handleClose = () => {
     setIsChatOpen(false);
     setIsHistoryOpen(false);
-    setTimeout(() => snap("bubble"), 0);
+    
+    // 【修改】不呼叫 snap 了，直接飛回記憶中的位置
+    animate(x, lastBubblePos.current.x, { type: "spring", stiffness: 300, damping: 28 });
+    animate(y, lastBubblePos.current.y, { type: "spring", stiffness: 300, damping: 28 });
   };
 
   const TypingIndicator = () => (
@@ -772,11 +881,12 @@ export default function ChatWidget() {
       onDragStart={() => {
         isDragging.current = true;
       }}
-      onDragEnd={() => {
+      onDragEnd={(event, info) => {
         setTimeout(() => {
           isDragging.current = false;
         }, 50);
-        snap(isChatOpen ? "panel" : "bubble");
+        // 把 info.velocity 傳給 snap
+        snap(isChatOpen ? "panel" : "bubble", info.velocity);
       }}
       style={{ x, y, opacity: ready ? 1 : 0 }}
       className="fixed left-0 top-0 z-[9999]"
@@ -789,7 +899,8 @@ export default function ChatWidget() {
             onTap={handleOpen}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="w-40 h-40 bg-transparent flex items-center justify-center"
+            // 【修改這裡】預設 (手機) 是 w-28 h-28 (112px)，md (平板以上) 變回 w-40 h-40 (160px)
+            className="w-28 h-28 md:w-40 md:h-40 bg-transparent flex items-center justify-center"
           >
             <div className="w-full h-full">
               <SlimeBall />
@@ -824,13 +935,13 @@ export default function ChatWidget() {
                 <h3 className="font-bold">CCU Assistant</h3>
               </div>
               <div className="flex gap-1">
-                <button
+                {/* <button
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={() => setIsHistoryOpen((v) => !v)}
                   className="p-2 hover:bg-white/10 rounded-full"
                 >
                   <MoreVertical size={20} />
-                </button>
+                </button> */}
                 <button
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={handleClose}
@@ -908,12 +1019,11 @@ export default function ChatWidget() {
                   </div>
                 ))}
 
-                {isSending && (
+{isSending && messages.length > 0 && messages[messages.length - 1].role === "user" && (
                   <div className="flex justify-start">
                     <TypingIndicator />
                   </div>
                 )}
-                <div ref={messagesEndRef} />
 
                 {messages.length === 0 && !isSending && (
                   <div className="mt-1 flex flex-wrap gap-2 justify-start">

@@ -165,6 +165,7 @@ export default function SlimeBall() {
   const mouse = useMousePosition();
   const [isBlinking, setIsBlinking] = useState(false);
   const [isGrabbed, setIsGrabbed] = useState(false);
+  
   const [originY, setOriginY] = useState(1); // 新增：動態基準點狀態
   const ballRef = useRef<HTMLDivElement>(null);
   const startPos = useRef({ x: 0, y: 0 });
@@ -315,7 +316,7 @@ export default function SlimeBall() {
           <path d={pathNormal} fill="url(#slimeGradient)" />
         </motion.svg>
 
-        <div className="absolute inset-0 flex items-center justify-center gap-7 pointer-events-none">
+<div className="absolute inset-0 flex items-center justify-center md:gap-7 md:scale-100 gap-5 scale-[0.7] origin-center pointer-events-none transition-transform duration-300">
           {[0, 1].map((i) => (
             <motion.div
               key={i}
