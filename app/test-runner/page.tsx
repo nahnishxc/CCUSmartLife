@@ -24,7 +24,6 @@ export default function TestRunner() {
         const json = JSON.parse(event.target?.result as string);
         let parsedQuestions: string[] = [];
 
-        // 判斷同學給的是 Array 還是 Object (處理 {"0": "...", "1": "..."} 的格式)
         if (Array.isArray(json)) {
           parsedQuestions = json;
         } else if (typeof json === 'object' && json !== null) {
@@ -44,7 +43,7 @@ export default function TestRunner() {
     reader.readAsText(file);
   };
 
-// 2. 核心迴圈：開始跑測試
+  // 2. 核心迴圈：開始跑測試
   const runTests = async () => {
     if (questions.length === 0) {
       alert("請先上傳題庫！");
@@ -60,7 +59,6 @@ export default function TestRunner() {
     const token = localStorage.getItem("token");
     const testResults: any[] = [];
 
-    // 紀錄正式題目的計數器（用來判斷每 50 題休息一次）
     let validQuestionCounter = 0;
 
     for (let i = 0; i < questions.length; i++) {
@@ -75,7 +73,9 @@ export default function TestRunner() {
       setProgress({ current: i + 1, total: questions.length, isWarmup: isWarmupPhase });
 
       const apiStartTime = performance.now();
-      let aiReply = "Error";
+      let firstTokenTime: number | null = null; // 紀錄 TTFT 專用
+      let apiEndTime = apiStartTime;
+      let aiReply = "";
 
       try {
         const res = await fetch(`${API_BASE_URL}/api/chat`, {
@@ -89,16 +89,87 @@ export default function TestRunner() {
         
         if (!res.ok) {
            aiReply = `API 錯誤 (Status: ${res.status})`;
+           apiEndTime = performance.now();
+        } else if (!res.body) {
+           aiReply = "ReadableStream not supported by response";
+           apiEndTime = performance.now();
         } else {
-           const data = await res.json();
-           aiReply = data.answer || data.message || "Empty response";
+          // 【Streaming 解析邏輯整合】
+          const reader = res.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = "";
+
+          while (true) {
+            // 如果在串流過程中按下停止，馬上切斷
+            if (abortTest.current) {
+              reader.cancel();
+              break;
+            }
+
+            const { done, value } = await reader.read();
+
+            if (value) {
+              buffer += decoder.decode(value, { stream: true });
+            }
+
+            const lines = buffer.split("\n");
+
+            if (!done) {
+              buffer = lines.pop() || "";
+            } else {
+              buffer = "";
+            }
+
+            let newTextToAdd = "";
+
+            for (const line of lines) {
+              const trimmedLine = line.trim();
+              if (!trimmedLine) continue;
+
+              let jsonStr = "";
+              if (trimmedLine.startsWith("data:")) {
+                jsonStr = trimmedLine.slice(5).trim();
+              } else if (trimmedLine.startsWith("{") && trimmedLine.endsWith("}")) {
+                jsonStr = trimmedLine;
+              }
+
+              if (jsonStr === "[DONE]") continue;
+
+              if (jsonStr) {
+                try {
+                  const parsed = JSON.parse(jsonStr);
+                  const tokenString = parsed.token || parsed.message || parsed.answer || parsed.content || "";
+                  if (tokenString) {
+                    newTextToAdd += tokenString;
+                  }
+                } catch (e) {
+                  // 解析失敗可忽略
+                }
+              }
+            }
+
+            if (newTextToAdd) {
+              // 捕捉第一個 Token 的時間 (TTFT)
+              if (!firstTokenTime) {
+                firstTokenTime = performance.now();
+              }
+              aiReply += newTextToAdd;
+            }
+
+            if (done) {
+              apiEndTime = performance.now();
+              break;
+            }
+          }
         }
       } catch (e) {
         aiReply = "網路連線失敗或跨域錯誤";
+        apiEndTime = performance.now();
       }
 
-      const apiEndTime = performance.now();
-      const apiDuration = apiEndTime - apiStartTime;
+      // 如果完全沒收到 Token 就失敗了，TTFT 視為跟總時間一樣
+      const ttftDuration = firstTokenTime ? (firstTokenTime - apiStartTime) : (apiEndTime - apiStartTime);
+      const totalApiDuration = apiEndTime - apiStartTime;
 
       const renderStartTime = performance.now();
       setMessages((prev) => [...prev, { role: "user", content: q }, { role: "ai", content: aiReply }]);
@@ -112,7 +183,8 @@ export default function TestRunner() {
             testResults.push({
               id: i + 1,
               question: q,
-              apiTimeMs: Number(apiDuration.toFixed(2)),
+              ttftMs: Number(ttftDuration.toFixed(2)),            // 新增: 首字時間
+              totalApiTimeMs: Number(totalApiDuration.toFixed(2)), // 新增: 整題跑完時間
               renderTimeMs: Number(renderDuration.toFixed(2)),
               isWarmup: isWarmupPhase
             });
@@ -124,19 +196,12 @@ export default function TestRunner() {
       // --- 休息與冷卻邏輯 ---
       if (!isWarmupPhase) {
         validQuestionCounter++;
-        
-        // 如果剛好跑滿 50 題，且不是最後一題
         if (validQuestionCounter % 50 === 0 && i < questions.length - 1) {
           console.log(`❄️ 已完成 ${validQuestionCounter} 題正式測試，進入 10 秒冷卻期...`);
-          
-          // 在介面上提示正在休息，你可以透過修改 progress 的文字來呈現
-          // 這裡我們簡單用一個 10 秒的等待
           await new Promise((r) => setTimeout(r, 10000)); 
-          continue; // 跳過下面的 1 秒暫停，因為已經休息 10 秒了
+          continue; 
         }
       }
-
-      // 每題之間固定的 1 秒緩衝
       await new Promise((r) => setTimeout(r, 1000)); 
     }
 
@@ -154,7 +219,6 @@ export default function TestRunner() {
   const handleExport = () => {
     if (results.length === 0) return;
 
-    // 只過濾出「非暖身」的數據來進行統計
     const validResults = results.filter(r => !r.isWarmup);
 
     const getStats = (arr: number[]) => {
@@ -164,7 +228,8 @@ export default function TestRunner() {
       return { mean: Number(mean.toFixed(2)), stdDev: Number(Math.sqrt(variance).toFixed(2)) };
     };
 
-    const apiTimes = validResults.map(r => r.apiTimeMs);
+    const ttftTimes = validResults.map(r => r.ttftMs);
+    const totalApiTimes = validResults.map(r => r.totalApiTimeMs);
     const renderTimes = validResults.map(r => r.renderTimeMs);
 
     const finalReport = {
@@ -173,8 +238,9 @@ export default function TestRunner() {
         warmupQuestionsIgnored: results.filter(r => r.isWarmup).length,
         validQuestionsCalculated: validResults.length,
       },
-      apiStats: getStats(apiTimes),
-      renderStats: getStats(renderTimes),
+      ttftStats: getStats(ttftTimes),          // 首字時間統計
+      totalApiStats: getStats(totalApiTimes),  // 總生成時間統計
+      renderStats: getStats(renderTimes),      // 畫面渲染時間統計
       rawData: results
     };
 
@@ -182,7 +248,7 @@ export default function TestRunner() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "frontend_performance_report.json";
+    a.download = "frontend_streaming_performance_report.json";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -191,7 +257,7 @@ export default function TestRunner() {
 
   return (
     <div className="p-8 max-w-4xl mx-auto font-sans">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">前端效能自動化測試站</h1>
+      <h1 className="text-2xl font-bold mb-6 text-gray-800">前端效能自動化測試站 (Streaming 版)</h1>
       
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-6 space-y-4">
         <div>
@@ -206,7 +272,6 @@ export default function TestRunner() {
               : "2. 開始執行測試"}
           </button>
           
-          {/* 緊急煞車按鈕，只有在 isTesting 為 true 時才會顯示 */}
           {isTesting && (
             <button 
               onClick={() => { abortTest.current = true; }} 

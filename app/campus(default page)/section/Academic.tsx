@@ -86,38 +86,39 @@ export default function Academic() {
               {selectedCollege.name}
             </h2>
 
-           {/* 內容區：文繞圖模式 */}
-<div className="mb-10 block overflow-hidden">
-  {/* 圖片容器：使用 float-left 達成文繞圖 */}
-  <div className="w-full md:w-2/5 md:float-left md:mr-8 mb-6 md:mb-4">
-    <div className="aspect-[4/3] w-full bg-gray-100 rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-      {selectedCollege.images && selectedCollege.images.length > 0 ? (
-        <img
-          src={selectedCollege.images[0]}
-          alt={selectedCollege.name}
-          className="w-full h-full object-cover"
-        />
-      ) : (
-        <div className="w-full h-full flex items-center justify-center text-gray-400 font-bold">
-          NO IMAGE
-        </div>
-      )}
-    </div>
-  </div>
+            {/* 內容區：文繞圖模式 */}
+            <div className="mb-10 block overflow-hidden">
+              {/* 圖片容器：使用 float-left 達成文繞圖 */}
+              <div className="w-full md:w-2/5 md:float-left md:mr-8 mb-6 md:mb-4">
+                <div className="aspect-[4/3] w-full bg-gray-100 rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+                  {selectedCollege.images &&
+                  selectedCollege.images.length > 0 ? (
+                    <img
+                      src={selectedCollege.images[0]}
+                      alt={selectedCollege.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-400 font-bold">
+                      NO IMAGE
+                    </div>
+                  )}
+                </div>
+              </div>
 
-  {/* 文字區：直接排版，它會圍繞在 float 元素周圍 */}
-  <div className="text-justify">
-    <h3 className="text-xl font-bold text-gray-800 mb-4">
-      About the College
-    </h3>
-    <p className="text-gray-600 leading-relaxed whitespace-pre-line text-lg">
-      {selectedCollege.description}
-    </p>
-  </div>
-</div>
+              {/* 文字區：直接排版，它會圍繞在 float 元素周圍 */}
+              <div className="text-justify">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">
+                  About the College
+                </h3>
+                <p className="text-gray-600 leading-relaxed whitespace-pre-line text-lg">
+                  {selectedCollege.description}
+                </p>
+              </div>
+            </div>
 
-{/* 清除浮動，確保後面的系所列表不會排版錯亂 */}
-<div className="clear-both"></div>
+            {/* 清除浮動，確保後面的系所列表不會排版錯亂 */}
+            <div className="clear-both"></div>
 
             {/* 系所連結列表 */}
             <div>

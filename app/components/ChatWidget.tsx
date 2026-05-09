@@ -654,69 +654,91 @@ export default function ChatWidget() {
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
 
+      // 【新增】準備一個緩衝水桶，用來裝「被切到一半」的字串
+      let buffer = "";
+
       while (true) {
         const { done, value } = await reader.read();
 
-        if (done) break;
+        // 1. 如果有收到資料，解碼並加進水桶
+        if (value) {
+          buffer += decoder.decode(value, { stream: true });
+        }
 
-        // 這裡拿到的是像 "data: {"token":"y at"}\n\n" 這樣的原始字串
-        const chunkText = decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
 
-        // 【新增】SSE 拆包裝紙邏輯！
-        // 因為一次可能收到好幾行，所以先用換行符號切開
-        const lines = chunkText.split("\n");
-        let newTextToAdd = ""; // 準備用來收集這次真正解析出來的文字
+        // 2. 【關鍵修復】如果還沒結束，最後一行通常被切斷了，留到下一波
+        // 但如果後端說結束了 (done)，我們就不留了，把剩下的全部拿去解析！
+        if (!done) {
+          buffer = lines.pop() || "";
+        } else {
+          buffer = "";
+        }
+
+        let newTextToAdd = "";
 
         for (const line of lines) {
-          // 只要是 'data: ' 開頭的，就是我們要的資料
-          if (line.startsWith("data: ")) {
-            const dataStr = line.slice(6).trim(); // 把前面 6 個字元 "data: " 切掉
+          const trimmedLine = line.trim();
+          if (!trimmedLine) continue;
 
-            // 如果遇到後端說結束的 [DONE] 標籤，就跳過
-            if (dataStr === "[DONE]") continue;
+          let jsonStr = "";
 
+          // 情況 A：標準的 "data: {...}" 格式
+          if (trimmedLine.startsWith("data:")) {
+            jsonStr = trimmedLine.slice(5).trim();
+          } 
+          // 情況 B：【關鍵修復】像截圖第一行那樣，沒穿衣服直接給 "{...}" 的格式
+          else if (trimmedLine.startsWith("{") && trimmedLine.endsWith("}")) {
+            jsonStr = trimmedLine;
+          }
+
+          if (jsonStr === "[DONE]") continue;
+
+          if (jsonStr) {
             try {
-              // 把字串轉回 JSON 物件
-              const parsed = JSON.parse(dataStr);
-              // 從截圖看到你們後端設定的 key 是 "token"，所以我們把它抓出來
-              if (parsed.token) {
-                newTextToAdd += parsed.token;
+              const parsed = JSON.parse(jsonStr);
+              // 抓取 token
+              const tokenString = parsed.token || parsed.message || parsed.answer || parsed.content || "";
+              
+              if (tokenString) {
+                newTextToAdd += tokenString;
               }
             } catch (e) {
-              // 有時候網路傳輸切太細，JSON 可能會被切一半導致 parse 失敗
-              // 這種情況我們就先安靜地忽略它，等下一包資料補齊
-              console.warn("解析小碎片失敗 (正常現象可忽略):", dataStr);
+              console.warn("解析碎片失敗 (可忽略):", jsonStr);
             }
           }
         }
 
-        // 如果這次解析完發現沒有新文字 (例如只是傳了 [DONE])，就不更新畫面，直接等下一波
-        if (!newTextToAdd) continue;
+        // 3. 更新畫面
+        if (newTextToAdd) {
+          console.log("成功解析到文字片段:", newTextToAdd); // 👈 幫你加個 log，F12 可以看進度！
 
-        // 接下來的更新畫面邏輯跟你原本的一模一樣，只是把 chunkText 換成 newTextToAdd
-        if (isFirstChunk) {
-          const endTime = performance.now();
-          const duration = (endTime - startTime) / 1000;
-          setLoadingTime(Number(duration.toFixed(2)));
-          isFirstChunk = false;
+          if (isFirstChunk) {
+            const endTime = performance.now();
+            const duration = (endTime - startTime) / 1000;
+            setLoadingTime(Number(duration.toFixed(2)));
+            isFirstChunk = false;
 
-          setMessages((prev) => [
-            ...prev,
-            { role: "assistant", content: newTextToAdd },
-          ]);
-        } else {
-          setMessages((prev) => {
-            const newMessages = [...prev];
-            const lastIndex = newMessages.length - 1;
-            newMessages[lastIndex] = {
-              ...newMessages[lastIndex],
-              content: newMessages[lastIndex].content + newTextToAdd,
-            };
-            return newMessages;
-          });
+            setMessages((prev) => [
+              ...prev,
+              { role: "assistant", content: newTextToAdd },
+            ]);
+          } else {
+            setMessages((prev) => {
+              const newMessages = [...prev];
+              const lastIndex = newMessages.length - 1;
+              newMessages[lastIndex] = {
+                ...newMessages[lastIndex],
+                content: newMessages[lastIndex].content + newTextToAdd,
+              };
+              return newMessages;
+            });
+          }
         }
-      }
-    } finally {
+
+        // 4. 資料真的全收完了，就安心下班跳出迴圈
+        if (done) break;
+      }}finally {
       setIsSending(false);
     }
   };
