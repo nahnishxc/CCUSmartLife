@@ -534,6 +534,48 @@ export default function ChatWidget() {
     fetchSessions();
   }, [isChatOpen]);
 
+
+// 【專為明天測試設計】默默讓 AI 保持熱機狀態的幽靈通道
+  useEffect(() => {
+    // 準備一個發送幽靈請求的函數
+    const pingAi = () => {
+      const token = localStorage.getItem("token");
+      // 隨便設定一個字串，後端其實不用理會，但能強迫 AI 模型動起來
+      const dummyQuestion = "keep-alive-ping"; 
+
+      fetch(`${API_BASE_URL}/api/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ 
+          message: dummyQuestion, 
+          sessionId: null // 不留紀錄
+        }),
+      })
+      .then(() => {
+        console.log("AI 暖身成功");
+      })
+      .catch((e) => {
+        console.log("AI 保溫失敗", e);
+      });
+    };
+
+    // 1. 網頁一打開（元件渲染）的瞬間，立刻先戳一次！幫使用者擋掉冷啟動時間
+    pingAi();
+
+    // 2. 接下來，每隔 4 分半鐘 (270,000 毫秒) 再自動戳一次，確保不管放多久都不會睡著
+    const keepAwakeTimer = setInterval(() => {
+      pingAi();
+    }, 4.5 * 60 * 1000);
+
+    // 清除計時器（好習慣）
+    return () => clearInterval(keepAwakeTimer);
+  }, []);
+
+
+
   // 監聽視窗縮放與設備旋轉
   useEffect(() => {
     const handleResize = () => {
@@ -918,7 +960,7 @@ export default function ChatWidget() {
 
   const faqOptions = [
     "NHI application",
-    "Lost ARC",
+    "Lost the ARC",
     "Tell me about CCU Campus",
     "Bus schedule",
     "Library hours",
