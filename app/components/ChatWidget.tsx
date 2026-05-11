@@ -535,42 +535,49 @@ export default function ChatWidget() {
   }, [isChatOpen]);
 
 
-// 【專為明天測試設計】默默讓 AI 保持熱機狀態的幽靈通道
+// 【專為明天測試設計】默默讓 AI 保持熱機狀態的幽靈通道 (一次發三題)
   useEffect(() => {
-    // 準備一個發送幽靈請求的函數
     const pingAi = () => {
       const token = localStorage.getItem("token");
-      // 隨便設定一個字串，後端其實不用理會，但能強迫 AI 模型動起來
-      const dummyQuestion = "keep-alive-ping"; 
+      
+      // 後端指定的三個問題
+      const dummyQuestions = [
+        "What is the deadline for course registration?",
+        "How do I apply for a student ID card?",
+        "Where is the international office located?"
+      ];
 
-      fetch(`${API_BASE_URL}/api/chat`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({ 
-          message: dummyQuestion, 
-          sessionId: null // 不留紀錄
-        }),
-      })
-      .then(() => {
-        console.log("AI 暖身成功");
-      })
-      .catch((e) => {
-        console.log("AI 保溫失敗", e);
+      // 用迴圈一次把三個請求非同步丟出去
+      dummyQuestions.forEach((question) => {
+        fetch(`${API_BASE_URL}/api/chat`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({ 
+            message: question, 
+            sessionId: null // 不留紀錄
+          }),
+        })
+        .then(() => {
+          console.log(`AI 保溫成功 (問題: ${question.substring(0, 15)}...)`);
+        })
+        .catch((e) => {
+          console.log("AI 保溫連線失敗", e);
+        });
       });
     };
 
-    // 1. 網頁一打開（元件渲染）的瞬間，立刻先戳一次！幫使用者擋掉冷啟動時間
+    // 1. 網頁一打開（元件渲染）的瞬間，立刻發送第一波！
     pingAi();
 
-    // 2. 接下來，每隔 4 分半鐘 (270,000 毫秒) 再自動戳一次，確保不管放多久都不會睡著
+    // 2. 接下來每 4 分半鐘 (270,000 毫秒) 自動補發一波
     const keepAwakeTimer = setInterval(() => {
       pingAi();
     }, 4.5 * 60 * 1000);
 
-    // 清除計時器（好習慣）
+    // 清除計時器
     return () => clearInterval(keepAwakeTimer);
   }, []);
 
@@ -608,58 +615,7 @@ export default function ChatWidget() {
     }
   };
 
-  // const handleSend = async (textOverride?: string) => {
-  //   const text = (textOverride ?? inputValue).trim();
-  //   if (!text || isSending) return;
 
-  //   setMessages((prev) => [...prev, { role: "user", content: text }]);
-  //   setInputValue("");
-  //   setIsSending(true);
-  //   setLoadingTime(null); // 【新增】每次發送新訊息就重置時間
-
-  //   const token = localStorage.getItem("token");
-  //   const startTime = performance.now(); // 【新增】就在 fetch 發生前開始計時
-
-  //   try {
-  //     const res = await fetch(`${API_BASE_URL}/api/chat`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  //       },
-  //       body: JSON.stringify({
-  //         message: text,
-  //         sessionId: currentSessionId,
-  //       }),
-  //     });
-
-  //     if (!res.ok) throw new Error(`API Error: ${res.status}`);
-
-  //     const data = await res.json();
-
-  //     // 【新增】資料一拿到，馬上計算時間
-  //     const endTime = performance.now();
-  //     const duration = (endTime - startTime) / 1000;
-  //     setLoadingTime(Number(duration.toFixed(2)));
-
-  //     const assistantMessage = {
-  //       role: "assistant",
-  //       content: data.answer || data.message || "I received an empty response.",
-  //     };
-  //     setMessages((prev) => [...prev, assistantMessage]);
-  //   } catch (error) {
-  //     console.error("API failed:", error);
-  //     setMessages((prev) => [
-  //       ...prev,
-  //       {
-  //         role: "assistant",
-  //         content: "抱歉，目前連線似乎有點問題，請稍後再試。",
-  //       },
-  //     ]);
-  //   } finally {
-  //     setIsSending(false);
-  //   }
-  // };
 
   const handleSend = async (textOverride?: string) => {
     const text = (textOverride ?? inputValue).trim();
