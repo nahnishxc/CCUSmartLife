@@ -498,6 +498,8 @@ export default function ChatWidget() {
   const lastBubblePos = useRef({ x: 0, y: 0 });
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const [isCurrentlyDragging, setIsCurrentlyDragging] = useState(false);
+
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const safe = 16;
@@ -928,21 +930,22 @@ export default function ChatWidget() {
       dragControls={dragControls}
       dragListener={!isChatOpen}
       dragMomentum={false}
-      onDragStart={() => {
+onDragStart={() => {
         isDragging.current = true;
+        setIsCurrentlyDragging(true); // 👈 新增：開始拖曳
       }}
       onDragEnd={(event, info) => {
         setTimeout(() => {
           isDragging.current = false;
+          setIsCurrentlyDragging(false); // 👈 新增：結束拖曳
         }, 50);
-        // 把 info.velocity 傳給 snap
         snap(isChatOpen ? "panel" : "bubble", info.velocity);
       }}
-      style={{ x, y, opacity: ready ? 1 : 0 }}
+      // 👇 修改：加上 willChange: "transform" 強制開啟硬體加速
+      style={{ x, y, opacity: ready ? 1 : 0, willChange: "transform" }}
       className="fixed left-0 top-0 z-[9999]"
     >
-      <AnimatePresence initial={false}>
-        {!isChatOpen && (
+              {!isChatOpen && (
           <motion.button
             key="bubble"
             ref={bubbleRef}
@@ -957,6 +960,8 @@ export default function ChatWidget() {
             </div>
           </motion.button>
         )}
+      <AnimatePresence initial={false}>
+
 
         {isChatOpen && (
           <motion.div
