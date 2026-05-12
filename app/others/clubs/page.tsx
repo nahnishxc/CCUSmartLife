@@ -164,15 +164,17 @@
 //     </div>
 //   );
 // }
+
+
 "use client";
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useRef } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import useSWR from "swr";
 import { motion, AnimatePresence } from "framer-motion";
 import { Facebook, Instagram, Globe } from "lucide-react";
 import Image from "next/image";
 
-// 🔴 重要：把這行本地資料導進來，你的「東西」才不會不見！
+// 🔴 引入本地資料作為保底
 import { CLUB_DATA } from "../../Data/club";
 
 // 1. 定義型別
@@ -195,58 +197,80 @@ interface ClubCategory {
   clubs: Club[];
 }
 
-// SWR Fetcher
-const fetcher = (url: string) => fetch(url).then((res) => {
+// 強化版 SWR Fetcher：防呆處理後端包裝的 data
+const fetcher = async (url: string) => {
+  const res = await fetch(url);
   if (!res.ok) throw new Error("Failed to fetch club data");
-  return res.json();
-});
+  const json = await res.json();
+  return json.data || json; // 自動對應不同 API 結構
+};
 
 export default function ClubPage() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  
+  // 👇 建立專屬捲軸追蹤器
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   // --- 【URL 狀態管理】 ---
   const activeCategoryName = searchParams.get("category");
 
-  // --- 【SWR 資料抓取 + 本地資料保險】 ---
-  // 我們把 CLUB_DATA 設定為 fallbackData，這樣一進頁面就會有圖有真相！
+// --- 【SWR 資料抓取 + 本地資料保險】 ---
   const { data: categories, isLoading } = useSWR(
     "https://campus-ai-backend-1.onrender.com/api/campus/clubs", 
     fetcher,
     { 
-      fallbackData: CLUB_DATA as unknown as ClubCategory[], // 👈 如果網路沒回應，就用本地這包
+      fallbackData: CLUB_DATA as unknown as ClubCategory[], 
       dedupingInterval: 60000 
     }
   );
 
+  const validCategories = Array.isArray(categories) && categories.length > 0 
+    ? categories 
+    : (CLUB_DATA as unknown as ClubCategory[]);
+
   // 找出目前應該顯示的分類資料
   const activeCategoryData = useMemo(() => {
-    if (!categories || categories.length === 0) return null;
-    if (!activeCategoryName) return categories[0];
-    const found = categories.find((c: ClubCategory) => c.name === activeCategoryName);
-    return found || categories[0];
-  }, [categories, activeCategoryName]);
+    if (!validCategories || validCategories.length === 0) return null;
+    if (!activeCategoryName) return validCategories[0];
+    const found = validCategories.find((c: ClubCategory) => c.name === activeCategoryName);
+    return found || validCategories[0];
+  }, [validCategories, activeCategoryName]);
 
-  // --- 【自動捲回頂部】 ---
+  // --- 【切換分類：雙重保險強制置頂】 ---
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const scrollToTop = () => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollTo({ top: 0, behavior: "instant" });
+      }
+    };
+
+    // 保險 A：切換瞬間執行
+    scrollToTop();
+    // 保險 B：等 React 渲染與動畫 50ms 後再強制執行一次
+    const timer = setTimeout(scrollToTop, 50);
+
+    return () => clearTimeout(timer);
   }, [activeCategoryName]);
 
   // 導航函數
   const switchCategory = (name: string) => {
-    router.push(`?category=${encodeURIComponent(name)}`);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("category", name);
+    // 加上 scroll: false 避免 Next.js 雞婆干擾我們自己的置頂邏輯
+    router.push(`?${params.toString()}`, { scroll: false });
   };
 
   return (
-    <div className="w-full bg-white rounded-3xl p-6 md:p-6 shadow-sm flex flex-col">
+    <div className="w-full bg-white rounded-3xl p-6 md:p-6 shadow-sm flex flex-col h-full">
       <style jsx global>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
       {/* 標題區 */}
-      <div className="mb-8">
+      <div className="mb-8 flex-shrink-0">
         <h2 className="text-3xl font-bold text-gray-800 tracking-tight">Student Clubs</h2>
         <p className="text-gray-500 mt-3 max-w-3xl leading-relaxed">
           From academic societies to sports teams, music, arts, and service groups,
@@ -254,9 +278,9 @@ export default function ClubPage() {
         </p>
       </div>
 
-      {/* 分類標籤切換 - 現在這裡一定會有東西了 */}
-      <div className="flex items-center gap-3 mb-8 overflow-x-auto no-scrollbar pb-2">
-        {categories?.map((category: ClubCategory) => {
+    {/* 分類標籤切換 */}
+      <div className="flex items-center gap-3 mb-8 overflow-x-auto no-scrollbar pb-2 flex-shrink-0">
+        {validCategories.map((category: ClubCategory) => {
           const isActive = activeCategoryData?.name === category.name;
           return (
             <button
@@ -274,8 +298,8 @@ export default function ClubPage() {
         })}
       </div>
 
-      {/* 社團清單區 */}
-      <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar pb-10">
+      {/* 社團清單區 (綁定 scrollRef) */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto pr-2 custom-scrollbar pb-10 relative">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={activeCategoryData?.id || "empty"}

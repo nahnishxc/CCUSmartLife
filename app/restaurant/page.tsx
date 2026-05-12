@@ -557,17 +557,15 @@
 //   );
 // }
 
-
 "use client";
 import { useState, useMemo, useEffect } from "react";
-import { useRouter, useSearchParams, usePathname } from "next/navigation"; // 引入路由 Hook
+import { useRouter, useSearchParams, usePathname } from "next/navigation"; 
 import useSWR from "swr";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, X } from "lucide-react";
+import { Search, X, UtensilsCrossed } from "lucide-react"; // 引入 UtensilsCrossed 作為餐廳的 Icon
 import RestaurantCard from "./RestaurantCard";
 import RestaurantDetail from "./RestaurantDetail";
 
-// 1. 介面定義 (保持不變)
 export interface RestaurantData {
   id: string;
   label: string;
@@ -585,7 +583,6 @@ export interface RestaurantData {
   };
 }
 
-// 定義 SWR 的 Fetcher
 const fetcher = (url: string) => fetch(url).then((res) => {
   if (!res.ok) throw new Error(`伺服器回應錯誤: ${res.status}`);
   return res.json();
@@ -596,23 +593,18 @@ export default function RestaurantPage() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // --- 【核心改動 1：URL 狀態管理】取代原本的 useState ---
   const view = searchParams.get("view") || "list";
   const selectedId = searchParams.get("id");
 
-  // --- 客戶端狀態管理 (搜尋與標籤保留使用 useState) ---
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTag, setActiveTag] = useState("All");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [activeCategoryTab, setActiveCategoryTab] = useState("Type");
 
-  // --- 【核心改動 2：自動捲回頂部】 ---
-  // 只要切換 view 或是點選不同的餐廳 (selectedId 改變)，畫面立刻回頂
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [view, selectedId]);
 
-  // --- SWR 資料抓取 ---
   const apiUrl = "https://campus-ai-backend-1.onrender.com/api/campus/restaurant";
   
   const { data: rawData, error, isLoading } = useSWR(apiUrl, fetcher, {
@@ -620,7 +612,6 @@ export default function RestaurantPage() {
     dedupingInterval: 5000,  
   });
 
-  // --- 資料處理與格式化 ---
   const { restaurants, dynamicBasicTags, dynamicMoreTags } = useMemo(() => {
     const actualList = rawData && Array.isArray(rawData.data) ? rawData.data : [];
     
@@ -701,7 +692,6 @@ export default function RestaurantPage() {
     };
   }, [rawData]);
 
-  // --- 搜尋與過濾邏輯 ---
   const filteredRestaurants = restaurants.filter((r) => {
     const matchActiveTag = activeTag === "All" || r.data.tags.includes(activeTag);
     const query = searchQuery.toLowerCase().trim();
@@ -713,6 +703,30 @@ export default function RestaurantPage() {
     
     return matchActiveTag && (nameMatch || tagMatch || attributeMatch);
   });
+
+  // --- 【新增：全版 Loading 狀態】 ---
+  // 當正在抓取資料，且目前畫面上還沒有任何餐廳可以顯示時，蓋上全版遮罩
+  if (isLoading && restaurants.length === 0) {
+    return (
+      <div className="w-full h-[500px] flex flex-col items-center justify-center bg-white rounded-3xl border border-gray-100 shadow-sm">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-emerald-500 mb-4"></div>
+        <p className="text-gray-400 font-medium">Discovering delicious food...</p>
+      </div>
+    );
+  }
+
+  // --- 【新增：API 壞掉或完全無資料時的防呆】 ---
+  if (restaurants.length === 0 && !isLoading) {
+    return (
+      <div className="w-full h-[500px] flex flex-col items-center justify-center bg-white rounded-3xl border border-dashed border-gray-200">
+        <UtensilsCrossed className="text-gray-200 mb-4" size={48} />
+        <p className="text-gray-400 font-medium">Restaurant information is currently unavailable.</p>
+        <button onClick={() => window.location.reload()} className="mt-6 px-6 py-2 bg-gray-50 text-emerald-600 rounded-full font-bold text-sm hover:bg-emerald-50 transition-colors">
+          Retry Connection
+        </button>
+      </div>
+    );
+  }
 
   const selectedRestaurant = restaurants.find((r) => r.id === selectedId);
 
@@ -730,13 +744,12 @@ export default function RestaurantPage() {
      console.error("載入餐廳失敗", error);
   }
 
-  // --- 導航控制函數 ---
   const openDetail = (id: string) => {
     router.push(`?view=detail&id=${id}`);
   };
 
   const goBackToList = () => {
-    router.push(pathname); // 清除參數，回歸列表
+    router.push(pathname); 
   };
 
   return (
@@ -867,22 +880,16 @@ export default function RestaurantPage() {
                 ))}
               </div>
 
-              {/* 列表內容 */}
-              {isLoading ? (
-                <div className="flex justify-center items-center py-20">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pb-10 mt-8">
-                  {filteredRestaurants.map((item) => (
-                    <RestaurantCard
-                      key={item.id}
-                      item={item}
-                      onClick={(id) => openDetail(id)} /* 核心改動：改為觸發 URL 變化 */
-                    />
-                  ))}
-                </div>
-              )}
+              {/* 列表內容 - 既然上面已經有全版 Loading 了，這裡就可以拔掉轉圈圈邏輯 */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pb-10 mt-8">
+                {filteredRestaurants.map((item) => (
+                  <RestaurantCard
+                    key={item.id}
+                    item={item}
+                    onClick={(id) => openDetail(id)} 
+                  />
+                ))}
+              </div>
             </div>
           </motion.div>
         ) : (
@@ -890,8 +897,8 @@ export default function RestaurantPage() {
             <RestaurantDetail
               restaurant={selectedRestaurant}
               relatedRestaurants={relatedRestaurants}
-              onBack={() => goBackToList()} /* 核心改動：改為清除 URL 參數 */
-              onSelectRelated={(id) => openDetail(id)} /* 核心改動：改為更新 URL id 參數 */
+              onBack={() => goBackToList()} 
+              onSelectRelated={(id) => openDetail(id)} 
             />
           )
         )}
