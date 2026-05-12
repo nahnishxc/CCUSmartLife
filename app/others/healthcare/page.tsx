@@ -657,7 +657,8 @@ function HealthcareContent() {
         {hospitalCategory && <ClinicRow category={hospitalCategory} />}
 
         <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-2 mb-2 overflow-x-auto no-scrollbar pb-1">
+{/* 👇 容器加上 pr-4 讓最右邊有一點留白 */}
+          <div className="flex items-center gap-2 mb-2 overflow-x-auto no-scrollbar pb-2 pr-4">
             <div className="w-0 h-0 border-l-[6px] border-l-emerald-500 border-y-[6px] border-y-transparent ml-1 mr-2 flex-shrink-0"></div>
 
             {filteredCategories.map((cat, index) => {
@@ -666,7 +667,8 @@ function HealthcareContent() {
                 <button
                   key={cat.title}
                   onClick={() => switchCategory(cat.title)}
-                  className={`px-4 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap border ${
+                  // 👇 加上 flex-shrink-0，確保按鈕絕對不會被擠壓變形
+                  className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap border ${
                     isActive
                       ? "bg-emerald-500 text-white border-emerald-500 shadow-md transform scale-105"
                       : "bg-gray-50 text-gray-500 border-gray-100 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200"
@@ -676,6 +678,9 @@ function HealthcareContent() {
                 </button>
               );
             })}
+            {/* 👇 迴圈結束後，加一個隱形的佔位元素，確保滾到底時不會貼死邊緣 */}
+            <div className="w-4 flex-shrink-0"></div>
+          </div>
           </div>
 
           <AnimatePresence mode="wait">
@@ -697,7 +702,7 @@ function HealthcareContent() {
           </AnimatePresence>
         </div>
       </div>
-    </div>
+    
   );
 }
 
@@ -706,7 +711,7 @@ function ClinicRow({ category, hideDefaultTitle = false, customTitle }: any) {
   const rowRef = useRef<HTMLDivElement>(null);
   const scroll = (direction: "left" | "right") => {
     if (rowRef.current) {
-      const scrollAmount = 420;
+      const scrollAmount = 460;
       rowRef.current.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
     }
   };
@@ -750,17 +755,26 @@ function ClinicRow({ category, hideDefaultTitle = false, customTitle }: any) {
           const { data } = clinic;
           const kmText = data.distance.split("(")[0].trim();
           const timeDetail = data.distance.match(/\(([^)]+)\)/)?.[1];
-
+const nameParts = data.name.split(" ("); 
+const engName = nameParts[0];
+const chiName = nameParts[1] ? `(${nameParts[1]}` : null;
           return (
-            <div key={clinic.id} onClick={() => handleCardClick(clinic)} className="flex-shrink-0 w-[380px] bg-gray-50 p-6 rounded-2xl border border-gray-100 flex flex-col hover:border-emerald-300 hover:shadow-lg hover:-translate-y-1 transition-all select-none cursor-pointer active:scale-95 group">
+            <div key={clinic.id} onClick={() => handleCardClick(clinic)} className="flex-shrink-0 w-[400px] bg-gray-50 p-6 rounded-2xl border border-gray-100 flex flex-col hover:border-emerald-300 hover:shadow-lg hover:-translate-y-1 transition-all select-none cursor-pointer active:scale-95 group">
               <div className="flex justify-between items-start mb-6">
                 <span className="bg-emerald-100 text-emerald-700 text-[10px] px-2.5 py-1.5 rounded-lg font-black uppercase tracking-wider leading-none">{data.tags[0]}</span>
                 <div className="flex items-center gap-1 text-emerald-600 font-bold text-[11px] mt-1">
                   <Navigation size={12} fill="currentColor" />{kmText}
                 </div>
               </div>
-              <h4 className="font-bold text-gray-800 text-xl truncate mb-5 leading-tight">{data.name}</h4>
-              <div className="space-y-3 flex-1">
+<h4 className="font-bold text-gray-800 text-xl mb-4 leading-tight min-h-[56px]">
+  {engName}
+  {chiName && (
+    <span className="block text-lg text-gray-500 mt-1">
+      {chiName}
+    </span>
+  )}
+</h4>
+          <div className="space-y-3 flex-1">
                 <div className="flex items-center gap-3 text-sm text-gray-600"><Phone size={16} className="shrink-0 text-emerald-500" /><span className="font-semibold">{data.contact}</span></div>
                 <div className="flex items-start gap-3 text-sm text-gray-600"><MapPin size={16} className="shrink-0 text-emerald-500 mt-0.5" /><span className="line-clamp-1">{data.address}</span></div>
                 <div className="flex items-center gap-3 text-sm text-gray-600"><BadgeDollarSign size={16} className="shrink-0 text-emerald-500" /><span className="font-medium">{data.fare}</span></div>
