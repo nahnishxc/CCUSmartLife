@@ -14,7 +14,7 @@ export default function MainNav() {
     { name: "Announcement", icon: Megaphone, href: "/announcement" },
     { name: "Restaurant", icon: Utensils, href: "/restaurant" },
     { name: "Transportation", icon: Bus, href: "/transportation" },
-    { name: "FAQ", icon: BookOpen, href: "/guide" },
+    { name: "FAQ", icon: BookOpen, href: "/FAQ" },
   ];
 
   const isOthersActive = pathname.startsWith("/others");
