@@ -237,7 +237,7 @@
 
 
 "use client";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import {
   Bus,
@@ -256,7 +256,7 @@ import TrainDetail from "./sections/TrainDetail";
 import UbikeDetail from "./sections/UbikeDetail";
 import RouteDetail from "./sections/RouteDetail";
 
-export default function Transportation() {
+function TransportationContent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -501,5 +501,14 @@ export default function Transportation() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function TransportationPage() {
+  return (
+    // 👉 3. 加入 Suspense 邊界，並設定載入中的 fallback 畫面
+    <Suspense fallback={<div>Loading...</div>}>
+      <TransportationContent />
+    </Suspense>
   );
 }

@@ -167,7 +167,7 @@
 
 
 "use client";
-import { useMemo, useEffect, useRef } from "react";
+import { useMemo, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import useSWR from "swr";
 import { motion, AnimatePresence } from "framer-motion";
@@ -205,7 +205,7 @@ const fetcher = async (url: string) => {
   return json.data || json; // 自動對應不同 API 結構
 };
 
-export default function ClubPage() {
+function ClubContent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -371,5 +371,13 @@ export default function ClubPage() {
         </AnimatePresence>
       </div>
     </div>
+  );
+}
+export default function ClubPage() {
+  return (
+    // 👉 3. 加入 Suspense 邊界，並設定載入中的 fallback 畫面
+    <Suspense fallback={<div>Loading...</div>}>
+      <ClubContent />
+    </Suspense>
   );
 }

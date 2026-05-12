@@ -255,9 +255,10 @@
 //     </div>
 //   );
 // }
+
 "use client";
-// 記得引入 useRef
-import { useEffect, useMemo, useState, useRef } from "react"; 
+// 記得引入 useRef 和 Suspense
+import { useEffect, useMemo, useState, useRef, Suspense } from "react"; 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight } from "lucide-react";
@@ -281,20 +282,21 @@ interface CampusViewProps {
   subTab: string;
 }
 
-export default function Campus({ subTab }: CampusViewProps) {
+// 1. 把原本的 export default function Campus 改名為 CampusContent (去掉 export default)
+function CampusContent({ subTab }: CampusViewProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams(); // 這裡用到了 useSearchParams
   
   // 新增：用來記錄上一次的 subTab，避免卡片點擊時被錯誤覆蓋
   const previousSubTab = useRef(subTab);
 
-  // 1. 【核心改動：URL 狀態管理】
+  // 【核心改動：URL 狀態管理】
   const currentView = useMemo(() => {
     return searchParams.get("view") || "LANDING";
   }, [searchParams]);
 
-  // 2. 【核心改動：自動捲回頂部】
+  // 【核心改動：自動捲回頂部】
   useEffect(() => {
     const container = document.querySelector(".custom-scrollbar");
     if (container) {
@@ -304,19 +306,16 @@ export default function Campus({ subTab }: CampusViewProps) {
     }
   }, [currentView]);
 
-  // 3. 【修復版：同步外部 Tab 導航】
+  // 【修復版：同步外部 Tab 導航】
   useEffect(() => {
-    // 只有當傳入的 subTab "真的改變了" (代表使用者點了上面的功能列)，我們才去蓋掉網址
     if (previousSubTab.current !== subTab) {
       if (subTab === "Campus Map") {
-        router.replace(pathname); // 回到首頁 (無參數)
+        router.replace(pathname); 
       } else if (subTab !== "About CCU" && subTab !== "LANDING") { 
-        // 確保不要把 LANDING 當作有效參數傳進去
         router.replace(`?view=${subTab}`);
       } else {
         router.replace(pathname);
       }
-      // 更新記錄
       previousSubTab.current = subTab;
     }
   }, [subTab, pathname, router]);
@@ -331,7 +330,6 @@ export default function Campus({ subTab }: CampusViewProps) {
   };
 
   return (
-    // ... 下方的 JSX 完全不用動！
     <div className="w-full h-full bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden flex flex-col relative">
       <AnimatePresence mode="wait">
         
@@ -416,6 +414,19 @@ export default function Campus({ subTab }: CampusViewProps) {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+// 2. 建立新的 export default function，並將 CampusContent 包裝在 Suspense 裡面
+export default function Campus({ subTab }: CampusViewProps) {
+  return (
+    <Suspense fallback={
+      <div className="w-full h-full bg-white rounded-3xl shadow-sm border border-gray-100 flex items-center justify-center">
+        <span className="text-gray-400">Loading campus...</span>
+      </div>
+    }>
+      <CampusContent subTab={subTab} />
+    </Suspense>
   );
 }
 

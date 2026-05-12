@@ -501,7 +501,7 @@
 
 
 "use client";
-import { useState, useRef, useMemo, useEffect } from "react";
+import { useState, useRef, useMemo, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import useSWR from "swr";
 import {
@@ -543,7 +543,7 @@ const fetcher = (url: string) => fetch(url).then((res) => {
   return res.json();
 });
 
-export default function Healthcare() {
+function HealthcareContent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -778,5 +778,14 @@ function ClinicRow({ category, hideDefaultTitle = false, customTitle }: any) {
         <div className="w-2 flex-shrink-0"></div>
       </div>
     </div>
+  );
+}
+
+export default function HealthcarrePage() {
+  return (
+    // 👉 3. 加入 Suspense 邊界，並設定載入中的 fallback 畫面
+    <Suspense fallback={<div>Loading...</div>}>
+      <HealthcareContent />
+    </Suspense>
   );
 }
