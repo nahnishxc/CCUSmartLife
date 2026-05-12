@@ -472,6 +472,7 @@ import {
 import { X, Send, MoreVertical } from "lucide-react";
 import SlimeBall from "./SlimeBall";
 import ReactMarkdown from "react-markdown";
+import SlimeSpeechBubble from "./SlimeSpeechBubble";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "https://campus-ai-backend-1.onrender.com";
@@ -536,17 +537,16 @@ export default function ChatWidget() {
     fetchSessions();
   }, [isChatOpen]);
 
-
-// 【專為明天測試設計】默默讓 AI 保持熱機狀態的幽靈通道 (一次發三題)
+  // 【專為明天測試設計】默默讓 AI 保持熱機狀態的幽靈通道 (一次發三題)
   useEffect(() => {
     const pingAi = () => {
       const token = localStorage.getItem("token");
-      
+
       // 後端指定的三個問題
       const dummyQuestions = [
         "What is the deadline for course registration?",
         "How do I apply for a student ID card?",
-        "Where is the international office located?"
+        "Where is the international office located?",
       ];
 
       // 用迴圈一次把三個請求非同步丟出去
@@ -557,17 +557,17 @@ export default function ChatWidget() {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
-          body: JSON.stringify({ 
-            message: question, 
-            sessionId: null // 不留紀錄
+          body: JSON.stringify({
+            message: question,
+            sessionId: null, // 不留紀錄
           }),
         })
-        .then(() => {
-          console.log(`AI 保溫成功 (問題: ${question.substring(0, 15)}...)`);
-        })
-        .catch((e) => {
-          console.log("AI 保溫連線失敗", e);
-        });
+          .then(() => {
+            console.log(`AI 保溫成功 (問題: ${question.substring(0, 15)}...)`);
+          })
+          .catch((e) => {
+            console.log("AI 保溫連線失敗", e);
+          });
       });
     };
 
@@ -575,15 +575,16 @@ export default function ChatWidget() {
     pingAi();
 
     // 2. 接下來每 4 分半鐘 (270,000 毫秒) 自動補發一波
-    const keepAwakeTimer = setInterval(() => {
-      pingAi();
-    }, 4.5 * 60 * 1000);
+    const keepAwakeTimer = setInterval(
+      () => {
+        pingAi();
+      },
+      4.5 * 60 * 1000,
+    );
 
     // 清除計時器
     return () => clearInterval(keepAwakeTimer);
   }, []);
-
-
 
   // 監聽視窗縮放與設備旋轉
   useEffect(() => {
@@ -616,8 +617,6 @@ export default function ChatWidget() {
       console.error("Load messages failed", e);
     }
   };
-
-
 
   const handleSend = async (textOverride?: string) => {
     const text = (textOverride ?? inputValue).trim();
@@ -686,7 +685,7 @@ export default function ChatWidget() {
           // 情況 A：標準的 "data: {...}" 格式
           if (trimmedLine.startsWith("data:")) {
             jsonStr = trimmedLine.slice(5).trim();
-          } 
+          }
           // 情況 B：【關鍵修復】像截圖第一行那樣，沒穿衣服直接給 "{...}" 的格式
           else if (trimmedLine.startsWith("{") && trimmedLine.endsWith("}")) {
             jsonStr = trimmedLine;
@@ -698,8 +697,13 @@ export default function ChatWidget() {
             try {
               const parsed = JSON.parse(jsonStr);
               // 抓取 token
-              const tokenString = parsed.token || parsed.message || parsed.answer || parsed.content || "";
-              
+              const tokenString =
+                parsed.token ||
+                parsed.message ||
+                parsed.answer ||
+                parsed.content ||
+                "";
+
               if (tokenString) {
                 newTextToAdd += tokenString;
               }
@@ -738,7 +742,8 @@ export default function ChatWidget() {
 
         // 4. 資料真的全收完了，就安心下班跳出迴圈
         if (done) break;
-      }}finally {
+      }
+    } finally {
       setIsSending(false);
     }
   };
@@ -930,7 +935,7 @@ export default function ChatWidget() {
       dragControls={dragControls}
       dragListener={!isChatOpen}
       dragMomentum={false}
-onDragStart={() => {
+      onDragStart={() => {
         isDragging.current = true;
         setIsCurrentlyDragging(true); // 👈 新增：開始拖曳
       }}
@@ -945,24 +950,23 @@ onDragStart={() => {
       style={{ x, y, opacity: ready ? 1 : 0, willChange: "transform" }}
       className="fixed left-0 top-0 z-[9999]"
     >
-              {!isChatOpen && (
-          <motion.button
-            key="bubble"
-            ref={bubbleRef}
-            onTap={handleOpen}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            // 【修改這裡】預設 (手機) 是 w-28 h-28 (112px)，md (平板以上) 變回 w-40 h-40 (160px)
-            className="w-28 h-28 md:w-40 md:h-40 bg-transparent flex items-center justify-center"
-          >
-            <div className="w-full h-full">
-              <SlimeBall />
-            </div>
-          </motion.button>
-        )}
+      {!isChatOpen && (
+        <motion.button
+          key="bubble"
+          ref={bubbleRef}
+          onTap={handleOpen}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          // 【修改這裡】預設 (手機) 是 w-28 h-28 (112px)，md (平板以上) 變回 w-40 h-40 (160px)
+          className="w-28 h-28 md:w-40 md:h-40 bg-transparent flex items-center justify-center"
+        >
+<SlimeSpeechBubble isChatOpen={isChatOpen} x={x} y={y} />
+          <div className="w-full h-full">
+            <SlimeBall />
+          </div>
+        </motion.button>
+      )}
       <AnimatePresence initial={false}>
-
-
         {isChatOpen && (
           <motion.div
             key="panel"
