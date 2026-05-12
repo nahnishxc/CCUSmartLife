@@ -19,13 +19,14 @@ export default function MainNav() {
 
   const isOthersActive = pathname.startsWith("/others");
 
-  return (
-    <div className="max-w-6xl mx-auto mb-12 px-4"> {/* 加入 px-4 防止滑動時貼邊 */}
-<div 
-  className="flex flex-nowrap items-center justify-start md:justify-between gap-4 overflow-x-auto pb-40 -mb-36 scrollbar-hide"
-  style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
->
-        {/* 隱藏 Chrome/Safari 捲軸的 inline style 或可在 globals.css 處理 */}
+ return (
+   
+    <div className="max-w-6xl mx-auto mb-12 px-4 relative z-[100]"> 
+      <div 
+        className="flex flex-nowrap items-center justify-start md:justify-between gap-4 overflow-x-auto md:overflow-visible pb-40 md:pb-4 -mb-36 md:mb-0 scrollbar-hide"
+        style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
+      >
+        {/* 隱藏 Chrome/Safari 捲軸的 inline style */}
         <style jsx>{`
           div::-webkit-scrollbar { display: none; }
         `}</style>

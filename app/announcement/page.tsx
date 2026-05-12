@@ -218,10 +218,9 @@
 //     </motion.button>
 //   );
 // }
-
 "use client";
-import { useMemo, useState, useEffect } from "react";
-import { useRouter, useSearchParams, usePathname } from "next/navigation"; // 引入路由 Hook
+import { useMemo, useState, useEffect, Suspense } from "react"; // 記得引入 Suspense
+import { useRouter, useSearchParams, usePathname } from "next/navigation"; 
 import useSWR from "swr";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -252,20 +251,16 @@ const fetcher = (url: string) => fetch(url).then(res => {
   return res.json();
 });
 
-export default function Announcement() {
+// 1. 把原本的 export default Announcement 改名為 AnnouncementContent (不要 export default)
+function AnnouncementContent() {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams(); // 這裡用到了 useSearchParams
 
-  // 1. 【URL 狀態管理】取代原本的 useState
-  // 從網址讀取 ?category=xxx，如果沒有就是 null (顯示入口大卡片)
   const activeCategory = searchParams.get("category");
-  
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
-  // 2. 【自動捲回頂部】只要分類改變，畫面立刻回頂
   useEffect(() => {
-    // 優先尋找有沒有自定義的滾動容器，沒有的話就滾動整個 window
     const container = document.querySelector(".custom-scrollbar");
     if (container) {
       container.scrollTo({ top: 0, behavior: "smooth" });
@@ -274,7 +269,6 @@ export default function Announcement() {
     }
   }, [activeCategory]);
 
-  // SWR 抓取資料
   const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || 'https://campus-ai-backend-1.onrender.com'}/api/announcements`;
   const { data: announcements = [], error, isLoading } = useSWR(apiUrl, fetcher, {
     revalidateOnFocus: true,
@@ -285,14 +279,13 @@ export default function Announcement() {
     return announcements.filter((item: AnnouncementData) => item.category === activeCategory);
   }, [announcements, activeCategory]);
 
-  // 3. 【導航函數】用來改變網址參數
   const navigateTo = (categoryKey: string | null) => {
     if (categoryKey) {
       router.push(`?category=${categoryKey}`);
     } else {
-      router.push(pathname); // 清除參數，返回主畫面
+      router.push(pathname);
     }
-    setExpandedId(null); // 切換頁面時，把展開的卡片收起來
+    setExpandedId(null);
   };
 
   return (
@@ -389,7 +382,7 @@ export default function Announcement() {
                 >
                   <button
                     onClick={(e) => {
-                      e.stopPropagation(); // 阻止觸發卡片的展開狀態
+                      e.stopPropagation(); 
                       window.open(item.url_en, "_blank");
                     }}
                     className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-600 hover:text-emerald-700 transition-colors"
@@ -410,7 +403,21 @@ export default function Announcement() {
   );
 }
 
-// 大卡片元件
+// 2. 建立新的 default export 元件，並用 Suspense 包裝
+export default function Announcement() {
+  return (
+    // 加入 Suspense 邊界，這樣 Next.js build 時才不會報錯
+    <Suspense fallback={
+      <div className="w-full min-h-[600px] flex items-center justify-center bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100">
+        <span className="text-gray-400">Loading page...</span>
+      </div>
+    }>
+      <AnnouncementContent />
+    </Suspense>
+  );
+}
+
+// 大卡片元件 (保持不變)
 function BigCard({ item, h, onClick }: { item: any, h: string, onClick: (k: string) => void }) {
   return (
     <motion.button 
