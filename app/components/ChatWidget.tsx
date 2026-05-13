@@ -493,7 +493,7 @@ export default function ChatWidget() {
   const [size] = useState({ width: 400, height: 550 });
   const [ready, setReady] = useState(false);
 
-  const bubbleRef = useRef<HTMLButtonElement>(null);
+  const bubbleRef = useRef<HTMLDivElement>(null);
   const dragControls = useDragControls();
   const isDragging = useRef(false);
   const lastBubblePos = useRef({ x: 0, y: 0 });
@@ -922,7 +922,7 @@ export default function ChatWidget() {
   );
 
   const faqOptions = [
-    "NHI application",
+    "Apply for NHI",
     "Lost the ARC",
     "Tell me about CCU Campus",
     "Bus schedule",
@@ -950,21 +950,23 @@ export default function ChatWidget() {
       style={{ x, y, opacity: ready ? 1 : 0, willChange: "transform" }}
       className="fixed left-0 top-0 z-[9999]"
     >
-      {!isChatOpen && (
-        <motion.button
+{!isChatOpen && (
+        <motion.div        // 👈 【修改這裡】把 motion.button 改成 motion.div
           key="bubble"
           ref={bubbleRef}
           onTap={handleOpen}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          // 【修改這裡】預設 (手機) 是 w-28 h-28 (112px)，md (平板以上) 變回 w-40 h-40 (160px)
-          className="w-28 h-28 md:w-40 md:h-40 bg-transparent flex items-center justify-center"
+          role="button" 
+          tabIndex={0}
+          // 👈 【修改這裡】在 className 最後面加上 cursor-pointer
+          className="w-28 h-28 md:w-40 md:h-40 bg-transparent flex items-center justify-center cursor-pointer"
         >
-<SlimeSpeechBubble isChatOpen={isChatOpen} x={x} y={y} />
+          <SlimeSpeechBubble isChatOpen={isChatOpen} x={x} y={y} />
           <div className="w-full h-full">
             <SlimeBall />
           </div>
-        </motion.button>
+        </motion.div>      // 👈 【修改這裡】結尾也要改成 motion.div
       )}
       <AnimatePresence initial={false}>
         {isChatOpen && (
