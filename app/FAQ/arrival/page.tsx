@@ -223,6 +223,27 @@ Please prepare:
 • If you overstay your visa, you may face heavier penalties and possible departure from Taiwan`,
   },
 ];
+const HighlightText = ({ text, query }: { text: string; query: string }) => {
+  if (!query.trim()) return <>{text}</>;
+
+  const escapeRegExp = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`(${escapeRegExp(query)})`, "gi");
+  const parts = text.split(regex);
+
+  return (
+    <>
+      {parts.map((part, i) =>
+        regex.test(part) ? (
+          <mark key={i} className="bg-yellow-200 text-black px-1 rounded-sm">
+            {part}
+          </mark>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      )}
+    </>
+  );
+};
 
 export default function FAQPage() {
   const [q, setQ] = useState("");
@@ -242,7 +263,7 @@ export default function FAQPage() {
   };
 
   return (
-    <div className="w-full h-full bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 flex flex-col overflow-y-auto custom-scrollbar">
+    <div className="w-full h-full bg-white rounded-3xl pt-16 px-6 pb-6 md:pt-16 md:px-10 md:pb-10 shadow-sm border border-gray-100 flex flex-col overflow-y-auto custom-scrollbar">
       {/* 標題與 Back：維持在最左邊，完全不動 */}
       <div className="mb-10 md:mb-12">
         <Link
@@ -293,9 +314,9 @@ export default function FAQPage() {
                   onClick={() => toggle(it.id)}
                   className="flex w-full items-start justify-between gap-4 px-8 py-6 text-left"
                 >
-                  {/* 問題字體改為 text-base/lg 並加粗 */}
+                  {/* 問題字體改為 text-base/lg 並加粗，套用高光搜尋 */}
                   <div className="text-base md:text-lg font-bold leading-snug text-gray-900">
-                    {it.question}
+                    <HighlightText text={it.question} query={q} />
                   </div>
                   <ChevronDown
                     className={`mt-1 h-5 w-5 shrink-0 text-gray-400 transition-transform duration-300 ${
@@ -334,11 +355,15 @@ export default function FAQPage() {
                                     key={i}
                                     className="font-black text-black tracking-tight"
                                   >
-                                    {part.slice(2, -2)}
+                                    <HighlightText text={part.slice(2, -2)} query={q} />
                                   </strong>
                                 );
                               }
-                              return <span key={i}>{part}</span>;
+                              return (
+                                <span key={i}>
+                                  <HighlightText text={part} query={q} />
+                                </span>
+                              );
                             })}
                           </span>
                         );

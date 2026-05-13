@@ -1,16 +1,16 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValueEvent, MotionValue } from "framer-motion";
 import { X } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 const PHRASES = {
   general: [
-    "Poke me, I dare you.",
+    "Poke me, I dare you!",
     "I'm not fat, I'm just well-rounded.",
     "Need any help with CCU life?",
     "It's a beautiful day in Minxiong!",
-    "Give me a qusetion about CCU!",
+    "Give me a question about CCU!",
     "Ask anything, any time.",
     "Encountering a problem? Ask me!"
   ],
@@ -23,11 +23,11 @@ const PHRASES = {
 
 export default function SlimeSpeechBubble({ 
   isChatOpen, 
-  x, // 接收 x
+  x, 
   y 
 }: { 
   isChatOpen: boolean;
-  x: MotionValue<number>; // 新增 x 型別
+  x: MotionValue<number>; 
   y: MotionValue<number>;
 }) {
   const pathname = usePathname();
@@ -35,56 +35,68 @@ export default function SlimeSpeechBubble({
   const [isVisible, setIsVisible] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isNearTop, setIsNearTop] = useState(false);
-  const [isNearLeft, setIsNearLeft] = useState(false); // 偵測是否靠左
+  const [isNearLeft, setIsNearLeft] = useState(false);
 
-  // 監聽 Y 座標
+  // 用來儲存計時器，確保切換頁面或卸載時能清得乾乾淨淨
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
   useMotionValueEvent(y, "change", (latest) => {
     setIsNearTop(latest < 120);
   });
 
-  // 監聽 X 座標 (配合你的 max-w-[300px]，把碰撞距離設為 300)
   useMotionValueEvent(x, "change", (latest) => {
     setIsNearLeft(latest < 300);
   });
 
   useEffect(() => {
+    // 每次狀態改變前，先清空所有計時器
+    if (timerRef.current) clearTimeout(timerRef.current);
+
     if (isMuted || isChatOpen) {
       setIsVisible(false);
       return;
     }
 
-    const showRandomMessage = () => {
-      const routeMessage = PHRASES.routes[pathname as keyof typeof PHRASES.routes];
-      const useRouteMessage = routeMessage && Math.random() > 0.5;
+    // 負責排程下一次對話的函式
+    const scheduleNextMessage = (delay: number) => {
+      timerRef.current = setTimeout(() => {
+        // 1. 決定要講什麼
+        const routeMessage = PHRASES.routes[pathname as keyof typeof PHRASES.routes];
+        const useRouteMessage = routeMessage && Math.random() > 0.5;
 
-      if (useRouteMessage) {
-        setCurrentText(routeMessage);
-      } else {
-        const randomGeneral = PHRASES.general[Math.floor(Math.random() * PHRASES.general.length)];
-        setCurrentText(randomGeneral);
-      }
+        if (useRouteMessage) {
+          setCurrentText(routeMessage);
+        } else {
+          const randomGeneral = PHRASES.general[Math.floor(Math.random() * PHRASES.general.length)];
+          setCurrentText(randomGeneral);
+        }
 
-      setIsVisible(true);
-      setTimeout(() => setIsVisible(false), 5000);
+        // 2. 顯示對話框
+        setIsVisible(true);
+
+        // 3. 安排 5 秒後關閉對話框，並啟動下一輪的等待
+        timerRef.current = setTimeout(() => {
+          setIsVisible(false);
+          // 下一次出現的時間：15秒 ~ 25秒之間的隨機值
+          scheduleNextMessage(Math.random() * 10000 + 15000); 
+        }, 5000);
+
+      }, delay);
     };
 
-    const initialTimer = setTimeout(showRandomMessage, 2000);
-    const loopTimer = setInterval(() => {
-      if (Math.random() > 0.3) showRandomMessage();
-    }, Math.random() * 10000 + 15000); 
+    // 進入頁面後，第一次延遲 2 秒出現
+    scheduleNextMessage(2000);
 
+    // Cleanup function：元件卸載或依賴改變時清除計時器
     return () => {
-      clearTimeout(initialTimer);
-      clearInterval(loopTimer);
+      if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, [pathname, isMuted, isChatOpen]);
 
-  // 【動態定位】保留你調的 120% 和 100%，加上左右翻轉邏輯
-const yClass = isNearTop ? "top-[105%]" : "bottom-[100%]";
+  const yClass = isNearTop ? "top-[105%]" : "bottom-[100%]";
   const xClass = isNearLeft ? "left-[30%]" : "right-[50%]";
   const positionClasses = `${yClass} ${xClass}`;
 
-  // 【動態尾巴】上下左右聰明翻轉
   const tailY = isNearTop ? "-top-2 border-t border-l" : "-bottom-2 border-b border-r";
   const tailX = isNearLeft ? "left-8" : "right-8";
   const tailClasses = `${tailY} ${tailX}`;

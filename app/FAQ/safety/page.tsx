@@ -127,6 +127,27 @@ You can apply:
 ※ Processing Time: Approximately 10 working days(Additional time may be required if documents are incomplete.)`,
   },
 ];
+const HighlightText = ({ text, query }: { text: string; query: string }) => {
+  if (!query.trim()) return <>{text}</>;
+
+  const escapeRegExp = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`(${escapeRegExp(query)})`, "gi");
+  const parts = text.split(regex);
+
+  return (
+    <>
+      {parts.map((part, i) =>
+        regex.test(part) ? (
+          <mark key={i} className="bg-yellow-200 text-black px-1 rounded-sm">
+            {part}
+          </mark>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      )}
+    </>
+  );
+};
 
 export default function FAQPage() {
   const [q, setQ] = useState("");
@@ -197,9 +218,9 @@ export default function FAQPage() {
                   onClick={() => toggle(it.id)}
                   className="flex w-full items-start justify-between gap-4 px-8 py-6 text-left"
                 >
-                  {/* 問題字體改為 text-base/lg 並加粗 */}
+                  {/* 問題字體改為 text-base/lg 並加粗，並套用 HighlightText */}
                   <div className="text-base md:text-lg font-bold leading-snug text-gray-900">
-                    {it.question}
+                    <HighlightText text={it.question} query={q} />
                   </div>
                   <ChevronDown
                     className={`mt-1 h-5 w-5 shrink-0 text-gray-400 transition-transform duration-300 ${
@@ -238,11 +259,15 @@ export default function FAQPage() {
                                     key={i}
                                     className="font-black text-black tracking-tight"
                                   >
-                                    {part.slice(2, -2)}
+                                    <HighlightText text={part.slice(2, -2)} query={q} />
                                   </strong>
                                 );
                               }
-                              return <span key={i}>{part}</span>;
+                              return (
+                                <span key={i}>
+                                  <HighlightText text={part} query={q} />
+                                </span>
+                              );
                             })}
                           </span>
                         );
