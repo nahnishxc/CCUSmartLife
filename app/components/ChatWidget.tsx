@@ -504,6 +504,16 @@ export default function ChatWidget() {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const safe = 16;
+const [canDrag, setCanDrag] = useState(false);
+
+  useEffect(() => {
+    const checkCanDrag = () => {
+      setCanDrag(window.innerWidth >= 768);
+    };
+    checkCanDrag();
+    window.addEventListener("resize", checkCanDrag);
+    return () => window.removeEventListener("resize", checkCanDrag);
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -585,6 +595,15 @@ export default function ChatWidget() {
     // 清除計時器
     return () => clearInterval(keepAwakeTimer);
   }, []);
+
+  // 【新增】手術一：專門處理背景鎖定，只要聊天室打開，背景就不准動！
+  useEffect(() => {
+    if (isChatOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [isChatOpen]);
 
   // 監聽視窗縮放與設備旋轉
   useEffect(() => {
@@ -790,68 +809,38 @@ export default function ChatWidget() {
     return { w: r?.width ?? 160, h: r?.height ?? 160 };
   };
 
-  // const snap = (mode: "bubble" | "panel") => {
-  //   const vw = window.innerWidth;
-  //   const vh = window.innerHeight;
-  //   const targetW = mode === "panel" ? size.width : 160;
-  //   const targetH = mode === "panel" ? size.height : 160;
-  //   const curX = x.get();
-  //   const curY = y.get();
-  //   const currentW = mode === "panel" ? 160 : size.width;
-  //   const centerX = curX + currentW / 2;
-  //   const targetX = centerX < vw / 2 ? safe : vw - targetW - safe;
-  //   const currentH = mode === "panel" ? 160 : size.height;
-  //   const centerY = curY + currentH / 2;
-  //   let targetY;
-  //   if (mode === "bubble" && centerY > vh / 2) {
-  //     targetY = vh - targetH - safe;
-  //   } else {
-  //     targetY = clamp(curY, safe, vh - targetH - safe);
-  //   }
-  //   animate(x, targetX, { type: "spring", stiffness: 360, damping: 32 });
-  //   animate(y, targetY, { type: "spring", stiffness: 360, damping: 32 });
-  // };
 
   const snap = (mode: "bubble" | "panel", velocity = { x: 0, y: 0 }) => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-
-    // 精準設定當前型態的寬高
-    const targetW = mode === "panel" ? size.width : 160;
-    const targetH = mode === "panel" ? size.height : 160;
+    const targetW = mode === "panel" ? Math.min(400, vw - 32) : 160;
+    const targetH = mode === "panel" ? Math.min(550, vh - 32) : 160;
 
     const { w: bubbleW, h: bubbleH } = getBubbleSize();
-
     const curX = x.get();
     const curY = y.get();
 
-    // 1. X 軸邏輯：左右靠邊 + 甩動預判
     let targetX;
     if (velocity.x < -400) {
-      targetX = safe; // 往左甩
+      targetX = safe;
     } else if (velocity.x > 400) {
-      targetX = vw - targetW - safe; // 往右甩
+      targetX = vw - targetW - safe;
     } else {
-      // 慢速放開，依賴中心點判斷
       const centerX = curX + targetW / 2;
       targetX = centerX < vw / 2 ? safe : vw - targetW - safe;
     }
 
-    // 2. Y 軸邏輯：面板固定底部，球球高度自由
     let targetY;
     if (mode === "panel") {
-      targetY = vh - targetH - safe; // 面板統一吸到底部
+      targetY = vh - targetH - safe;
     } else {
-      // 球球模式：加上一點點滑動慣性，但絕對不能超出螢幕安全範圍
       const projectedY = curY + velocity.y * 0.15;
       targetY = clamp(projectedY, safe, vh - targetH - safe);
     }
 
-    // 【新增】把甩出去的暴力初速度打個 2.5 折，避免像噴射機
     const dampenedVelX = velocity.x * 0.25;
     const dampenedVelY = velocity.y * 0.25;
 
-    // 【修改】調降 stiffness(彈簧硬度) 到 220，調高 damping(阻力) 到 32
     animate(x, targetX, {
       type: "spring",
       stiffness: 220,
@@ -863,6 +852,22 @@ export default function ChatWidget() {
       stiffness: 220,
       damping: 32,
       velocity: dampenedVelY,
+    });
+  };
+
+const handleClose = () => {
+    setIsChatOpen(false);
+    setIsHistoryOpen(false);
+
+    animate(x, lastBubblePos.current.x, {
+      type: "spring",
+      stiffness: 100,
+      damping: 28,
+    });
+    animate(y, lastBubblePos.current.y, {
+      type: "spring",
+      stiffness: 300,
+      damping: 28,
     });
   };
 
@@ -886,22 +891,6 @@ export default function ChatWidget() {
     setTimeout(() => snap("panel"), 0);
   };
 
-  const handleClose = () => {
-    setIsChatOpen(false);
-    setIsHistoryOpen(false);
-
-    // 【修改】不呼叫 snap 了，直接飛回記憶中的位置
-    animate(x, lastBubblePos.current.x, {
-      type: "spring",
-      stiffness: 300,
-      damping: 28,
-    });
-    animate(y, lastBubblePos.current.y, {
-      type: "spring",
-      stiffness: 300,
-      damping: 28,
-    });
-  };
 
   const TypingIndicator = () => (
     <div className="flex gap-1 px-5 py-3.5 bg-white border border-gray-100 rounded-2xl rounded-tl-none shadow-sm w-16">
@@ -931,42 +920,57 @@ export default function ChatWidget() {
 
   return (
     <motion.div
-      drag
+      drag={canDrag} // 👈 換成 canDrag：手機版會變成 false，徹底釘死在右下角！
       dragControls={dragControls}
-      dragListener={!isChatOpen}
+      dragListener={!isChatOpen && canDrag} // 👈 這裡也加上 canDrag
       dragMomentum={false}
       onDragStart={() => {
         isDragging.current = true;
-        setIsCurrentlyDragging(true); // 👈 新增：開始拖曳
+        setIsCurrentlyDragging(true);
       }}
       onDragEnd={(event, info) => {
         setTimeout(() => {
           isDragging.current = false;
-          setIsCurrentlyDragging(false); // 👈 新增：結束拖曳
+          setIsCurrentlyDragging(false);
         }, 50);
+
+        // 【新增】胖手指防禦機制：計算拖曳的總距離 (畢氏定理)
+        const distance = Math.sqrt(info.offset.x ** 2 + info.offset.y ** 2);
+
+        // 如果距離小於 5 像素，且聊天室還沒開，這就是一個「點擊」！
+        if (distance < 5 && !isChatOpen) {
+          handleOpen();
+          return; // 觸發打開後，就不要執行後面的 snap 亂彈了
+        }
+
+        // 否則正常執行吸附邏輯
         snap(isChatOpen ? "panel" : "bubble", info.velocity);
       }}
-      // 👇 修改：加上 willChange: "transform" 強制開啟硬體加速
       style={{ x, y, opacity: ready ? 1 : 0, willChange: "transform" }}
       className="fixed left-0 top-0 z-[9999]"
     >
-{!isChatOpen && (
-        <motion.div        // 👈 【修改這裡】把 motion.button 改成 motion.div
+      {!isChatOpen && (
+        <motion.div
           key="bubble"
           ref={bubbleRef}
           onTap={handleOpen}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          role="button" 
+          role="button"
           tabIndex={0}
-          // 👈 【修改這裡】在 className 最後面加上 cursor-pointer
-          className="w-28 h-28 md:w-40 md:h-40 bg-transparent flex items-center justify-center cursor-pointer"
+          // 👈 這裡 100% 還原成你最初的寬高，只在最後加上 touch-none
+          className="w-28 h-28 md:w-40 md:h-40 bg-transparent flex items-center justify-center cursor-pointer touch-none"
         >
-          <SlimeSpeechBubble isChatOpen={isChatOpen} x={x} y={y} />
-          <div className="w-full h-full">
+          {/* 氣泡（電腦版顯示） */}
+          <div className="hidden md:block">
+            <SlimeSpeechBubble isChatOpen={isChatOpen} x={x} y={y} />
+          </div>
+
+          {/* 球球本體：調整手機版大小，讓它不那麼擋路 */}
+          <div className="w-20 h-20 md:w-40 md:h-40">
             <SlimeBall />
           </div>
-        </motion.div>      // 👈 【修改這裡】結尾也要改成 motion.div
+        </motion.div>
       )}
       <AnimatePresence initial={false}>
         {isChatOpen && (
@@ -976,14 +980,14 @@ export default function ChatWidget() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ type: "spring", damping: 26, stiffness: 240 }}
-            style={{ width: size.width, height: size.height }}
-            className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col relative"
-            onMouseEnter={() => {
-              document.body.style.overflow = "hidden";
+            // 👇 1. 把 getPanelSize 刪掉，換成原生 CSS 的 min() 函數
+            // 意思是：電腦版維持 400x550，手機版自動變成滿版並扣掉 32px 的安全邊距
+            style={{
+              width: "min(400px, 100vw - 32px)",
+              height: "min(550px, 100dvh - 32px)",
             }}
-            onMouseLeave={() => {
-              document.body.style.overflow = "";
-            }}
+            // 👇 2. 類別保持乾淨，保留 overscroll-none 防止手機 Safari 彈性拉扯
+            className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col relative overscroll-none"
           >
             <div
               onPointerDown={(e) => dragControls.start(e)}
