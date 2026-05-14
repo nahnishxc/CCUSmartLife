@@ -187,7 +187,7 @@ export default function FAQPage() {
     <div className="w-full h-full bg-white rounded-3xl pt-16 px-6 pb-6 md:pt-16 md:px-10 md:pb-10 shadow-sm border border-gray-100 flex flex-col overflow-y-auto custom-scrollbar">
       <div className="mb-10 md:mb-12">
         <Link
-          href="/guide"
+          href="/FAQ"
           className="w-fit mb-8 flex items-center gap-2 text-sm text-gray-500 hover:text-black transition-colors bg-gray-50 px-4 py-2 rounded-full font-medium"
         >
           <ArrowLeft size={18} />

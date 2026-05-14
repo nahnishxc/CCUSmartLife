@@ -185,7 +185,6 @@ export default function FAQPage() {
     <div className="w-full h-full bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 flex flex-col overflow-y-auto custom-scrollbar">
       {/* Title + content */}
       <div className="mb-8">
-        <div className="text-xs font-bold tracking-[0.22em] text-gray-400">FAQ</div>
 
         <h2 className="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900">
           Everything you need to <span className="text-emerald-600">settle in</span>

@@ -171,7 +171,7 @@ export default function FAQPage() {
       {/* 標題與 Back：維持在最左邊，完全不動 */}
       <div className="mb-10 md:mb-12">
         <Link
-          href="/guide"
+          href="/FAQ"
           className="w-fit mb-8 flex items-center gap-2 text-sm text-gray-500 hover:text-black transition-colors bg-gray-50 px-4 py-2 rounded-full font-medium"
         >
           <ArrowLeft size={18} />

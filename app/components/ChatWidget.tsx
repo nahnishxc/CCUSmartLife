@@ -1101,6 +1101,7 @@ export default function ChatWidget() {
                     ))}
                   </div>
                 )}
+                <div ref={messagesEndRef} />
               </div>
 
               <AnimatePresence>

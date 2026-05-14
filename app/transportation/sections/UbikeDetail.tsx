@@ -414,6 +414,19 @@ export default function UbikeDetail({ onBack }: UbikeDetailProps) {
     return allStations.find((s) => s.uid === selectedStationId) || null;
   }, [allStations, selectedStationId]);
 
+  const translateStatus = (status: string) => {
+    switch (status) {
+      case "正常":
+        return "Normal";
+      case "停止營運":
+        return "Closed";
+      case "暫停營運":
+        return "Suspended";
+      default:
+        return status; // 如果有預期外的狀態，就直接顯示原本的字
+    }
+  };
+
   const handleOpenMap = () => {
     if (currentStation) {
       window.open(
@@ -579,7 +592,7 @@ export default function UbikeDetail({ onBack }: UbikeDetailProps) {
                       Status
                     </div>
                     <div className="text-xl font-black text-gray-700">
-                      {currentStation.status}
+{translateStatus(currentStation.status)}
                     </div>
                   </div>
                   <div className="bg-emerald-500 p-3 rounded-xl text-center border border-emerald-600 shadow-sm">
