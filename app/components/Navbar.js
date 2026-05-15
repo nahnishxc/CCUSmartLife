@@ -134,14 +134,13 @@
 //     </>
 //   );
 // }
-
 "use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-// 引入 Menu (漢堡) 和 X (關閉)，並把 MainNav 會用到的圖示一起引進來
-import { Globe, User, ChevronRight, Menu, X, MapPin, Megaphone, Utensils, Bus, BookOpen, Calendar } from "lucide-react";
+// 引入 Users 和 Heart 作為 Clubs 和 Healthcare 的圖示
+import { Globe, User, ChevronRight, Menu, X, MapPin, Megaphone, Utensils, Bus, BookOpen, Users, Heart } from "lucide-react";
 import LoginModal from "./LoginModal";
 import ProfileModal from "./ProfileModal";
 
@@ -153,19 +152,19 @@ export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [user, setUser] = useState(null);
   
-  // 新增：控制手機版漢堡選單的開關
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const linkStyle = "text-sm text-[#333333] hover:underline";
 
-  // 將原本在 MainNav 的選項搬過來，供手機版選單使用
+  // 將 Others 拆分為 Clubs 與 Healthcare，並配上對應的圖示
   const navItems = [
     { name: "Campus", icon: MapPin, href: "/" },
     { name: "Announcement", icon: Megaphone, href: "/announcement" },
     { name: "Restaurant", icon: Utensils, href: "/restaurant" },
     { name: "Transportation", icon: Bus, href: "/transportation" },
     { name: "FAQ", icon: BookOpen, href: "/FAQ" },
-    { name: "Others", icon: Calendar, href: "/others" }, // 手機版為求簡化，可先將 Others 做成單一連結
+    { name: "Clubs", icon: Users, href: "/others" },
+    { name: "Healthcare", icon: Heart, href: "/others/healthcare" },
   ];
 
   useEffect(() => {
@@ -204,14 +203,14 @@ export default function Navbar() {
           CCU SmartLife
         </Link>
         
-        {/* 電腦版：原本右側的連結 (加上 hidden md:flex 讓它在手機版消失) */}
+        {/* 電腦版 */}
         <nav className="hidden md:flex items-center gap-6 relative">
           <a href="https://oia.ccu.edu.tw/" target="_blank" rel="noreferrer" className={linkStyle}>OIA</a>
           <a href="https://www.ccu.edu.tw/" target="_blank" rel="noreferrer" className={linkStyle}>CCU</a>
           {/* 其他 Login 邏輯維持不變... */}
         </nav>
 
-        {/* 手機版：漢堡按鈕 (加上 md:hidden 讓它在電腦版消失) */}
+        {/* 手機版：漢堡按鈕 */}
         <button 
           className="md:hidden p-2 text-gray-600 z-[101]"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -221,21 +220,25 @@ export default function Navbar() {
       </header>
 
       {/* 手機版：全螢幕下拉選單 */}
-      {/* 判斷 isMobileMenuOpen 來決定是否顯示，並加入動畫 */}
       <div 
         className={`fixed inset-0 bg-white z-[90] transition-transform duration-300 ease-in-out md:hidden ${
           isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
         }`}
-        style={{ top: "80px" }} // 避開上方 80px (h-20) 的 Navbar
+        style={{ top: "80px" }} 
       >
         <div className="flex flex-col p-6 gap-2 overflow-y-auto h-full">
           {navItems.map((item) => {
-            const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+            // 修正 isActive 判斷，避免在 /others/healthcare 時，/others 也被誤判為 active
+            const isActive = 
+              item.href === "/" || item.href === "/others"
+                ? pathname === item.href
+                : pathname.startsWith(item.href);
+
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setIsMobileMenuOpen(false)} // 點擊後自動收合選單
+                onClick={() => setIsMobileMenuOpen(false)} 
                 className={`flex items-center gap-4 p-4 rounded-2xl transition-all ${
                   isActive ? "bg-emerald-50 text-emerald-600" : "text-gray-600 hover:bg-gray-50"
                 }`}
@@ -250,7 +253,6 @@ export default function Navbar() {
           
           <div className="h-[1px] bg-gray-200 my-4" />
           
-          {/* 原本在 Navbar 上的外部連結也移進手機選單底部 */}
           <a href="https://oia.ccu.edu.tw/" target="_blank" rel="noreferrer" className="p-4 text-gray-600 font-medium">To OIA</a>
           <a href="https://www.ccu.edu.tw/" target="_blank" rel="noreferrer" className="p-4 text-gray-600 font-medium">To CCU</a>
         </div>
