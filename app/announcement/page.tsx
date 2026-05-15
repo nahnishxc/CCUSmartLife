@@ -378,7 +378,7 @@ function AnnouncementContent() {
                   
                   <motion.p 
                     layout="position"
-                    className={`text-gray-500 leading-relaxed break-all ${
+                    className={`text-gray-500 leading-relaxed ${
                       isExpanded ? "text-sm mt-4 whitespace-pre-wrap" : "text-sm line-clamp-2"
                     }`}
                   >

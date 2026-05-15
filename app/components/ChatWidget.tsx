@@ -547,54 +547,54 @@ const [canDrag, setCanDrag] = useState(false);
     fetchSessions();
   }, [isChatOpen]);
 
-  // 【專為明天測試設計】默默讓 AI 保持熱機狀態的幽靈通道 (一次發三題)
-  useEffect(() => {
-    const pingAi = () => {
-      const token = localStorage.getItem("token");
+  // // 【專為明天測試設計】默默讓 AI 保持熱機狀態的幽靈通道 (一次發三題)
+  // useEffect(() => {
+  //   const pingAi = () => {
+  //     const token = localStorage.getItem("token");
 
-      // 後端指定的三個問題
-      const dummyQuestions = [
-        "What is the deadline for course registration?",
-        "How do I apply for a student ID card?",
-        "Where is the international office located?",
-      ];
+  //     // 後端指定的三個問題
+  //     const dummyQuestions = [
+  //       "What is the deadline for course registration?",
+  //       "How do I apply for a student ID card?",
+  //       "Where is the international office located?",
+  //     ];
 
-      // 用迴圈一次把三個請求非同步丟出去
-      dummyQuestions.forEach((question) => {
-        fetch(`${API_BASE_URL}/api/chat`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-          body: JSON.stringify({
-            message: question,
-            sessionId: null, // 不留紀錄
-          }),
-        })
-          .then(() => {
-            console.log(`AI 保溫成功 (問題: ${question.substring(0, 15)}...)`);
-          })
-          .catch((e) => {
-            console.log("AI 保溫連線失敗", e);
-          });
-      });
-    };
+  //     // 用迴圈一次把三個請求非同步丟出去
+  //     dummyQuestions.forEach((question) => {
+  //       fetch(`${API_BASE_URL}/api/chat`, {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  //         },
+  //         body: JSON.stringify({
+  //           message: question,
+  //           sessionId: null, // 不留紀錄
+  //         }),
+  //       })
+  //         .then(() => {
+  //           console.log(`AI 保溫成功 (問題: ${question.substring(0, 15)}...)`);
+  //         })
+  //         .catch((e) => {
+  //           console.log("AI 保溫連線失敗", e);
+  //         });
+  //     });
+  //   };
 
-    // 1. 網頁一打開（元件渲染）的瞬間，立刻發送第一波！
-    pingAi();
+  //   // 1. 網頁一打開（元件渲染）的瞬間，立刻發送第一波！
+  //   pingAi();
 
-    // 2. 接下來每 4 分半鐘 (270,000 毫秒) 自動補發一波
-    const keepAwakeTimer = setInterval(
-      () => {
-        pingAi();
-      },
-      4.5 * 60 * 1000,
-    );
+  //   // 2. 接下來每 4 分半鐘 (270,000 毫秒) 自動補發一波
+  //   const keepAwakeTimer = setInterval(
+  //     () => {
+  //       pingAi();
+  //     },
+  //     4.5 * 60 * 1000,
+  //   );
 
-    // 清除計時器
-    return () => clearInterval(keepAwakeTimer);
-  }, []);
+  //   // 清除計時器
+  //   return () => clearInterval(keepAwakeTimer);
+  // }, []);
 
   // 【新增】手術一：專門處理背景鎖定，只要聊天室打開，背景就不准動！
   useEffect(() => {
