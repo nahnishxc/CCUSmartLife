@@ -469,19 +469,23 @@ function TransportationContent() {
         </div>
       </div>
 
-      <div className="mt-6">
-        <h3 className="text-3xl font-bold text-gray-800 mb-8 ">
+<div className="mt-6">
+        <h3 className="text-3xl font-bold text-gray-800 mb-6"> {/* 把 mb-8 稍微縮小成 mb-6 */}
           Frequently Used Routes
         </h3>
-        <div className="flex gap-5 overflow-x-auto pb-6 px-1 custom-scrollbar">
+        
+        {/* 🔴 改為 Grid 網格排版：手機單欄直排，平板 2 欄，電腦 4 欄 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-6">
           {Object.values(ROUTE_DATA).map((route) => (
             <div
               key={route.id}
               onClick={() => navigateTo("route", route.id)}
-              className="min-w-[21%] md:min-w-[23%] group cursor-pointer"
+              // 手機版改為橫向卡片 (flex items-center)，加一點灰底白框讓它像按鈕
+              className="group cursor-pointer flex items-center md:flex-col bg-gray-50 md:bg-transparent p-3 md:p-0 rounded-2xl md:rounded-none border border-gray-100 md:border-transparent hover:border-emerald-200 md:hover:border-transparent transition-all"
             >
               <div
-                className={`w-full aspect-square rounded-2xl mb-3 overflow-hidden group-hover:scale-[1.02] transition-transform shadow-sm`}
+                // 手機版圖片變成固定大小的小正方形 (w-16 h-16)，電腦版恢復大滿版 (w-full aspect-square)
+                className="w-16 h-16 md:w-full md:aspect-square rounded-xl overflow-hidden flex-shrink-0 md:mb-3 group-hover:scale-[1.02] transition-transform shadow-sm"
               >
                 <div
                   className="w-full h-full bg-center bg-cover"
@@ -490,11 +494,13 @@ function TransportationContent() {
                   }}
                 />
               </div>
-              <div className="flex items-center justify-between px-1">
+              
+              {/* 文字與箭頭區塊 */}
+              <div className="flex-1 flex items-center justify-between px-4 md:px-1 overflow-hidden">
                 <span className="text-sm font-bold text-gray-700 group-hover:text-emerald-600 truncate">
                   {route.name}
                 </span>
-                <ArrowRight size={14} className="text-gray-300" />
+                <ArrowRight size={14} className="text-gray-300 shrink-0" />
               </div>
             </div>
           ))}

@@ -37,7 +37,6 @@ export default function SlimeSpeechBubble({
   const [isNearTop, setIsNearTop] = useState(false);
   const [isNearLeft, setIsNearLeft] = useState(false);
 
-  // 用來儲存計時器，確保切換頁面或卸載時能清得乾乾淨淨
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useMotionValueEvent(y, "change", (latest) => {
@@ -49,7 +48,6 @@ export default function SlimeSpeechBubble({
   });
 
   useEffect(() => {
-    // 每次狀態改變前，先清空所有計時器
     if (timerRef.current) clearTimeout(timerRef.current);
 
     if (isMuted || isChatOpen) {
@@ -57,10 +55,8 @@ export default function SlimeSpeechBubble({
       return;
     }
 
-    // 負責排程下一次對話的函式
     const scheduleNextMessage = (delay: number) => {
       timerRef.current = setTimeout(() => {
-        // 1. 決定要講什麼
         const routeMessage = PHRASES.routes[pathname as keyof typeof PHRASES.routes];
         const useRouteMessage = routeMessage && Math.random() > 0.5;
 
@@ -71,23 +67,18 @@ export default function SlimeSpeechBubble({
           setCurrentText(randomGeneral);
         }
 
-        // 2. 顯示對話框
         setIsVisible(true);
 
-        // 3. 安排 5 秒後關閉對話框，並啟動下一輪的等待
         timerRef.current = setTimeout(() => {
           setIsVisible(false);
-          // 下一次出現的時間：15秒 ~ 25秒之間的隨機值
           scheduleNextMessage(Math.random() * 10000 + 15000); 
         }, 5000);
 
       }, delay);
     };
 
-    // 進入頁面後，第一次延遲 2 秒出現
     scheduleNextMessage(2000);
 
-    // Cleanup function：元件卸載或依賴改變時清除計時器
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
@@ -97,7 +88,8 @@ export default function SlimeSpeechBubble({
   const xClass = isNearLeft ? "left-[30%]" : "right-[50%]";
   const positionClasses = `${yClass} ${xClass}`;
 
-  const tailY = isNearTop ? "-top-2 border-t border-l" : "-bottom-2 border-b border-r";
+  // 修改點 1：將尾巴尖端的邊框顏色也設為黑色，並與主體一致
+  const tailY = isNearTop ? "-top-1 border-t-1 border-l-1 border-black" : "-bottom-1 border-b-1 border-r-1 border-black";
   const tailX = isNearLeft ? "left-8" : "right-8";
   const tailClasses = `${tailY} ${tailX}`;
 
@@ -109,7 +101,8 @@ export default function SlimeSpeechBubble({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: isNearTop ? -5 : 5, scale: 0.9 }}
           transition={{ type: "spring", stiffness: 260, damping: 20 }}
-          className={`absolute ${positionClasses} w-max max-w-[300px] min-w-[180px] bg-white px-5 py-3 rounded-2xl shadow-lg border border-gray-100 pointer-events-auto z-50`}
+          // 修改點 2：將 'border border-gray-100' 修改為 'border-2 border-black'
+          className={`absolute ${positionClasses} w-max max-w-[300px] min-w-[180px] bg-white px-5 py-3 rounded-2xl shadow-lg border-2 border-black pointer-events-auto z-50`}
           onPointerDownCapture={(e) => e.stopPropagation()}
           onClickCapture={(e) => e.stopPropagation()}
         >

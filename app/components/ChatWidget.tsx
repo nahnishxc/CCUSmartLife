@@ -547,7 +547,7 @@ const [canDrag, setCanDrag] = useState(false);
     fetchSessions();
   }, [isChatOpen]);
 
-  // // 【專為明天測試設計】默默讓 AI 保持熱機狀態的幽靈通道 (一次發三題)
+  // // 專為測試設計 默默讓 AI 保持熱機狀態的幽靈通道 (一次發三題)
   // useEffect(() => {
   //   const pingAi = () => {
   //     const token = localStorage.getItem("token");

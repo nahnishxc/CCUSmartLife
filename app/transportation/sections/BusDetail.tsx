@@ -260,7 +260,6 @@
 //     </div>
 //   );
 // }
-
 "use client";
 
 import { useState, Suspense } from "react";
@@ -325,12 +324,10 @@ export default function BusDetail({ onBack }: BusDetailProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // --- 【修改 1：狀態改由 URL 驅動，完美支援上一頁】 ---
   const selectedRouteId = searchParams.get("busRoute") || "7309";
   const direction = parseInt(searchParams.get("dir") || "0") as 0 | 1;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // 更新網址參數的函數 (不觸發畫面強制捲動)
   const updateUrlState = (route: string, dir: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("busRoute", route);
@@ -340,13 +337,12 @@ export default function BusDetail({ onBack }: BusDetailProps) {
 
   const currentRouteData = ROUTE_INFO[selectedRouteId] || ROUTE_INFO["7309"];
 
-  // --- 【修改 2：導入 SWR 取代 setInterval】 ---
   const { data, isLoading } = useSWR(
     `https://campus-ai-backend-1.onrender.com/api/traffic/buses/${selectedRouteId}/estimated-time-of-arrival?direction=${direction}`,
     fetcher,
     {
-      refreshInterval: 30000, // 每 30 秒自動更新 (等同於你的 setInterval)
-      revalidateOnFocus: true, // 切換回網頁時瞬間更新
+      refreshInterval: 30000, 
+      revalidateOnFocus: true, 
     }
   );
 
@@ -365,7 +361,7 @@ export default function BusDetail({ onBack }: BusDetailProps) {
   };
 
   return (
-    <div className="w-full h-full bg-white rounded-3xl p-6 md:p-8 pt-16 shadow-sm border border-gray-100 flex flex-col overflow-y-auto custom-scrollbar">
+    <div className="w-full h-full bg-white rounded-3xl p-4 md:p-8 pt-16 md:pt-16 shadow-sm border border-gray-100 flex flex-col overflow-y-auto custom-scrollbar">
       {/* --- Header --- */}
       <div className="flex items-center gap-4 mb-6 border-b border-gray-100 pb-4 flex-shrink-0">
         <button
@@ -381,9 +377,9 @@ export default function BusDetail({ onBack }: BusDetailProps) {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 mb-8 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex-shrink-0">
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 mb-8 bg-white p-4 md:p-6 rounded-2xl border border-gray-100 shadow-sm flex-shrink-0">
         
-        {/* 左半部 */}
+        {/* 左半部 (選單與基本資訊) */}
         <div className="w-full lg:w-72 xl:w-80 flex-shrink-0 flex flex-col justify-center relative">
           
           <div className="relative mb-4 z-20">
@@ -408,7 +404,7 @@ export default function BusDetail({ onBack }: BusDetailProps) {
                     <button
                       key={id}
                       onClick={() => {
-                        updateUrlState(id, direction); // 同步更新 URL
+                        updateUrlState(id, direction); 
                         setIsDropdownOpen(false);
                       }}
                       className={`w-full text-left px-5 py-3 transition-colors ${selectedRouteId === id ? "bg-emerald-50 text-emerald-600 font-black" : "text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 font-bold"}`}
@@ -434,40 +430,51 @@ export default function BusDetail({ onBack }: BusDetailProps) {
           </a>
         </div>
 
-        {/* 右半部 */}
-        <div className="flex-1 flex flex-col gap-4 justify-center">
+        {/* 右半部 (方向切換與重要站點) */}
+        {/* 加入 min-w-0 確保它在 flex 容器中能夠乖乖縮小，不會撐破版面 */}
+        <div className="flex-1 flex flex-col gap-4 justify-center min-w-0 w-full">
           
-          <div className="flex items-center gap-3">
+          <div className="flex flex-row items-center gap-2 md:gap-3">
              <button 
                onClick={() => updateUrlState(selectedRouteId, 0)}
-               className={`flex-1 py-3 px-4 rounded-xl text-sm font-bold transition-all border-2 ${direction === 0 ? "bg-gray-200 border-gray-300 text-gray-800 shadow-inner" : "bg-white border-gray-200 text-gray-500 hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-600"}`}
+               className={`flex-1 py-3 px-2 md:px-4 rounded-xl text-xs md:text-sm font-bold transition-all border-2 break-words leading-tight min-h-[52px] ${direction === 0 ? "bg-gray-200 border-gray-300 text-gray-800 shadow-inner" : "bg-white border-gray-200 text-gray-500 hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-600"}`}
              >
                {currentRouteData.dir0}
              </button>
              <ArrowRightLeft size={20} className="text-gray-300 flex-shrink-0" />
              <button 
                onClick={() => updateUrlState(selectedRouteId, 1)}
-               className={`flex-1 py-3 px-4 rounded-xl text-sm font-bold transition-all border-2 ${direction === 1 ? "bg-gray-200 border-gray-300 text-gray-800 shadow-inner" : "bg-white border-gray-200 text-gray-500 hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-600"}`}
+               className={`flex-1 py-3 px-2 md:px-4 rounded-xl text-xs md:text-sm font-bold transition-all border-2 break-words leading-tight min-h-[52px] ${direction === 1 ? "bg-gray-200 border-gray-300 text-gray-800 shadow-inner" : "bg-white border-gray-200 text-gray-500 hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-600"}`}
              >
                {currentRouteData.dir1}
              </button>
           </div>
 
-          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-             <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 text-[10px] font-bold text-gray-500 text-center uppercase tracking-wider">
+          {/* 🔴 重要站點表格優化：拿掉橫向捲軸，用字體壓縮策略直接塞滿 4 格 */}
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden w-full">
+             <div className="bg-gray-50 px-2 md:px-4 py-2 border-b border-gray-200 text-[9px] md:text-[10px] font-bold text-gray-500 text-center uppercase tracking-wider">
                 Key Stops Arrival Times
              </div>
-             <div className="grid grid-cols-4 divide-x divide-gray-200 bg-white">
-                {keyStops.length > 0 ? keyStops.map((stop, idx) => (
-                  <div key={idx} className="p-3 lg:p-4 flex flex-col items-center justify-center text-center">
-                     <span className="text-xs text-gray-700 font-medium line-clamp-2 mb-2 min-h-[2rem] flex items-center justify-center leading-tight">
-                       {stop.stopNameEn.replace("National Chung Cheng University", "CCU")}
-                     </span>
-                     <span className={`text-sm font-black ${stop.estimateTime !== null ? "text-emerald-600" : "text-gray-400"}`}>
-                       {renderStatus(stop)}
-                     </span>
-                  </div>
-                )) : (
+             
+             <div className="grid grid-cols-4 divide-x divide-gray-200 bg-white w-full">
+                {keyStops.length > 0 ? keyStops.map((stop, idx) => {
+                  // 把冗長的單字縮寫，幫手機螢幕爭取更多空間
+                  const shortName = stop.stopNameEn
+                    .replace("National Chung Cheng University", "CCU")
+                    .replace("Railway Station", "Station");
+
+                  return (
+                    // 縮小 padding (p-1.5)，讓文字有更多發揮空間
+                    <div key={idx} className="p-1.5 md:p-3 flex flex-col items-center justify-center text-center">
+                       <span className="text-[9px] md:text-xs text-gray-700 font-bold line-clamp-3 mb-1.5 min-h-[2.5rem] flex items-center justify-center leading-tight tracking-tighter break-words px-0.5">
+                         {shortName}
+                       </span>
+                       <span className={`text-[10px] md:text-sm font-black tracking-tighter ${stop.estimateTime !== null ? "text-emerald-600" : "text-gray-400"}`}>
+                         {renderStatus(stop)}
+                       </span>
+                    </div>
+                  );
+                }) : (
                   <div className="col-span-4 py-6 text-center text-sm font-bold text-gray-400">No Key Stop Data</div>
                 )}
              </div>
@@ -476,7 +483,7 @@ export default function BusDetail({ onBack }: BusDetailProps) {
       </div>
 
       {/* --- Real-time Route Map --- */}
-      <div className="flex-1 bg-gray-50 rounded-2xl border border-gray-100 p-6 overflow-y-auto custom-scrollbar">
+      <div className="flex-1 bg-gray-50 rounded-2xl border border-gray-100 p-4 md:p-6 overflow-y-auto custom-scrollbar">
           {isLoading && stops.length === 0 ? (
             <div className="flex items-center justify-center h-full font-bold text-gray-400">Loading Live Data...</div>
           ) : (
@@ -494,21 +501,21 @@ export default function BusDetail({ onBack }: BusDetailProps) {
                         hasDeparted ? "bg-gray-300 border-gray-300" : "bg-white border-gray-400"
                     }`}></div>
 
-                    <div className="flex-1 flex items-center justify-between p-3 rounded-xl hover:bg-white hover:shadow-sm transition-all border border-transparent hover:border-emerald-100">
-                        <div className="flex flex-col">
-                          <span className={`font-bold text-sm ${hasDeparted ? "text-gray-400" : "text-gray-800"}`}>
+                    <div className="flex-1 flex items-center justify-between p-2 md:p-3 rounded-xl hover:bg-white hover:shadow-sm transition-all border border-transparent hover:border-emerald-100">
+                        <div className="flex flex-col pr-2">
+                          <span className={`font-bold text-xs md:text-sm leading-tight ${hasDeparted ? "text-gray-400" : "text-gray-800"}`}>
                             {index + 1}. {stop.stopNameEn}
                           </span>
-                          <span className="text-xs font-medium text-gray-500 mt-0.5">{stop.arrivalTime || "--:--"}</span>
+                          <span className="text-[10px] md:text-xs font-medium text-gray-500 mt-0.5">{stop.arrivalTime || "--:--"}</span>
                         </div>
                         
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-col md:flex-row items-end md:items-center gap-1 md:gap-2 flex-shrink-0">
                            {isArriving && (
-                               <span className="flex items-center gap-1 text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full font-bold animate-pulse">
-                                 <Bus size={12} /> Arriving
+                               <span className="flex items-center gap-1 text-[10px] md:text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full font-bold animate-pulse">
+                                 <Bus size={12} /> <span className="hidden sm:inline">Arriving</span>
                                </span>
                            )}
-                           <span className={`font-mono font-bold text-sm ${
+                           <span className={`font-mono font-bold text-xs md:text-sm text-right ${
                                stop.estimateTime !== null ? (stop.estimateTime <= 2 ? "text-red-500" : "text-emerald-600") : "text-gray-400"
                            }`}>
                                {renderStatus(stop)}
