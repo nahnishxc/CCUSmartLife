@@ -913,16 +913,19 @@ const faqDatabase = [
     "Apply for NHI",
     "Apply for ARC",
     "Library hour",
+    "Open bank account",
+    "Emergency numbers",
+    "Internships"
   ];
 
   // 儲存當前隨機抽出的 FAQ
   const [randomFaqs, setRandomFaqs] = useState<string[]>([]);
 
+  
   useEffect(() => {
     if (isChatOpen) {
       document.body.style.overflow = "hidden";
-      
-      // 【新增】：每次打開聊天室，從題庫中隨機挑選 4 題
+    
       const shuffled = [...faqDatabase].sort(() => 0.5 - Math.random());
       setRandomFaqs(shuffled.slice(0, 4));
       

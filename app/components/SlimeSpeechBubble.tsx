@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValueEvent, MotionValue } from "framer-motion";
-import { X } from "lucide-react";
+// 【修改】：把 X 換成了 VolumeX
+import { VolumeX } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 const PHRASES = {
@@ -88,8 +89,6 @@ export default function SlimeSpeechBubble({
   const xClass = isNearLeft ? "left-[30%]" : "right-[50%]";
   const positionClasses = `${yClass} ${xClass}`;
 
-  // 修改點 1：修正為標準的 border-2，加上 dashed 虛線，並把顏色換成米灰色 (#eadfce)
-  // 同時將位置微調至 9px 確保與 2px 的邊框完美融合
   const tailY = isNearTop 
     ? "-top-[9px] border-t-2 border-l-2 border-dashed border-[#eadfce]" 
     : "-bottom-[9px] border-b-2 border-r-2 border-dashed border-[#eadfce]";
@@ -104,28 +103,29 @@ export default function SlimeSpeechBubble({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: isNearTop ? -5 : 5, scale: 0.9 }}
           transition={{ type: "spring", stiffness: 260, damping: 20 }}
-          // 修改點 2：將 'border-black' 改成 'border-dashed border-[#eadfce]'
           className={`absolute ${positionClasses} w-max max-w-[300px] min-w-[180px] bg-white px-5 py-3 rounded-2xl shadow-lg border-2 border-dashed border-[#eadfce] pointer-events-auto z-50`}
-          onPointerDownCapture={(e) => e.stopPropagation()}
-          onClickCapture={(e) => e.stopPropagation()}
+          // 【修復點 1】：拿掉 Capture，讓內層的按鈕能優先接收到點擊事件！
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
         >
+          {/* 靜音按鈕 */}
           <button 
-            onPointerDownCapture={(e) => e.stopPropagation()}
-            onClick={(e) => {
+            title="Mute notifications"
+            // 【修復點 2】：改用 onPointerDown，確保手指一碰到就立刻觸發靜音並消失
+            onPointerDown={(e) => {
               e.stopPropagation();
               setIsVisible(false);
               setIsMuted(true);
             }}
-            className="absolute -top-2 -right-2 bg-gray-200 hover:bg-red-400 hover:text-white text-gray-500 rounded-full p-1 transition-colors z-10"
+            className="absolute -top-3 -right-3 bg-white border border-[#eadfce] shadow-sm hover:bg-gray-100 hover:text-gray-700 text-gray-400 rounded-full p-1.5 transition-colors z-10 cursor-pointer"
           >
-            <X size={13} />
+            <VolumeX size={14} />
           </button>
           
           <p className="text-[15px] text-gray-700 font-medium leading-relaxed relative z-10">
             {currentText}
           </p>
           
-          {/* 尾巴的部分也一併套用新的虛線和顏色 */}
           <div className={`absolute ${tailClasses} w-4 h-4 bg-white transform rotate-45`} />
         </motion.div>
       )}
