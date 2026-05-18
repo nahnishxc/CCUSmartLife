@@ -130,7 +130,8 @@ You can apply:
 const HighlightText = ({ text, query }: { text: string; query: string }) => {
   if (!query.trim()) return <>{text}</>;
 
-  const escapeRegExp = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const escapeRegExp = (str: string) =>
+    str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const regex = new RegExp(`(${escapeRegExp(query)})`, "gi");
   const parts = text.split(regex);
 
@@ -138,7 +139,11 @@ const HighlightText = ({ text, query }: { text: string; query: string }) => {
     <>
       {parts.map((part, i) =>
         regex.test(part) ? (
-          <mark key={i} className="bg-yellow-200 text-black px-1 rounded-sm">
+          // 【套用】：手繪實體螢光筆質感高光
+          <mark
+            key={i}
+            className="bg-[#fef08a]/90 text-[#1f2937] px-1 mx-[1px] rounded-sm shadow-[inset_0_-3px_0_rgba(0,0,0,0.06)] font-semibold"
+          >
             {part}
           </mark>
         ) : (
@@ -167,12 +172,15 @@ export default function FAQPage() {
   };
 
   return (
-    <div className="w-full h-full bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 flex flex-col overflow-y-auto custom-scrollbar">
-      {/* 標題與 Back：維持在最左邊，完全不動 */}
-      <div className="mb-10 md:mb-12">
+    // 【套用】：外層底色 bg-[#fffdf8]、大圓角、米灰邊框與專屬陰影
+    <div className="w-full h-full bg-[#fffdf8] rounded-[32px] pt-8 px-6 pb-6 md:pt-8 md:px-10 md:pb-10 shadow-[0_10px_30px_rgba(90,70,40,0.06)] border border-[#eadfce] flex flex-col overflow-y-auto custom-scrollbar">
+      
+      {/* 標題區：下方改為手帳感 dashed 虛線分隔條 */}
+      <div className="mb-10 md:mb-12 border-b-2 border-dashed border-[#eadfce]/60 pb-6">
         <Link
           href="/FAQ"
-          className="w-fit mb-8 flex items-center gap-2 text-sm text-gray-500 hover:text-black transition-colors bg-gray-50 px-4 py-2 rounded-full font-medium"
+          // 【套用】：返回按鈕換成精緻的紙質標籤外觀，加入綠色 Hover 呼應
+          className="w-fit mb-8 flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-700 transition-all bg-[#fffefb] border border-[#eadfce] px-4 py-2 rounded-xl font-bold shadow-sm hover:shadow-md"
         >
           <ArrowLeft size={18} />
           Back
@@ -182,56 +190,66 @@ export default function FAQPage() {
           Emergency & Safety
         </h1>
 
-        <p className="pl-5 mt-4 text-base md:text-lg text-gray-500 leading-relaxed max-w-2xl">
+        <p className="pl-5 mt-4 text-base md:text-lg text-[#6f7b76] font-medium leading-relaxed max-w-2xl">
           Lost Documents and Daily Security. Search a keyword to quickly find
           the right answer.
         </p>
       </div>
 
-      {/* 搜尋與 FAQ 列表：長度設為約 92% 並置中，增加呼吸感 */}
       <div className="w-[95%] max-w-6xl mx-auto">
-        {/* 搜尋欄：字體微調大一點，更有質感 */}
-        <div className="mb-8 flex items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50/50 px-6 py-4 focus-within:bg-white focus-within:ring-2 focus-within:ring-black/5 transition-all">
-          <Search className="h-5 w-5 text-gray-400" />
+        {/* 搜尋框：【套用】底色修改為 bg-[#fffefb]，邊框更換為米灰線條，Focus 綠色光暈 */}
+        <div className="mb-8 flex items-center gap-3 rounded-2xl border border-[#eadfce] bg-[#fffefb] px-6 py-4 focus-within:bg-white focus-within:ring-2 focus-within:ring-emerald-200 transition-all shadow-sm">
+          <Search className="h-5 w-5 text-[#6f7b76]" />
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search by keywords..."
-            className="w-full bg-transparent text-base md:text-lg outline-none placeholder:text-gray-400"
+            className="w-full bg-transparent text-base md:text-lg outline-none placeholder:text-gray-400 text-gray-800 font-semibold"
           />
         </div>
 
-        {/* FAQ 列表 */}
+        {/* 風琴摺問答列表 */}
         <section className="space-y-4 pb-10">
           {items.map((it) => {
             const isOpen = !!open[it.id];
             return (
               <div
                 key={it.id}
+                // 【套用】：問答外殼底色一律修改為 bg-[#fffefb]，溫潤米灰邊框
                 className={`overflow-hidden rounded-2xl border transition-all duration-300 ${
                   isOpen
-                    ? "border-gray-200 shadow-lg translate-y-[-2px]"
-                    : "border-gray-100 shadow-sm"
+                    ? "border-[#eadfce] shadow-md translate-y-[-2px] bg-[#fffefb]"
+                    : "border-[#eadfce]/60 shadow-sm bg-[#fffefb]"
                 }`}
               >
                 <button
                   onClick={() => toggle(it.id)}
                   className="flex w-full items-start justify-between gap-4 px-8 py-6 text-left"
                 >
-                  {/* 問題字體改為 text-base/lg 並加粗，並套用 HighlightText */}
-                  <div className="text-base md:text-lg font-bold leading-snug text-gray-900">
+                  <div className="text-base md:text-lg font-bold leading-snug text-gray-800 group-hover:text-emerald-700 transition-colors">
                     <HighlightText text={it.question} query={q} />
                   </div>
                   <ChevronDown
-                    className={`mt-1 h-5 w-5 shrink-0 text-gray-400 transition-transform duration-300 ${
-                      isOpen ? "rotate-180 text-black" : ""
+                    className={`mt-1 h-5 w-5 shrink-0 text-[#6f7b76] transition-transform duration-300 ${
+                      isOpen ? "rotate-180 text-emerald-700" : ""
                     }`}
                   />
                 </button>
 
                 {isOpen && (
-                  <div className="border-t border-gray-100 bg-gray-50/30 px-10 py-8">
-                    <div className="whitespace-pre-line font-sans text-base md:text-lg leading-8 text-gray-700">
+                  // 【套用】：淡灰方眼格紋背景，繼承純淨底色，已移除紅線
+                  <div 
+                    className="relative border-t-2 border-dashed border-[#eadfce]/60 px-10 py-8 overflow-hidden"
+                    style={{
+                      backgroundImage: `
+                        linear-gradient(#f1f5f9 1px, transparent 1px), 
+                        linear-gradient(90deg, #f1f5f9 1px, transparent 1px)
+                      `,
+                      backgroundSize: '32px 32px',
+                      backgroundPosition: '0 8px'
+                    }}
+                  >
+                    <div className="relative z-10 whitespace-pre-line font-sans text-base md:text-lg leading-8 text-[#6f7b76] font-medium">
                       {it.answer.split("\n").map((line, index) => {
                         const trimmedLine = line.trim();
                         const isHeadingChunk =
@@ -244,9 +262,10 @@ export default function FAQPage() {
                         return (
                           <span
                             key={index}
+                            // 【套用】：為了對齊方格線，margin 設定為 32px 的倍數 (mt-8, mb-0)
                             className={`block 
-                              ${isHeadingChunk ? "mt-5 mb-1" : "mb-0.5"} 
-                               ${isBulletPoint ? "pl-4 md:pl-6" : ""} 
+                              ${isHeadingChunk ? "mt-8 mb-0" : "mb-0"} 
+                              ${isBulletPoint ? "pl-4 md:pl-6" : ""} 
                             `}
                           >
                             {parts.map((part, i) => {
@@ -255,11 +274,15 @@ export default function FAQPage() {
                                 part.endsWith("**")
                               ) {
                                 return (
+                                  // 【套用】：粗體字改為專題經典綠色 text-emerald-700
                                   <strong
                                     key={i}
-                                    className="font-black text-black tracking-tight"
+                                    className="font-black text-emerald-700 tracking-tight"
                                   >
-                                    <HighlightText text={part.slice(2, -2)} query={q} />
+                                    <HighlightText
+                                      text={part.slice(2, -2)}
+                                      query={q}
+                                    />
                                   </strong>
                                 );
                               }

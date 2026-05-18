@@ -88,8 +88,11 @@ export default function SlimeSpeechBubble({
   const xClass = isNearLeft ? "left-[30%]" : "right-[50%]";
   const positionClasses = `${yClass} ${xClass}`;
 
-  // 修改點 1：將尾巴尖端的邊框顏色也設為黑色，並與主體一致
-  const tailY = isNearTop ? "-top-1 border-t-1 border-l-1 border-black" : "-bottom-1 border-b-1 border-r-1 border-black";
+  // 修改點 1：修正為標準的 border-2，加上 dashed 虛線，並把顏色換成米灰色 (#eadfce)
+  // 同時將位置微調至 9px 確保與 2px 的邊框完美融合
+  const tailY = isNearTop 
+    ? "-top-[9px] border-t-2 border-l-2 border-dashed border-[#eadfce]" 
+    : "-bottom-[9px] border-b-2 border-r-2 border-dashed border-[#eadfce]";
   const tailX = isNearLeft ? "left-8" : "right-8";
   const tailClasses = `${tailY} ${tailX}`;
 
@@ -101,8 +104,8 @@ export default function SlimeSpeechBubble({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: isNearTop ? -5 : 5, scale: 0.9 }}
           transition={{ type: "spring", stiffness: 260, damping: 20 }}
-          // 修改點 2：將 'border border-gray-100' 修改為 'border-2 border-black'
-          className={`absolute ${positionClasses} w-max max-w-[300px] min-w-[180px] bg-white px-5 py-3 rounded-2xl shadow-lg border-2 border-black pointer-events-auto z-50`}
+          // 修改點 2：將 'border-black' 改成 'border-dashed border-[#eadfce]'
+          className={`absolute ${positionClasses} w-max max-w-[300px] min-w-[180px] bg-white px-5 py-3 rounded-2xl shadow-lg border-2 border-dashed border-[#eadfce] pointer-events-auto z-50`}
           onPointerDownCapture={(e) => e.stopPropagation()}
           onClickCapture={(e) => e.stopPropagation()}
         >
@@ -113,16 +116,17 @@ export default function SlimeSpeechBubble({
               setIsVisible(false);
               setIsMuted(true);
             }}
-            className="absolute -top-2 -right-2 bg-gray-200 hover:bg-red-400 hover:text-white text-gray-500 rounded-full p-1 transition-colors"
+            className="absolute -top-2 -right-2 bg-gray-200 hover:bg-red-400 hover:text-white text-gray-500 rounded-full p-1 transition-colors z-10"
           >
             <X size={13} />
           </button>
           
-          <p className="text-[15px] text-gray-700 font-medium leading-relaxed">
+          <p className="text-[15px] text-gray-700 font-medium leading-relaxed relative z-10">
             {currentText}
           </p>
           
-          <div className={`absolute ${tailClasses} w-4 h-4 bg-white transform rotate-45 shadow-[2px_2px_5px_rgba(0,0,0,0.05)]`} />
+          {/* 尾巴的部分也一併套用新的虛線和顏色 */}
+          <div className={`absolute ${tailClasses} w-4 h-4 bg-white transform rotate-45`} />
         </motion.div>
       )}
     </AnimatePresence>

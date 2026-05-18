@@ -817,7 +817,7 @@ import {
   Stethoscope,
   BadgeDollarSign,
   Navigation,
-  ChevronDown // 🔴 新增引入
+  ChevronDown 
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -917,35 +917,44 @@ function HealthcareContent() {
     router.push(`?type=${encodeURIComponent(title)}`);
   };
 
+  // 給電腦版分類標籤區用的橫向捲動參考
+  const categoryScrollRef = useRef<HTMLDivElement>(null);
+  const scrollCategory = (direction: "left" | "right") => {
+    if (categoryScrollRef.current) {
+      const scrollAmount = 200;
+      categoryScrollRef.current.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
+    }
+  };
+
   if (isLoading && filteredCategories.length === 0) {
     return (
-      <div className="w-full h-[500px] flex flex-col items-center justify-center bg-white rounded-3xl">
+      <div className="w-full h-[500px] flex flex-col items-center justify-center bg-[#fffdf8] rounded-[32px] border border-[#eadfce] shadow-sm">
         <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-emerald-500 mb-4"></div>
-        <p className="text-gray-400 font-medium">Updating Healthcare Data...</p>
+        <p className="text-[#6f7b76] font-bold tracking-wide">Updating Healthcare Data...</p>
       </div>
     );
   }
 
   if (filteredCategories.length === 0 && !isLoading) {
     return (
-      <div className="p-20 text-center bg-white rounded-3xl border border-dashed border-gray-200">
-        <Stethoscope className="mx-auto text-gray-300 mb-4" size={48} />
-        <p className="text-gray-400">Healthcare information is currently unavailable.</p>
-        <button onClick={() => window.location.reload()} className="mt-4 text-emerald-600 font-bold text-sm">Retry</button>
+      <div className="p-20 text-center bg-[#fffdf8] rounded-[32px] border border-dashed border-[#eadfce] shadow-sm">
+        <Stethoscope className="mx-auto text-[#eadfce] mb-4" size={48} />
+        <p className="text-[#6f7b76] font-bold">Healthcare information is currently unavailable.</p>
+        <button onClick={() => window.location.reload()} className="mt-4 px-6 py-2 bg-[#fffefb] text-emerald-700 border border-[#eadfce] rounded-full font-bold text-sm hover:bg-[#eadfce]/20 transition-all shadow-sm">Retry</button>
       </div>
     );
   }
 
   return (
-    <div className="w-full bg-white rounded-3xl p-4 md:p-6 shadow-sm flex flex-col">
+    <div className="w-full bg-[#fffdf8] rounded-[32px] p-4 md:p-6 shadow-[0_10px_30px_rgba(90,70,40,0.06)] border border-[#eadfce] flex flex-col">
       <style jsx global>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
-      <div className="mb-6">
+      <div className="mb-6 border-b-2 border-dashed border-[#eadfce]/60 pb-4">
         <h2 className="text-2xl font-bold text-gray-800">Campus Healthcare</h2>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-[#6f7b76] mt-1 font-medium">
           Contracted clinics and hospitals nearby. Click on a card to open Google Maps.
         </p>
       </div>
@@ -955,7 +964,7 @@ function HealthcareContent() {
 
         <div className="flex flex-col gap-4">
           
-          {/* 🔴 手機版：下拉選單 */}
+          {/* 手機版：下拉選單 */}
           <div className="relative md:hidden mb-2">
             <select
               value={filteredCategories[selectedCategoryIndex]?.title || ""}
@@ -973,26 +982,48 @@ function HealthcareContent() {
             </div>
           </div>
 
-          {/* 🔴 電腦版：橫向標籤 */}
-          <div className="hidden md:flex items-center gap-2 mb-2 overflow-x-auto no-scrollbar pb-2 pr-4">
-            <div className="w-0 h-0 border-l-[6px] border-l-emerald-500 border-y-[6px] border-y-transparent ml-1 mr-2 flex-shrink-0"></div>
-            {filteredCategories.map((cat, index) => {
-              const isActive = selectedCategoryIndex === index;
-              return (
-                <button
-                  key={cat.title}
-                  onClick={() => switchCategory(cat.title)}
-                  className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap border ${
-                    isActive
-                      ? "bg-emerald-500 text-white border-emerald-500 shadow-md transform scale-105"
-                      : "bg-gray-50 text-gray-500 border-gray-100 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200"
-                  }`}
-                >
-                  {cat.title}
-                </button>
-              );
-            })}
-            <div className="w-4 flex-shrink-0"></div>
+          {/* 電腦版：橫向分頁標籤 - 加入包裹層與左右箭頭 */}
+          <div className="hidden md:flex items-center relative group/cat mb-2">
+            {/* 左捲動按鈕 */}
+            <button 
+              onClick={() => scrollCategory("left")} 
+              className="absolute left-0 z-10 w-8 h-8 rounded-full bg-white/90 shadow-sm border border-[#eadfce] flex items-center justify-center text-gray-600 hover:text-emerald-600 hover:scale-105 transition-all opacity-0 group-hover/cat:opacity-100 -ml-4"
+            >
+              <ChevronLeft size={16} />
+            </button>
+
+            {/* 標籤滾動區塊 */}
+            <div 
+              ref={categoryScrollRef}
+              className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 pr-4 scroll-smooth w-full"
+            >
+              <div className="w-0 h-0 border-l-[6px] border-l-emerald-500 border-y-[6px] border-y-transparent ml-1 mr-2 flex-shrink-0"></div>
+              {filteredCategories.map((cat, index) => {
+                const isActive = selectedCategoryIndex === index;
+                return (
+                  <button
+                    key={cat.title}
+                    onClick={() => switchCategory(cat.title)}
+                    className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap border ${
+                      isActive
+                        ? "bg-emerald-500 text-white border-transparent shadow-md transform scale-105"
+                        : "bg-[#fffefb] text-gray-500 border-[#eadfce] hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200"
+                    }`}
+                  >
+                    {cat.title}
+                  </button>
+                );
+              })}
+              <div className="w-4 flex-shrink-0"></div>
+            </div>
+
+            {/* 右捲動按鈕 */}
+            <button 
+              onClick={() => scrollCategory("right")} 
+              className="absolute right-0 z-10 w-8 h-8 rounded-full bg-white/90 shadow-sm border border-[#eadfce] flex items-center justify-center text-gray-600 hover:text-emerald-600 hover:scale-105 transition-all opacity-0 group-hover/cat:opacity-100 mr-2"
+            >
+              <ChevronRight size={16} />
+            </button>
           </div>
 
           <AnimatePresence mode="wait">
@@ -1029,7 +1060,7 @@ function ClinicRow({ category, hideDefaultTitle = false, customTitle }: any) {
 
   const handleCardClick = (clinic: ClinicData) => {
     const query = `${clinic.data.name} ${clinic.data.address}`;
-    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+    const url = `http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(query)}`;
     window.open(url, "_blank");
   };
 
@@ -1043,20 +1074,19 @@ function ClinicRow({ category, hideDefaultTitle = false, customTitle }: any) {
       )}
 
       {hideDefaultTitle && customTitle && (
-        <div className="px-2 text-sm text-gray-400 font-bold flex items-center gap-2">
-          <Stethoscope size={14} />
+        <div className="px-2 text-sm text-[#6f7b76] font-bold flex items-center gap-2">
+          <Stethoscope size={14} className="text-emerald-600" />
           {customTitle}
         </div>
       )}
 
-      {/* 🔴 隱藏手機版的箭頭按鈕 (改為 hidden md:flex) */}
       <div className="hidden md:flex absolute top-[60%] -translate-y-1/2 left-0 z-10 opacity-0 group-hover/row:opacity-100 transition-opacity duration-300 pointer-events-none">
-        <button onClick={() => scroll("left")} className="pointer-events-auto w-10 h-10 rounded-full bg-white/90 shadow-md border border-gray-100 flex items-center justify-center text-gray-600 hover:text-emerald-600 hover:scale-110 transition-all -ml-3">
+        <button onClick={() => scroll("left")} className="pointer-events-auto w-10 h-10 rounded-full bg-white/90 shadow-md border border-[#eadfce] flex items-center justify-center text-gray-600 hover:text-emerald-600 hover:scale-110 transition-all -ml-3">
           <ChevronLeft size={24} />
         </button>
       </div>
       <div className="hidden md:flex absolute top-[60%] -translate-y-1/2 right-0 z-10 opacity-0 group-hover/row:opacity-100 transition-opacity duration-300 pointer-events-none">
-        <button onClick={() => scroll("right")} className="pointer-events-auto w-10 h-10 rounded-full bg-white/90 shadow-md border border-gray-100 flex items-center justify-center text-gray-600 hover:text-emerald-600 hover:scale-110 transition-all -mr-3">
+        <button onClick={() => scroll("right")} className="pointer-events-auto w-10 h-10 rounded-full bg-white/90 shadow-md border border-[#eadfce] flex items-center justify-center text-gray-600 hover:text-emerald-600 hover:scale-110 transition-all -mr-3">
           <ChevronRight size={24} />
         </button>
       </div>
@@ -1069,8 +1099,13 @@ function ClinicRow({ category, hideDefaultTitle = false, customTitle }: any) {
           const nameParts = data.name.split(" ("); 
           const engName = nameParts[0];
           const chiName = nameParts[1] ? `(${nameParts[1]}` : null;
+          
           return (
-            <div key={clinic.id} onClick={() => handleCardClick(clinic)} className="flex-shrink-0 w-[85vw] md:w-[400px] bg-gray-50 p-6 rounded-2xl border border-gray-100 flex flex-col hover:border-emerald-300 hover:shadow-lg hover:-translate-y-1 transition-all select-none cursor-pointer active:scale-95 group">
+            <div 
+              key={clinic.id} 
+              onClick={() => handleCardClick(clinic)} 
+              className="flex-shrink-0 w-[85vw] md:w-[400px] bg-[#fffefb] p-6 rounded-2xl border border-[#eadfce] flex flex-col hover:border-emerald-300 hover:shadow-[0_12px_32px_rgba(90,70,40,0.08)] hover:-translate-y-1 transition-all duration-300 select-none cursor-pointer active:scale-95 group"
+            >
               <div className="flex justify-between items-start mb-6">
                 <span className="bg-emerald-100 text-emerald-700 text-[10px] px-2.5 py-1.5 rounded-lg font-black uppercase tracking-wider leading-none">{data.tags[0]}</span>
                 <div className="flex items-center gap-1 text-emerald-600 font-bold text-[11px] mt-1">
@@ -1085,15 +1120,17 @@ function ClinicRow({ category, hideDefaultTitle = false, customTitle }: any) {
                   </span>
                 )}
               </h4>
-              <div className="space-y-3 flex-1">
+              <div className="space-y-3 ">
                 <div className="flex items-center gap-3 text-sm text-gray-600"><Phone size={16} className="shrink-0 text-emerald-500" /><span className="font-semibold">{data.contact}</span></div>
                 <div className="flex items-start gap-3 text-sm text-gray-600"><MapPin size={16} className="shrink-0 text-emerald-500 mt-0.5" /><span className="line-clamp-1">{data.address}</span></div>
                 <div className="flex items-center gap-3 text-sm text-gray-600"><BadgeDollarSign size={16} className="shrink-0 text-emerald-500" /><span className="font-medium">{data.fare}</span></div>
               </div>
-              <div className="mt-6 pt-4 border-t border-gray-200/60 flex justify-between items-center">
+              
+              {/* 【修正重點】：調整了虛線的間距，讓 mt (5) 和 pt (5) 平衡對稱 */}
+              <div className="mt-5 pt-5 border-t-2 border-dashed border-[#eadfce]/60 flex justify-between items-center">
                 <div className="flex gap-1.5 overflow-hidden items-center">
-                  {timeDetail && <div className="flex items-center gap-1 text-[10px] bg-white text-emerald-600 px-2 py-1 rounded-md border border-emerald-100 shadow-sm font-bold whitespace-nowrap"><Clock size={10} />{timeDetail.replace("around ", "")}</div>}
-                  {data.tags.slice(1).map((tag: any, idx: any) => (<span key={idx} className="text-[10px] bg-gray-200/50 text-gray-500 px-2 py-1 rounded-md font-medium whitespace-nowrap">{tag}</span>))}
+                  {timeDetail && <div className="flex items-center gap-1 text-[10px] bg-[#fffdf8] text-emerald-600 px-2 py-1 rounded-md border border-emerald-100 shadow-sm font-bold whitespace-nowrap"><Clock size={10} />{timeDetail.replace("around ", "")}</div>}
+                  {data.tags.slice(1).map((tag: any, idx: any) => (<span key={idx} className="text-[10px] bg-gray-200/40 text-gray-500 px-2 py-1 rounded-md font-medium whitespace-nowrap">{tag}</span>))}
                 </div>
                 <span className="text-xs text-emerald-500 font-bold flex items-center gap-1 shrink-0 ml-2">View Map <ChevronRight size={12} /></span>
               </div>
@@ -1106,9 +1143,14 @@ function ClinicRow({ category, hideDefaultTitle = false, customTitle }: any) {
   );
 }
 
-export default function HealthcarrePage() {
+// 【修復重點】：確保檔案最底部有導出這個 Component！
+export default function HealthcarePage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={
+      <div className="w-full h-[500px] flex items-center justify-center bg-[#fffdf8] rounded-[32px] border border-[#eadfce] shadow-sm">
+        <span className="text-[#6f7b76] font-bold tracking-widest">Loading...</span>
+      </div>
+    }>
       <HealthcareContent />
     </Suspense>
   );

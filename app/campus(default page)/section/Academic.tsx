@@ -11,7 +11,7 @@ export default function Academic() {
   const selectedCollege = ACADEMIC_UNITS.find((c) => c.id === selectedId);
 
   return (
-    <div className="w-full h-full bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 relative overflow-hidden flex flex-col">
+    <div className="w-full h-full bg-#fffefb rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 relative overflow-hidden flex flex-col">
       <AnimatePresence mode="wait">
         {/* === View 1: Overview (Map + List) === */}
         {!selectedId && (

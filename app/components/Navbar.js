@@ -134,6 +134,7 @@
 //     </>
 //   );
 // }
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -197,9 +198,8 @@ export default function Navbar() {
       <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} onLoginSuccess={handleLoginSuccess} />
       <ProfileModal isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} userData={user} />
 
-      {/* 最外層 header */}
-      <header className="fixed top-0 left-0 right-0 h-20 px-4 md:px-8 flex items-center justify-between bg-white border-b border-[#e5e5e5] z-[100]">
-        <Link href="/" className="font-bold text-xl tracking-wider text-black z-[101]">
+{/* 最外層 header - 改為紙張白、毛玻璃、米灰邊框、暖色淡陰影 */}
+      <header className="fixed top-0 left-0 right-0 h-20 px-4 md:px-8 flex items-center justify-between z-[100] bg-[#fffdf8]/90 backdrop-blur-md border-b border-[#eadfce] shadow-[0_4px_20px_rgba(90,70,40,0.04)]">        <Link href="/" className="font-bold text-xl tracking-wider text-black z-[101]">
           CCU SmartLife
         </Link>
         
@@ -219,9 +219,9 @@ export default function Navbar() {
         </button>
       </header>
 
-      {/* 手機版：全螢幕下拉選單 */}
+{/* 手機版：全螢幕下拉選單 - 背景改為淡米白 */}
       <div 
-        className={`fixed inset-0 bg-white z-[90] transition-transform duration-300 ease-in-out md:hidden ${
+        className={`fixed inset-0 z-[90] transition-transform duration-300 ease-in-out md:hidden bg-[#fbf8f1] ${
           isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
         }`}
         style={{ top: "80px" }} 

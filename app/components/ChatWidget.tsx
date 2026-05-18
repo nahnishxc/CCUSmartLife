@@ -504,7 +504,7 @@ export default function ChatWidget() {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const safe = 16;
-const [canDrag, setCanDrag] = useState(false);
+  const [canDrag, setCanDrag] = useState(false);
 
   useEffect(() => {
     const checkCanDrag = () => {
@@ -809,7 +809,6 @@ const [canDrag, setCanDrag] = useState(false);
     return { w: r?.width ?? 160, h: r?.height ?? 160 };
   };
 
-
   const snap = (mode: "bubble" | "panel", velocity = { x: 0, y: 0 }) => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
@@ -855,7 +854,7 @@ const [canDrag, setCanDrag] = useState(false);
     });
   };
 
-const handleClose = () => {
+  const handleClose = () => {
     setIsChatOpen(false);
     setIsHistoryOpen(false);
 
@@ -891,7 +890,6 @@ const handleClose = () => {
     setTimeout(() => snap("panel"), 0);
   };
 
-
   const TypingIndicator = () => (
     <div className="flex gap-1 px-5 py-3.5 bg-white border border-gray-100 rounded-2xl rounded-tl-none shadow-sm w-16">
       {[0, 1, 2].map((i) => (
@@ -910,19 +908,34 @@ const handleClose = () => {
     </div>
   );
 
-  const faqOptions = [
+const faqDatabase = [
+    "Lose passport",
     "Apply for NHI",
-    "Lost the ARC",
-    "Tell me about CCU Campus",
-    "Bus schedule",
-    "Library hours",
+    "Apply for ARC",
+    "Library hour",
   ];
+
+  // 儲存當前隨機抽出的 FAQ
+  const [randomFaqs, setRandomFaqs] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (isChatOpen) {
+      document.body.style.overflow = "hidden";
+      
+      // 【新增】：每次打開聊天室，從題庫中隨機挑選 4 題
+      const shuffled = [...faqDatabase].sort(() => 0.5 - Math.random());
+      setRandomFaqs(shuffled.slice(0, 4));
+      
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [isChatOpen]);
 
   return (
     <motion.div
-      drag={canDrag} // 👈 換成 canDrag：手機版會變成 false，徹底釘死在右下角！
+      drag={canDrag}
       dragControls={dragControls}
-      dragListener={!isChatOpen && canDrag} // 👈 這裡也加上 canDrag
+      dragListener={!isChatOpen && canDrag}
       dragMomentum={false}
       onDragStart={() => {
         isDragging.current = true;
@@ -934,16 +947,11 @@ const handleClose = () => {
           setIsCurrentlyDragging(false);
         }, 50);
 
-        // 【新增】胖手指防禦機制：計算拖曳的總距離 (畢氏定理)
         const distance = Math.sqrt(info.offset.x ** 2 + info.offset.y ** 2);
-
-        // 如果距離小於 5 像素，且聊天室還沒開，這就是一個「點擊」！
         if (distance < 5 && !isChatOpen) {
           handleOpen();
-          return; // 觸發打開後，就不要執行後面的 snap 亂彈了
+          return;
         }
-
-        // 否則正常執行吸附邏輯
         snap(isChatOpen ? "panel" : "bubble", info.velocity);
       }}
       style={{ x, y, opacity: ready ? 1 : 0, willChange: "transform" }}
@@ -958,15 +966,11 @@ const handleClose = () => {
           whileTap={{ scale: 0.95 }}
           role="button"
           tabIndex={0}
-          // 👈 這裡 100% 還原成你最初的寬高，只在最後加上 touch-none
           className="w-28 h-28 md:w-40 md:h-40 bg-transparent flex items-center justify-center cursor-pointer touch-none"
         >
-          {/* 氣泡（電腦版顯示） */}
           <div className="hidden md:block">
             <SlimeSpeechBubble isChatOpen={isChatOpen} x={x} y={y} />
           </div>
-
-          {/* 球球本體：調整手機版大小，讓它不那麼擋路 */}
           <div className="w-20 h-20 md:w-40 md:h-40">
             <SlimeBall />
           </div>
@@ -980,15 +984,14 @@ const handleClose = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ type: "spring", damping: 26, stiffness: 240 }}
-            // 👇 1. 把 getPanelSize 刪掉，換成原生 CSS 的 min() 函數
-            // 意思是：電腦版維持 400x550，手機版自動變成滿版並扣掉 32px 的安全邊距
             style={{
               width: "min(400px, 100vw - 32px)",
               height: "min(550px, 100dvh - 32px)",
             }}
-            // 👇 2. 類別保持乾淨，保留 overscroll-none 防止手機 Safari 彈性拉扯
-            className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col relative overscroll-none"
+            // 【外層容器】：換成手帳暖白底色、米灰外框與柔和陰影
+            className="bg-[#fffdf8] rounded-[32px] shadow-[0_20px_40px_rgba(90,70,40,0.12)] border border-[#eadfce] overflow-hidden flex flex-col relative overscroll-none"
           >
+            {/* 頂部 Header：維持原本漂亮的綠色漸層 */}
             <div
               onPointerDown={(e) => dragControls.start(e)}
               className="bg-gradient-to-r from-emerald-500 to-teal-600 p-5 flex justify-between items-center text-white shrink-0 cursor-grab active:cursor-grabbing"
@@ -1000,30 +1003,34 @@ const handleClose = () => {
                 <h3 className="font-bold">CCU Assistant</h3>
               </div>
               <div className="flex gap-1">
-                {/* <button
-                  onPointerDown={(e) => e.stopPropagation()}
-                  onClick={() => setIsHistoryOpen((v) => !v)}
-                  className="p-2 hover:bg-white/10 rounded-full"
-                >
-                  <MoreVertical size={20} />
-                </button> */}
                 <button
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={handleClose}
-                  className="p-2 hover:bg-white/10 rounded-full"
+                  className="p-2 hover:bg-white/10 rounded-full transition-colors"
                 >
                   <X size={20} />
                 </button>
               </div>
             </div>
 
+            {/* 對話區域：加上筆記本淡灰方格紋 */}
             <div
-              className="flex-1 bg-gray-50 p-6 overflow-y-auto relative overscroll-contain"
+              className="flex-1 p-6 overflow-y-auto relative overscroll-contain custom-scrollbar"
+              style={{
+                backgroundColor: "#fffdf8",
+                backgroundImage: `
+                  linear-gradient(#f1f5f9 1px, transparent 1px), 
+                  linear-gradient(90deg, #f1f5f9 1px, transparent 1px)
+                `,
+                backgroundSize: "32px 32px",
+                backgroundPosition: "0 8px",
+              }}
               onWheelCapture={(e: any) => e.stopPropagation()}
               onPointerDownCapture={(e: any) => e.stopPropagation()}
             >
-              <div className="flex flex-col gap-3">
-                <div className="self-start bg-white px-5 py-3.5 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 text-sm text-gray-700 max-w-[85%]">
+              <div className="flex flex-col gap-4">
+                {/* 歡迎訊息：套用米白底與米灰外框 */}
+                <div className="self-start bg-[#fffefb] px-5 py-4 rounded-2xl rounded-tl-none shadow-sm border-2 border-dashed border-[#eadfce] text-sm text-[#6f7b76] font-medium max-w-[85%] leading-relaxed">
                   Hi! I&apos;m your AI assistant. How can I help you today?
                 </div>
 
@@ -1033,44 +1040,50 @@ const handleClose = () => {
                     className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
                   >
                     <div
-                      className={`px-5 py-3.5 rounded-2xl text-sm max-w-[85%] shadow-sm ${m.role === "user" ? "bg-emerald-600 text-white rounded-tr-none" : "bg-white text-gray-700 border border-gray-100 rounded-tl-none"}`}
+className={`px-5 py-3.5 rounded-2xl text-sm max-w-[85%] leading-relaxed ${
+  m.role === "user" 
+    ? "bg-emerald-600 text-white rounded-tr-none shadow-md font-medium" 
+    : "bg-[#fffefb] text-[#6f7b76] border-2 border-dashed border-[#eadfce] shadow-sm rounded-tl-none font-medium"
+}`}
                     >
                       {m.role === "user" ? (
-                        // 使用者的訊息保持純文字即可
                         <div className="whitespace-pre-wrap">{m.content}</div>
                       ) : (
-                        // AI 的訊息交給 ReactMarkdown 處理，並套用 Tailwind 樣式
-                        <div className="prose prose-sm prose-emerald max-w-none flex flex-col gap-2">
+                        <div className="prose prose-sm prose-emerald max-w-none flex flex-col gap-2 text-[#6f7b76]">
                           <ReactMarkdown
                             components={{
-                              // 客製化 ul (無序清單 - 點點)
                               ul: ({ node, ...props }: any) => (
                                 <ul
                                   className="list-disc list-inside ml-2 space-y-1"
                                   {...props}
                                 />
                               ),
-                              // 客製化 ol (有序清單 - 數字)
                               ol: ({ node, ...props }: any) => (
                                 <ol
                                   className="list-decimal list-inside ml-2 space-y-1"
                                   {...props}
                                 />
                               ),
-                              // 客製化 li (清單項目)
                               li: ({ node, ...props }: any) => (
-                                <li className="leading-relaxed" {...props} />
+                                <li
+                                  className="leading-relaxed marker:text-emerald-500"
+                                  {...props}
+                                />
                               ),
-                              // 客製化 p (段落)
                               p: ({ node, ...props }: any) => (
                                 <p className="leading-relaxed m-0" {...props} />
                               ),
-                              // 客製化 a (超連結)
                               a: ({ node, ...props }: any) => (
                                 <a
-                                  className="text-emerald-600 underline hover:text-emerald-800 transition-colors break-all"
+                                  className="text-emerald-600 font-bold underline hover:text-emerald-800 transition-colors break-all"
                                   target="_blank"
                                   rel="noopener noreferrer"
+                                  {...props}
+                                />
+                              ),
+                              strong: ({ node, ...props }: any) => (
+                                <strong
+                                  className="font-bold text-gray-800"
                                   {...props}
                                 />
                               ),
@@ -1088,26 +1101,31 @@ const handleClose = () => {
                   messages.length > 0 &&
                   messages[messages.length - 1].role === "user" && (
                     <div className="flex justify-start">
-                      <TypingIndicator />
+                      <div className="bg-[#fffefb] border border-[#eadfce] rounded-2xl rounded-tl-none shadow-sm">
+                        <TypingIndicator />
+                      </div>
                     </div>
                   )}
 
-                {messages.length === 0 && !isSending && (
-                  <div className="mt-1 flex flex-wrap gap-2 justify-start">
-                    {faqOptions.map((faq) => (
-                      <button
-                        key={faq}
-                        className="bg-white px-4 py-2 rounded-full border border-gray-200 text-xs text-gray-600 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all shadow-sm"
-                        onClick={() => handleSend(faq)}
-                      >
-                        {faq}
-                      </button>
-                    ))}
-                  </div>
-                )}
-                <div ref={messagesEndRef} />
+{/* FAQ 快捷選項：套用手帳風標籤質感 */}
+{messages.length === 0 && !isSending && (
+  <div className="mt-2 flex flex-wrap gap-2 justify-start">
+    {randomFaqs.map((faq) => ( // 👈 把這裡的 faqOptions 換成 randomFaqs
+      <button
+        key={faq}
+        // 【微調】：因為字變多了，可以讓按鈕的字體稍微小一點 (text-[11px])，避免佔用太多空間
+        className="bg-[#fffefb] px-4 py-2 rounded-full border border-[#eadfce] text-[11px] font-bold text-[#8c8273] hover:border-emerald-400 hover:text-emerald-700 hover:bg-[#fbf8f1] transition-all shadow-sm text-left leading-snug"
+        onClick={() => handleSend(faq)}
+      >
+        {faq}
+      </button>
+    ))}
+  </div>
+)}
+                <div ref={messagesEndRef} className="h-2" />
               </div>
 
+              {/* 歷史紀錄側邊欄：統一色系與虛線邊框 */}
               <AnimatePresence>
                 {isHistoryOpen && (
                   <motion.div
@@ -1115,29 +1133,29 @@ const handleClose = () => {
                     animate={{ x: 0 }}
                     exit={{ x: "100%" }}
                     transition={{ type: "spring", stiffness: 260, damping: 28 }}
-                    className="absolute inset-y-0 right-0 w-80 bg-white shadow-2xl z-40 p-6 border-l border-gray-200 flex flex-col"
+                    className="absolute inset-y-0 right-0 w-80 bg-[#fffdf8] shadow-2xl z-40 p-6 border-l border-[#eadfce] flex flex-col"
                   >
                     <div className="flex justify-between items-center mb-6 font-bold text-gray-800">
                       History
                       <button
                         onClick={() => setIsHistoryOpen(false)}
-                        className="p-2 rounded-full hover:bg-gray-100"
+                        className="p-2 rounded-full hover:bg-[#fbf8f1] transition-colors"
                       >
-                        <X size={18} />
+                        <X size={18} className="text-[#6f7b76]" />
                       </button>
                     </div>
                     <button
                       onClick={handleNewChat}
-                      className="w-full py-3 border-2 border-dashed rounded-2xl text-xs mb-4 hover:border-emerald-400 hover:text-emerald-600"
+                      className="w-full py-3 border-2 border-dashed border-[#eadfce] bg-[#fffefb] rounded-2xl font-bold text-sm text-[#8c8273] mb-4 hover:border-emerald-400 hover:text-emerald-600 transition-colors shadow-sm"
                     >
                       + New Chat
                     </button>
-                    <div className="flex-1 overflow-y-auto">
+                    <div className="flex-1 overflow-y-auto custom-scrollbar pr-2">
                       {history.map((c) => (
                         <div
                           key={c.id}
                           onClick={() => handleSelectSession(c.id)}
-                          className="p-3 bg-gray-50 rounded-xl mb-2 text-xs truncate cursor-pointer hover:bg-gray-100 transition-colors"
+                          className="p-4 bg-[#fffefb] border border-[#eadfce] rounded-xl mb-3 text-sm font-medium text-[#6f7b76] truncate cursor-pointer hover:border-emerald-300 hover:shadow-md transition-all"
                         >
                           {c.title}
                         </div>
@@ -1148,7 +1166,8 @@ const handleClose = () => {
               </AnimatePresence>
             </div>
 
-            <div className="p-4 bg-white border-t border-gray-100">
+            {/* 輸入區：上方用手帳風虛線隔開 */}
+            <div className="p-4 bg-[#fffdf8] border-t-2 border-dashed border-[#eadfce]">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -1162,12 +1181,12 @@ const handleClose = () => {
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder={isSending ? "AI is thinking..." : "Ask me..."}
                   disabled={isSending}
-                  className="w-full bg-gray-100 py-3 px-4 pr-12 rounded-xl outline-none text-sm disabled:opacity-50"
+                  className="w-full bg-[#fffefb] border border-[#eadfce] py-3.5 px-5 pr-14 rounded-2xl outline-none text-sm font-medium text-gray-800 placeholder:text-[#a8a196] disabled:opacity-50 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300 transition-all shadow-inner"
                 />
                 <button
                   type="submit"
                   disabled={isSending || !inputValue.trim()}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-emerald-600 text-white rounded-lg disabled:bg-gray-400 transition-colors"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2.5 bg-emerald-600 text-white rounded-xl disabled:bg-[#d1ccc2] hover:bg-emerald-700 transition-colors shadow-sm"
                 >
                   <Send size={16} />
                 </button>

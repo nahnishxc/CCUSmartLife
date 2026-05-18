@@ -458,7 +458,7 @@ export default function TrainDetail({ onBack }: TrainDetailProps) {
     }
   }, [isSearched]);
 
-  const { data: stationsRaw } = useSWR(`${BASE_URL}/api/traffic/trains/stations`, fetcher, { revalidateOnFocus: false });
+  const stationsRaw = useSWR(`${BASE_URL}/api/traffic/trains/stations`, fetcher, { revalidateOnFocus: false }).data;
   
   const stationCodeMap = useMemo(() => {
     const codeMap: Record<string, string> = {};
@@ -477,11 +477,11 @@ export default function TrainDetail({ onBack }: TrainDetailProps) {
     return codeMap;
   }, [stationsRaw]);
 
-  const { data: boardRaw } = useSWR(
+  const boardRaw = useSWR(
     isSearched ? null : `${BASE_URL}/api/traffic/trains`, 
     fetcher, 
     { refreshInterval: 60000 }
-  );
+  ).data;
 
   const quickCheckData = useMemo(() => {
     if (!boardRaw) return [];
@@ -551,18 +551,22 @@ export default function TrainDetail({ onBack }: TrainDetailProps) {
   });
 
   return (
-    <div className="w-full h-full bg-white rounded-3xl p-4 md:p-8 pt-16 md:pt-16 shadow-sm border border-gray-100 flex flex-col overflow-y-auto custom-scrollbar">
+    // 【背板指定】修改為 bg-[#fffdf8]，搭配米灰邊框與手帳暖陰影
+    <div className="w-full h-full bg-[#fffdf8] rounded-[32px] p-4 md:p-8 pt-8 md:pt-8 shadow-[0_10px_30px_rgba(90,70,40,0.06)] border border-[#eadfce] flex flex-col overflow-y-auto custom-scrollbar">
+      
       {/* Header */}
-      <div className="flex items-center gap-4 mb-6 md:mb-8 border-b border-gray-100 pb-4 md:pb-5">
+      {/* 換成手帳虛線分隔條 */}
+      <div className="flex items-center gap-4 mb-6 md:mb-8 border-b-2 border-dashed border-[#eadfce]/60 pb-4 md:pb-5">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-full bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-xs md:text-sm transition-colors"
+          // 返回按鈕同步升級為紙質標籤貼紙風格
+          className="flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl bg-[#fffefb] border border-[#eadfce] text-gray-600 font-bold text-xs md:text-sm shadow-sm hover:shadow-md hover:text-emerald-700 hover:bg-[#fbf8f1] transition-all"
         >
           <ArrowLeft size={18} />
           Back
         </button>
         <div>
-          <div className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-wider">
+          <div className="text-[10px] md:text-xs text-[#6f7b76] font-bold uppercase tracking-wider">
             Taiwan Railway
           </div>
           <div className="text-base md:text-lg font-bold text-gray-800">
@@ -571,48 +575,49 @@ export default function TrainDetail({ onBack }: TrainDetailProps) {
         </div>
       </div>
 
-      {/* 🔴 Filter Section (優化響應式排版) */}
-      <div className="bg-gray-50/80 p-4 md:p-5 rounded-2xl border border-gray-100 mb-8 flex-shrink-0 shadow-sm">
+      {/* Filter Section：【卡片指定】修改為 bg-[#fffefb] 與米灰框線 */}
+      <div className="bg-[#fffefb] p-4 md:p-5 rounded-2xl border border-[#eadfce] mb-8 flex-shrink-0 shadow-sm">
         
         {/* 起迄站列 */}
         <div className="flex items-end gap-2 md:gap-3 mb-4">
           <div className="flex-1 min-w-0">
-            <label className="text-[10px] md:text-xs font-bold text-gray-500 uppercase ml-1 mb-1.5 block tracking-wide">Departure</label>
+            <label className="text-[10px] md:text-xs font-bold text-[#6f7b76] uppercase ml-1 mb-1.5 block tracking-wide">Departure</label>
             <button 
               onClick={() => { setSelectorTarget("dep"); setSelectedCity(null); }}
-              className="w-full bg-white h-12 px-3 md:px-4 rounded-xl border border-gray-200 text-sm md:text-base font-bold text-gray-700 flex items-center justify-between hover:border-emerald-400 hover:shadow-sm transition-all"
+              // 內部按鈕/選單一律換成極淺暖底色搭配米灰外框
+              className="w-full bg-[#fffdf8] h-12 px-3 md:px-4 rounded-xl border border-[#eadfce] text-sm md:text-base font-bold text-gray-700 flex items-center justify-between hover:border-emerald-400 hover:shadow-sm transition-all"
             >
               <span className="truncate">{depStation}</span>
-              <ChevronDown size={16} className="text-gray-400 flex-shrink-0 ml-1" />
+              <ChevronDown size={16} className="text-[#6f7b76] flex-shrink-0 ml-1" />
             </button>
           </div>
 
           <button 
             onClick={swapStations} 
-            className="h-12 w-10 md:w-12 flex-shrink-0 flex items-center justify-center rounded-xl bg-white border border-gray-200 text-emerald-600 hover:bg-emerald-50 hover:border-emerald-300 transition-all shadow-sm"
+            className="h-12 w-10 md:w-12 flex-shrink-0 flex items-center justify-center rounded-xl bg-[#fffdf8] border border-[#eadfce] text-emerald-600 hover:bg-emerald-50/50 hover:border-emerald-300 transition-all shadow-sm"
           >
             <ArrowRightLeft size={16} className="md:w-[18px] md:h-[18px]" />
           </button>
 
           <div className="flex-1 min-w-0">
-            <label className="text-[10px] md:text-xs font-bold text-gray-500 uppercase ml-1 mb-1.5 block tracking-wide">Arrival</label>
+            <label className="text-[10px] md:text-xs font-bold text-[#6f7b76] uppercase ml-1 mb-1.5 block tracking-wide">Arrival</label>
             <button 
               onClick={() => { setSelectorTarget("arr"); setSelectedCity(null); }}
-              className="w-full bg-white h-12 px-3 md:px-4 rounded-xl border border-gray-200 text-sm md:text-base font-bold text-gray-700 flex items-center justify-between hover:border-emerald-400 hover:shadow-sm transition-all"
+              className="w-full bg-[#fffdf8] h-12 px-3 md:px-4 rounded-xl border border-[#eadfce] text-sm md:text-base font-bold text-gray-700 flex items-center justify-between hover:border-emerald-400 hover:shadow-sm transition-all"
             >
               <span className="truncate">{arrStation}</span>
-              <ChevronDown size={16} className="text-gray-400 flex-shrink-0 ml-1" />
+              <ChevronDown size={16} className="text-[#6f7b76] flex-shrink-0 ml-1" />
             </button>
           </div>
         </div>
 
-        {/* 🔴 日期與時間列：手機版強制上下堆疊 (flex-col)，電腦版左右並排 (lg:flex-row) */}
+        {/* 日期與時間列 */}
         <div className="flex flex-col lg:flex-row lg:items-end gap-3 md:gap-4">
           <div className="w-full lg:w-1/3">
-            <label className="text-[10px] md:text-xs font-bold text-gray-500 uppercase ml-1 mb-1.5 block tracking-wide">Date</label>
-            <div className="relative h-12 bg-white rounded-xl border border-gray-200 px-3 flex items-center justify-between hover:border-emerald-400 focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-emerald-50 overflow-hidden transition-all shadow-sm">
+            <label className="text-[10px] md:text-xs font-bold text-[#6f7b76] uppercase ml-1 mb-1.5 block tracking-wide">Date</label>
+            <div className="relative h-12 bg-[#fffdf8] rounded-xl border border-[#eadfce] px-3 flex items-center justify-between hover:border-emerald-400 focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-emerald-50 overflow-hidden transition-all shadow-sm">
               <span className="text-sm font-bold text-gray-700 pl-1">{formattedDate}</span>
-              <Calendar size={16} className="text-gray-400" />
+              <Calendar size={16} className="text-[#6f7b76]" />
               <input 
                 type="date" 
                 value={date}
@@ -624,8 +629,8 @@ export default function TrainDetail({ onBack }: TrainDetailProps) {
           </div>
 
           <div className="w-full lg:flex-1">
-             <label className="text-[10px] md:text-xs font-bold text-gray-500 uppercase ml-1 mb-1.5 block tracking-wide">Time Period (24H)</label>
-             <div className="flex items-center gap-2 bg-white rounded-xl border border-gray-200 px-3 h-12 shadow-sm hover:border-emerald-400 transition-all">
+             <label className="text-[10px] md:text-xs font-bold text-[#6f7b76] uppercase ml-1 mb-1.5 block tracking-wide">Time Period (24H)</label>
+             <div className="flex items-center gap-2 bg-[#fffdf8] rounded-xl border border-[#eadfce] px-3 h-12 shadow-sm hover:border-emerald-400 transition-all">
                <input 
                  type="time" 
                  value={startTime} 
@@ -661,7 +666,7 @@ export default function TrainDetail({ onBack }: TrainDetailProps) {
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="pb-10">
             <button
               onClick={clearSearch}
-              className="self-start mb-5 flex items-center gap-2 text-xs md:text-sm text-gray-500 hover:text-emerald-700 transition-colors bg-gray-50 hover:bg-emerald-50 px-4 py-2 rounded-full font-bold border border-transparent hover:border-emerald-100"
+              className="self-start mb-5 flex items-center gap-2 text-xs md:text-sm text-gray-600 hover:text-emerald-700 transition-all bg-[#fffefb] border border-[#eadfce] px-4 py-2 rounded-full font-bold shadow-sm hover:shadow-md"
             >
               <ArrowLeft size={16} className="md:w-[18px] md:h-[18px]" />
               Back to Board
@@ -677,13 +682,15 @@ export default function TrainDetail({ onBack }: TrainDetailProps) {
               {searchLoading ? (
                  <div className="py-16 flex flex-col items-center justify-center text-emerald-600 gap-3">
                    <Loader2 size={32} className="animate-spin" />
-                   <p className="text-sm font-bold text-gray-500">Searching trains...</p>
+                   <p className="text-sm font-bold text-[#6f7b76]">Searching trains...</p>
                  </div>
               ) : searchResults.length > 0 ? searchResults.map((item: any, idx: number) => (
-                <div key={idx} className="bg-white border border-gray-100 rounded-2xl p-4 md:p-5 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all group">
+                // 【卡片指定】搜尋結果卡片一律改為 bg-[#fffefb] 與米灰框線
+                <div key={idx} className="bg-[#fffefb] border border-[#eadfce] rounded-2xl p-4 md:p-5 shadow-sm hover:shadow-[0_12px_24px_rgba(90,70,40,0.08)] hover:-translate-y-0.5 hover:border-emerald-300 transition-all duration-300 group">
                    <div className="flex justify-between items-start mb-4">
                       <div>
-                         <span className="text-xs md:text-sm font-bold bg-gray-100 text-gray-600 px-2 py-1 rounded-md mr-2 md:mr-3 group-hover:bg-emerald-100 group-hover:text-emerald-700 transition-colors">
+                         {/* 車種小標籤背景換成細緻紙質貼紙感 */}
+                         <span className="text-xs md:text-sm font-bold bg-[#fffdf8] text-gray-600 border border-[#eadfce]/70 px-2 py-1 rounded-md mr-2 md:mr-3 group-hover:bg-emerald-50 group-hover:text-emerald-700 group-hover:border-emerald-200 transition-colors">
                            {item.trainTypeEn}
                          </span>
                          <span className="text-xs md:text-sm font-bold text-gray-400">#{item.trainNo}</span>
@@ -693,11 +700,11 @@ export default function TrainDetail({ onBack }: TrainDetailProps) {
                    <div className="flex items-center justify-between px-1 md:px-2">
                       <div className="text-center">
                          <div className="text-2xl md:text-3xl font-black text-gray-800 tracking-tight">{item.departureTime}</div>
-                         <div className="text-[10px] md:text-xs text-gray-400 mt-1 md:mt-1.5 font-bold uppercase">{searchDep}</div>
+                         <div className="text-[10px] md:text-xs text-[#6f7b76] mt-1 md:mt-1.5 font-bold uppercase">{searchDep}</div>
                       </div>
                       
                       <div className="flex-1 mx-4 md:mx-6 flex flex-col items-center">
-                         <div className="w-full h-[3px] bg-gray-100 relative rounded-full">
+                         <div className="w-full h-[3px] bg-[#eadfce]/60 relative rounded-full">
                             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-gray-300 group-hover:bg-emerald-400 transition-colors"></div>
                             <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-gray-300 group-hover:bg-emerald-400 transition-colors"></div>
                          </div>
@@ -705,12 +712,12 @@ export default function TrainDetail({ onBack }: TrainDetailProps) {
 
                       <div className="text-center">
                          <div className="text-2xl md:text-3xl font-black text-gray-800 tracking-tight">{item.arrivalTime}</div>
-                         <div className="text-[10px] md:text-xs text-gray-400 mt-1 md:mt-1.5 font-bold uppercase">{searchArr}</div>
+                         <div className="text-[10px] md:text-xs text-[#6f7b76] mt-1 md:mt-1.5 font-bold uppercase">{searchArr}</div>
                       </div>
                    </div>
                 </div>
               )) : (
-                <div className="text-center py-16 text-gray-400 text-sm font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                <div className="text-center py-16 text-[#6f7b76] text-sm font-bold bg-[#fffefb] rounded-2xl border-2 border-dashed border-[#eadfce]">
                    No trains found for this period.
                 </div>
               )}
@@ -725,9 +732,10 @@ export default function TrainDetail({ onBack }: TrainDetailProps) {
                      {data.station}
                   </h3>
                   
-                  {/* 🔴 看板表格區優化：調整間距與字體大小，讓文字不再被截斷 */}
-                  <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
-                     <div className="grid grid-cols-12 bg-gray-50/80 text-[10px] md:text-xs font-bold text-gray-400 py-3 px-2 md:px-4 border-b border-gray-100 text-center uppercase tracking-wider">
+                  {/* 看板表格區：【卡片指定】修改為 bg-[#fffefb] 與米灰框線 */}
+                  <div className="bg-[#fffefb] border border-[#eadfce] rounded-2xl overflow-hidden shadow-sm">
+                     {/* 表格欄位標頭：改為手帳紙襯底與 dashed 虛線 */}
+                     <div className="grid grid-cols-12 bg-[#fbf8f1] text-[10px] md:text-xs font-bold text-[#6f7b76] py-3 px-2 md:px-4 border-b-2 border-dashed border-[#eadfce]/60 text-center uppercase tracking-wider">
                         <div className="col-span-2 text-left pl-1 md:pl-2">No.</div>
                         <div className="col-span-3">Dest.</div>
                         <div className="col-span-3">Type</div>
@@ -736,28 +744,30 @@ export default function TrainDetail({ onBack }: TrainDetailProps) {
                      </div>
                      
                      {!boardRaw ? (
-                        <div className="py-10 flex flex-col items-center justify-center text-gray-400">
-                          <Loader2 size={24} className="animate-spin mb-2" />
+                        <div className="py-10 flex flex-col items-center justify-center text-[#6f7b76]">
+                          <Loader2 size={24} className="animate-spin mb-2 text-emerald-600" />
                           <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider">Loading Live Data...</span>
                         </div>
                      ) : data.trains.length > 0 ? (
-                       <div className="divide-y divide-gray-50">
+                       // 每列橫條改用虛線交錯，Hover 改為手帳紙灰底
+                       <div className="divide-y-2 divide-dashed divide-[#eadfce]/40">
                           {data.trains.map((t: any, tIdx: number) => (
-                             <div key={tIdx} className="grid grid-cols-12 items-center py-3 md:py-4 px-2 md:px-4 text-xs md:text-sm text-center hover:bg-gray-50 transition-colors">
+                             <div key={tIdx} className="grid grid-cols-12 items-center py-3 md:py-4 px-2 md:px-4 text-xs md:text-sm text-center hover:bg-[#fbf8f1]/50 transition-colors">
                                 <div className="col-span-2 text-left pl-1 md:pl-2 font-black text-gray-700 truncate">{t.trainNo}</div>
                                 <div className="col-span-3 font-bold text-gray-800 truncate px-0.5 md:px-1 text-[11px] md:text-sm">{t.destinationEn}</div>
-                                <div className="col-span-3 text-[9px] md:text-xs font-bold text-gray-500 truncate px-0.5">{t.trainTypeEn.replace("Limited Express", "Exp.")}</div>
+                                <div className="col-span-3 text-[9px] md:text-xs font-bold text-[#6f7b76] truncate px-0.5">{t.trainTypeEn.replace("Limited Express", "Exp.")}</div>
                                 <div className="col-span-2 font-black text-emerald-600 text-[11px] md:text-base">{t.departureTime}</div>
                                 <div className={`col-span-2 text-right pr-1 md:pr-2 font-bold text-[9px] md:text-xs ${t.delayTime > 0 ? "text-red-500" : "text-gray-400"}`}>
                                    {t.delayTime > 0 ? (
-                                      <span className="bg-red-50 py-0.5 px-1 md:py-1 md:px-2 rounded-md whitespace-nowrap">+{t.delayTime}</span>
+                                      // 誤點標籤加入精緻邊框
+                                      <span className="bg-red-50 text-red-600 border border-red-100 py-0.5 px-1 md:py-1 md:px-2 rounded-md whitespace-nowrap">+{t.delayTime} min</span>
                                    ) : "On Time"}
                                 </div>
                              </div>
                           ))}
                        </div>
                      ) : (
-                       <div className="py-10 text-center text-[11px] md:text-sm font-bold text-gray-400 bg-gray-50/30">
+                       <div className="py-10 text-center text-[11px] md:text-sm font-bold text-[#6f7b76] bg-[#fbf8f1]/20">
                           No incoming trains at the moment.
                        </div>
                      )}
@@ -771,39 +781,42 @@ export default function TrainDetail({ onBack }: TrainDetailProps) {
       {/* Station Selector Modal */}
       <AnimatePresence>
         {selectorTarget && (
-          <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} className="absolute inset-0 z-50 bg-white/95 backdrop-blur-md flex flex-col p-4 md:p-6 rounded-3xl">
-             <div className="flex justify-between items-center mb-6 flex-shrink-0 border-b border-gray-100 pb-4">
+          // 彈窗背景一併更換為手帳暖白背板材質與毛玻璃效果
+          <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} className="absolute inset-0 z-50 bg-[#fffdf8]/95 backdrop-blur-md flex flex-col p-4 md:p-6 rounded-3xl">
+             <div className="flex justify-between items-center mb-6 flex-shrink-0 border-b-2 border-dashed border-[#eadfce]/60 pb-4">
                <div className="flex items-center gap-2 md:gap-3">
                  {selectedCity && (
-                    <button onClick={() => setSelectedCity(null)} className="p-1.5 md:p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
+                    <button onClick={() => setSelectedCity(null)} className="p-1.5 md:p-2 rounded-xl bg-[#fffefb] border border-[#eadfce] shadow-sm hover:bg-[#fbf8f1] transition-all">
                        <ChevronLeft size={20} className="text-gray-600" />
                     </button>
                  )}
                  <h3 className="text-lg md:text-xl font-black text-gray-800">{selectedCity ? `Select Station` : "Select City"}</h3>
                </div>
-               <button onClick={() => setSelectorTarget(null)} className="text-xs md:text-sm font-bold text-gray-400 hover:text-gray-600 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors">Close</button>
+               <button onClick={() => setSelectorTarget(null)} className="text-xs md:text-sm font-bold text-gray-600 border border-[#eadfce] bg-[#fffefb] px-3 py-1.5 rounded-xl hover:bg-[#fbf8f1] shadow-sm transition-all">Close</button>
              </div>
 
              <div className="flex-1 overflow-y-auto custom-scrollbar pb-10">
                 {!selectedCity ? (
                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
                       {Object.keys(TAIWAN_STATIONS).map(city => (
-                         <button key={city} onClick={() => setSelectedCity(city)} className="py-3 md:py-4 px-3 bg-gray-50 hover:bg-emerald-50 hover:text-emerald-700 border border-transparent rounded-xl text-xs md:text-sm font-bold text-gray-600 transition-all text-left flex justify-between items-center group">
+                         // 城市按鈕換成紙質小卡片貼紙外觀
+                         <button key={city} onClick={() => setSelectedCity(city)} className="py-3 md:py-4 px-3 bg-[#fffefb] border border-[#eadfce] shadow-sm hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 rounded-xl text-xs md:text-sm font-bold text-gray-600 transition-all text-left flex justify-between items-center group">
                             {city.replace(" City", "").replace(" County", "")}
-                            <ChevronDown size={14} className="opacity-0 group-hover:opacity-100 -rotate-90 transition-opacity" />
+                            <ChevronDown size={14} className="opacity-0 group-hover:opacity-100 -rotate-90 text-emerald-600 transition-all" />
                          </button>
                       ))}
                    </div>
                 ) : (
                    <div className="space-y-4">
-                      <div className="text-[10px] md:text-sm font-black text-emerald-600 uppercase tracking-widest pl-1">{selectedCity}</div>
+                      <div className="text-[10px] md:text-sm font-black text-emerald-700 uppercase tracking-widest pl-1">{selectedCity}</div>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
                          {TAIWAN_STATIONS[selectedCity].map(station => (
+                            // 車站按鈕同步換成清爽的紙白卡片底色
                             <button key={station} onClick={() => {
                                  if (selectorTarget === "dep") setDepStation(station);
                                  else setArrStation(station);
                                  setSelectorTarget(null);
-                            }} className="py-3 md:py-4 px-3 bg-white border border-gray-200 rounded-xl text-sm md:text-base font-bold text-gray-700 hover:border-emerald-500 hover:shadow-md transition-all text-left">
+                            }} className="py-3 md:py-4 px-3 bg-[#fffefb] border border-[#eadfce] rounded-xl text-sm md:text-base font-bold text-gray-700 hover:border-emerald-500 hover:shadow-md transition-all text-left">
                                {station}
                             </button>
                          ))}
